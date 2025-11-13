@@ -1,0 +1,30 @@
+{
+  "name": "@nlam/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "API, provider layer, agent loop and eval harness.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
+    "build": "tsc -b",
+    "eval": "tsx src/eval/cli.ts",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.120.0",
+    "@fastify/cors": "^11.3.0",
+    "@fastify/rate-limit": "^11.2.0",
+    "@google/genai": "^2.18.0",
+    "@nlam/shared": "*",
+    "dotenv": "^17.4.2",
+    "fastify": "^5.12.1",
+    "pino": "^10.3.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "pino-pretty": "^13.1.3",
+    "tsx": "^4.23.12"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@nlam/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Application model schema, types and pure validation utilities.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "build:watch": "tsc -b --watch",
+    "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "zod": "^4.4.3"
+  }
+}

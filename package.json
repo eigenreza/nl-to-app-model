@@ -1,0 +1,43 @@
+{
+  "name": "nl-to-app-model",
+  "private": true,
+  "version": "0.1.0",
+  "description": "An agentic system that turns natural-language descriptions into validated, editable application models.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "workspaces": [
+    "packages/shared",
+    "packages/server",
+    "packages/web"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=@nlam/shared && npm run build --workspace=@nlam/server && npm run build --workspace=@nlam/web",
+    "dev": "concurrently -n server,web -c blue,magenta \"npm run dev --workspace=@nlam/server\" \"npm run dev --workspace=@nlam/web\"",
+    "dev:server": "npm run dev --workspace=@nlam/server",
+    "dev:web": "npm run dev --workspace=@nlam/web",
+    "typecheck": "tsc --build --force",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "eval": "npm run eval --workspace=@nlam/server",
+    "check:charset": "node scripts/check-charset.mjs",
+    "verify": "npm run check:charset && npm run lint && npm run typecheck && npm run test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.13.3",
+    "concurrently": "^10.0.5",
+    "eslint": "^10.9.1",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.11.0",
+    "prettier": "^3.9.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.68.0",
+    "vitest": "^4.1.11"
+  }
+}
