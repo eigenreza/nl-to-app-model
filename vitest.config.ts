@@ -19,16 +19,9 @@ export default defineConfig({
           include: ['src/**/*.test.ts'],
         },
       },
-      {
-        test: {
-          name: 'web',
-          root: './packages/web',
-          environment: 'jsdom',
-          globals: true,
-          setupFiles: ['./src/test-setup.ts'],
-          include: ['src/**/*.test.{ts,tsx}'],
-        },
-      },
+      // The browser package brings its own config so that the React plugin and
+      // the workspace alias are shared with the dev server rather than copied.
+      './packages/web',
     ],
   },
 });

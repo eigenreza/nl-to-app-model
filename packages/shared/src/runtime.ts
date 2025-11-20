@@ -192,7 +192,7 @@ export function selectTableRows(
 
 /** The options a select filter should offer, including the neutral entry. */
 export function filterOptions(field: Field): Array<{ value: string; label: string }> {
-  const neutral = { value: '', label: `All ${field.label.toLowerCase()}` };
+  const neutral = { value: '', label: 'Any' };
   if (field.type === 'boolean') {
     return [neutral, { value: 'true', label: 'Yes' }, { value: 'false', label: 'No' }];
   }
