@@ -69,7 +69,9 @@ describe('runtime state', () => {
 
   it('rebuilds rows when the entity definition changes', () => {
     const store = storeWith();
-    store.dispatch(rowRemoved({ entityId: 'book', rowId: store.getState().runtime.data.book![0]!.id }));
+    store.dispatch(
+      rowRemoved({ entityId: 'book', rowId: store.getState().runtime.data.book![0]!.id }),
+    );
 
     const withExtraSeed = structuredClone(EXAMPLE_MODELS.book_tracker);
     withExtraSeed.entities[0]!.seed!.push({ title: 'Solaris', finished: false });

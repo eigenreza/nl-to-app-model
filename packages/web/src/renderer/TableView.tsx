@@ -116,7 +116,10 @@ export function TableView({ component, entity }: Props) {
                   {columns.map((field) => {
                     const text = formatCellValue(row.values[field.id], field);
                     return (
-                      <td key={field.id} className={field.type === 'number' ? 'numeric' : undefined}>
+                      <td
+                        key={field.id}
+                        className={field.type === 'number' ? 'numeric' : undefined}
+                      >
                         {text === '' ? <span className="muted">not set</span> : text}
                       </td>
                     );

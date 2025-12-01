@@ -15,7 +15,9 @@ import { MetricView } from './MetricView.js';
  */
 export function AppRenderer({ model }: { model: ApplicationModel }) {
   const layoutClass =
-    model.layout.type === 'grid' ? `layout-grid columns-${model.layout.columns ?? 2}` : 'layout-vertical';
+    model.layout.type === 'grid'
+      ? `layout-grid columns-${model.layout.columns ?? 2}`
+      : 'layout-vertical';
 
   return (
     <section className="rendered-app" aria-label="Rendered application">
@@ -54,12 +56,17 @@ function ComponentCard({ component, model }: { component: Component; model: Appl
   }
 
   return (
-    <article className={`card ${widthClass} card-${component.type}`} data-component-id={component.id}>
+    <article
+      className={`card ${widthClass} card-${component.type}`}
+      data-component-id={component.id}
+    >
       <h3>{title}</h3>
       {component.type === 'text' && <p className="text-block">{component.content}</p>}
       {component.type === 'table' && entity && <TableView component={component} entity={entity} />}
       {component.type === 'form' && entity && <FormView component={component} entity={entity} />}
-      {component.type === 'metric' && entity && <MetricView component={component} entity={entity} />}
+      {component.type === 'metric' && entity && (
+        <MetricView component={component} entity={entity} />
+      )}
     </article>
   );
 }

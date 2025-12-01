@@ -19,19 +19,16 @@ export function serialiseModel(model: ApplicationModel): string {
  * editor and the renderer can never disagree about whether the document on
  * screen is valid.
  */
-export const jsonTextApplied = createAction(
-  'model/jsonTextApplied',
-  (text: string) => {
-    const validation = validateApplicationModelJson(text);
-    return {
-      payload: {
-        text,
-        model: validation.model,
-        issues: validation.issues satisfies ValidationIssue[],
-      },
-    };
-  },
-);
+export const jsonTextApplied = createAction('model/jsonTextApplied', (text: string) => {
+  const validation = validateApplicationModelJson(text);
+  return {
+    payload: {
+      text,
+      model: validation.model,
+      issues: validation.issues satisfies ValidationIssue[],
+    },
+  };
+});
 
 export const modelApplied = createAction(
   'model/modelApplied',

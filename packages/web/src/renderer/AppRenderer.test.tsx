@@ -13,7 +13,10 @@ function card(componentId: string): HTMLElement {
 
 describe('AppRenderer', () => {
   it('renders the application name and every component', () => {
-    renderWithStore(<AppRenderer model={EXAMPLE_MODELS.book_tracker} />, storeFor(EXAMPLE_MODELS.book_tracker));
+    renderWithStore(
+      <AppRenderer model={EXAMPLE_MODELS.book_tracker} />,
+      storeFor(EXAMPLE_MODELS.book_tracker),
+    );
 
     expect(screen.getByRole('heading', { name: 'Book tracker' })).toBeInTheDocument();
     expect(card('total_books')).toBeInTheDocument();
@@ -23,14 +26,20 @@ describe('AppRenderer', () => {
   });
 
   it('computes metrics from the seeded rows', () => {
-    renderWithStore(<AppRenderer model={EXAMPLE_MODELS.book_tracker} />, storeFor(EXAMPLE_MODELS.book_tracker));
+    renderWithStore(
+      <AppRenderer model={EXAMPLE_MODELS.book_tracker} />,
+      storeFor(EXAMPLE_MODELS.book_tracker),
+    );
 
     expect(within(card('total_books')).getByText('5')).toBeInTheDocument();
     expect(within(card('unread_books')).getByText('3')).toBeInTheDocument();
   });
 
   it('shows one table row per seeded row', () => {
-    renderWithStore(<AppRenderer model={EXAMPLE_MODELS.book_tracker} />, storeFor(EXAMPLE_MODELS.book_tracker));
+    renderWithStore(
+      <AppRenderer model={EXAMPLE_MODELS.book_tracker} />,
+      storeFor(EXAMPLE_MODELS.book_tracker),
+    );
 
     const table = within(card('book_table')).getByRole('table');
     expect(within(table).getAllByRole('row')).toHaveLength(6); // header plus five books
@@ -39,7 +48,10 @@ describe('AppRenderer', () => {
 
   it('narrows the table through a select filter', async () => {
     const user = userEvent.setup();
-    renderWithStore(<AppRenderer model={EXAMPLE_MODELS.book_tracker} />, storeFor(EXAMPLE_MODELS.book_tracker));
+    renderWithStore(
+      <AppRenderer model={EXAMPLE_MODELS.book_tracker} />,
+      storeFor(EXAMPLE_MODELS.book_tracker),
+    );
 
     await user.selectOptions(within(card('book_table')).getByLabelText('Genre'), 'Fiction');
 
@@ -49,7 +61,10 @@ describe('AppRenderer', () => {
 
   it('narrows the table through a text filter and clears it again', async () => {
     const user = userEvent.setup();
-    renderWithStore(<AppRenderer model={EXAMPLE_MODELS.book_tracker} />, storeFor(EXAMPLE_MODELS.book_tracker));
+    renderWithStore(
+      <AppRenderer model={EXAMPLE_MODELS.book_tracker} />,
+      storeFor(EXAMPLE_MODELS.book_tracker),
+    );
 
     await user.type(within(card('book_table')).getByLabelText('Search titles'), 'piranesi');
     expect(within(card('book_table')).getByText('1 of 5 rows')).toBeInTheDocument();
@@ -60,7 +75,10 @@ describe('AppRenderer', () => {
 
   it('adds a row through the form and reflects it in the table and the metrics', async () => {
     const user = userEvent.setup();
-    renderWithStore(<AppRenderer model={EXAMPLE_MODELS.book_tracker} />, storeFor(EXAMPLE_MODELS.book_tracker));
+    renderWithStore(
+      <AppRenderer model={EXAMPLE_MODELS.book_tracker} />,
+      storeFor(EXAMPLE_MODELS.book_tracker),
+    );
 
     await user.type(within(card('add_book')).getByLabelText(/Title/), 'Pale Fire');
     await user.click(within(card('add_book')).getByRole('button', { name: 'Add to library' }));
@@ -72,7 +90,10 @@ describe('AppRenderer', () => {
 
   it('refuses to add a row that is missing a required field', async () => {
     const user = userEvent.setup();
-    renderWithStore(<AppRenderer model={EXAMPLE_MODELS.book_tracker} />, storeFor(EXAMPLE_MODELS.book_tracker));
+    renderWithStore(
+      <AppRenderer model={EXAMPLE_MODELS.book_tracker} />,
+      storeFor(EXAMPLE_MODELS.book_tracker),
+    );
 
     await user.click(within(card('add_book')).getByRole('button', { name: 'Add to library' }));
 
@@ -82,7 +103,10 @@ describe('AppRenderer', () => {
 
   it('removes a row and updates the count', async () => {
     const user = userEvent.setup();
-    renderWithStore(<AppRenderer model={EXAMPLE_MODELS.book_tracker} />, storeFor(EXAMPLE_MODELS.book_tracker));
+    renderWithStore(
+      <AppRenderer model={EXAMPLE_MODELS.book_tracker} />,
+      storeFor(EXAMPLE_MODELS.book_tracker),
+    );
 
     const table = within(card('book_table')).getByRole('table');
     const removeButtons = within(table).getAllByRole('button', { name: /^Remove row/ });
@@ -93,14 +117,20 @@ describe('AppRenderer', () => {
   });
 
   it('applies a fixed where clause without offering a control for it', () => {
-    renderWithStore(<AppRenderer model={EXAMPLE_MODELS.expense_log} />, storeFor(EXAMPLE_MODELS.expense_log));
+    renderWithStore(
+      <AppRenderer model={EXAMPLE_MODELS.expense_log} />,
+      storeFor(EXAMPLE_MODELS.expense_log),
+    );
 
     // Three of the five seeded expenses are over 100.
     expect(within(card('large_expenses')).getByText('3 of 5 rows')).toBeInTheDocument();
   });
 
   it('renders a text component', () => {
-    renderWithStore(<AppRenderer model={EXAMPLE_MODELS.issue_board} />, storeFor(EXAMPLE_MODELS.issue_board));
+    renderWithStore(
+      <AppRenderer model={EXAMPLE_MODELS.issue_board} />,
+      storeFor(EXAMPLE_MODELS.issue_board),
+    );
 
     expect(within(card('intro')).getByText(/still on the board/)).toBeInTheDocument();
   });
@@ -108,9 +138,7 @@ describe('AppRenderer', () => {
   it('reports a dangling entity reference instead of throwing', () => {
     const broken = {
       ...EXAMPLE_MODELS.contact_list,
-      components: [
-        { ...EXAMPLE_MODELS.contact_list.components[0]!, entityId: 'missing' },
-      ],
+      components: [{ ...EXAMPLE_MODELS.contact_list.components[0]!, entityId: 'missing' }],
     } as typeof EXAMPLE_MODELS.contact_list;
 
     renderWithStore(<AppRenderer model={broken} />);
