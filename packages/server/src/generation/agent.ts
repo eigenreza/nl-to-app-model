@@ -12,15 +12,14 @@
  * stopping, the draft is salvaged into the best model that still validates and
  * returned alongside a structured report of what did not work.
  */
-import { summariseIssues, type ValidationIssue } from '@nlam/shared';
 import {
-  ProviderError,
   addUsage,
   emptyUsage,
-  type LLMMessage,
-  type LLMProvider,
+  summariseIssues,
   type TokenUsage,
-} from '../providers/types.js';
+  type ValidationIssue,
+} from '@nlam/shared';
+import { ProviderError, type LLMMessage, type LLMProvider } from '../providers/types.js';
 import { ModelDraft } from './draft.js';
 import { agentNudgePrompt, agentSystemPrompt, agentUserPrompt } from './prompts.js';
 import { executeTool, toolDefinitions } from './tools.js';

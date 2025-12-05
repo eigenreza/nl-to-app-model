@@ -6,12 +6,8 @@
  * adapter makes the whole loop deterministic: a test writes the sequence of
  * model turns it wants and then asserts on what the loop did with them.
  */
-import {
-  emptyUsage,
-  type CompletionRequest,
-  type CompletionResponse,
-  type LLMProvider,
-} from './types.js';
+import { emptyUsage } from '@nlam/shared';
+import type { CompletionRequest, CompletionResponse, LLMProvider } from './types.js';
 
 export type ScriptedTurn =
   | Partial<CompletionResponse>

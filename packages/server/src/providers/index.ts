@@ -2,7 +2,7 @@ import { apiKeyFor, type Config } from '../config.js';
 import { AnthropicProvider } from './anthropic.js';
 import { GeminiProvider } from './gemini.js';
 import { RateLimiter, ThrottledProvider, type Sleep } from './throttle.js';
-import type { LLMProvider } from './types.js';
+import type { LLMProvider, ProviderError } from './types.js';
 
 export * from './types.js';
 export * from './throttle.js';
@@ -12,7 +12,7 @@ export { AnthropicProvider } from './anthropic.js';
 export { ScriptedProvider, textTurn, toolTurn } from './scripted.js';
 
 export interface CreateProviderOptions {
-  onRetry?: (info: { attempt: number; delayMs: number; error: Error }) => void;
+  onRetry?: (info: { attempt: number; delayMs: number; error: ProviderError }) => void;
   sleep?: Sleep;
 }
 

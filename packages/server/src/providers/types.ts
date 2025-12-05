@@ -1,3 +1,5 @@
+import type { TokenUsage } from '@nlam/shared';
+
 /**
  * The provider interface.
  *
@@ -37,11 +39,6 @@ export interface CompletionRequest {
   maxOutputTokens?: number;
 }
 
-export interface TokenUsage {
-  inputTokens: number;
-  outputTokens: number;
-}
-
 export interface CompletionResponse {
   text: string;
   toolCalls: ToolCall[];
@@ -77,15 +74,4 @@ export class ProviderError extends Error {
     this.status = options.status;
     this.retryable = options.retryable ?? false;
   }
-}
-
-export function emptyUsage(): TokenUsage {
-  return { inputTokens: 0, outputTokens: 0 };
-}
-
-export function addUsage(a: TokenUsage, b: TokenUsage): TokenUsage {
-  return {
-    inputTokens: a.inputTokens + b.inputTokens,
-    outputTokens: a.outputTokens + b.outputTokens,
-  };
 }
