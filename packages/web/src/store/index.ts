@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
+import { generationReducer } from './generationSlice.js';
 import { modelReducer } from './modelSlice.js';
 import { runtimeReducer } from './runtimeSlice.js';
 
@@ -8,6 +9,7 @@ export function createAppStore() {
     reducer: {
       model: modelReducer,
       runtime: runtimeReducer,
+      generation: generationReducer,
     },
   });
 }
@@ -23,3 +25,5 @@ export const useAppSelector = useSelector.withTypes<RootState>();
 
 export * from './actions.js';
 export * from './runtimeSlice.js';
+
+export * from './generationSlice.js';

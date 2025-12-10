@@ -1,4 +1,5 @@
 import { useAppSelector } from './store/index.js';
+import { PromptPanel } from './prompt/PromptPanel.js';
 import { ModelEditor } from './editor/ModelEditor.js';
 import { AppRenderer } from './renderer/AppRenderer.js';
 
@@ -10,13 +11,17 @@ export function App() {
       <header className="app-header">
         <h1>Natural language to application model</h1>
         <p>
-          Describe an application, get a validated model, and see it rendered. The model on the left
-          is the source of truth: edit it and the application on the right follows.
+          Describe an application, watch an agent build a validated model of it, and see that model
+          rendered. The model on the left is the source of truth: edit it and the application on the
+          right follows.
         </p>
       </header>
 
       <main className="panes">
-        <ModelEditor />
+        <div className="pane-column">
+          <PromptPanel />
+          <ModelEditor />
+        </div>
 
         <section className="pane preview-pane" aria-label="Preview">
           <header className="pane-header">

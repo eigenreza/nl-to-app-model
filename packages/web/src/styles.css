@@ -20,7 +20,7 @@
   --warning-bg: #fdf4e3;
   --ok: #2b6a44;
   --radius: 8px;
-  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -50,7 +50,12 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   font-size: 15px;
   line-height: 1.5;
 }
@@ -504,4 +509,163 @@ tbody tr:hover {
   .form-row .field-error {
     grid-column: 1;
   }
+}
+
+/* Prompt panel and trace ------------------------------------------------- */
+
+.pane-column {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+  min-width: 0;
+}
+
+.prompt-input {
+  width: 100%;
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+}
+
+.prompt-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.mode-picker {
+  border: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 0.9rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.mode-picker label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.replay-catalogue {
+  margin-top: 0.9rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-alt);
+  font-size: 0.85rem;
+}
+
+.replay-catalogue p {
+  margin: 0 0 0.4rem;
+  color: var(--text-muted);
+}
+
+.replay-catalogue ul {
+  margin: 0;
+  padding-left: 1rem;
+  display: grid;
+  gap: 0.15rem;
+}
+
+.replay-catalogue .link-button {
+  text-align: left;
+  padding: 0;
+}
+
+.trace {
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 0.8rem;
+}
+
+.trace-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.trace-step {
+  display: grid;
+  grid-template-columns: 1.1rem 1fr;
+  gap: 0.4rem;
+  font-size: 0.87rem;
+  align-items: start;
+}
+
+.trace-marker {
+  font-family: var(--mono);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.trace-step.ok .trace-marker {
+  color: var(--ok);
+}
+
+.trace-step.failed .trace-marker {
+  color: var(--error);
+}
+
+.trace-label {
+  margin: 0;
+}
+
+.trace-detail {
+  margin: 0.1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.trace-issues {
+  margin: 0.2rem 0 0;
+  padding-left: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.trace-status {
+  margin: 0.6rem 0 0;
+  font-size: 0.87rem;
+  color: var(--text-muted);
+}
+
+.trace-status.error {
+  color: var(--error);
+}
+
+.trace-status.warning {
+  color: var(--warning);
+}
+
+.trace-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.2rem;
+  margin: 0.7rem 0 0;
+  font-size: 0.8rem;
+}
+
+.trace-summary div {
+  display: grid;
+  gap: 0.05rem;
+}
+
+.trace-summary dt {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 0.68rem;
+}
+
+.trace-summary dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
 }
