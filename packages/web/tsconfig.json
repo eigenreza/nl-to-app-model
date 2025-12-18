@@ -14,5 +14,6 @@
     "allowImportingTsExtensions": false
   },
   "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/test-setup.ts", "src/testUtils.tsx"],
   "references": [{ "path": "../shared" }]
 }

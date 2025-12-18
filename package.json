@@ -17,7 +17,7 @@
     "dev": "concurrently -n server,web -c blue,magenta \"npm run dev --workspace=@nlam/server\" \"npm run dev --workspace=@nlam/web\"",
     "dev:server": "npm run dev --workspace=@nlam/server",
     "dev:web": "npm run dev --workspace=@nlam/web",
-    "typecheck": "tsc --build --force",
+    "typecheck": "tsc --build --force && tsc --noEmit -p tsconfig.test.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint .",

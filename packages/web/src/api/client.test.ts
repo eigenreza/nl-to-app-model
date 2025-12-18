@@ -148,12 +148,16 @@ describe('streamGeneration', () => {
   });
 
   it('sends the access token only when one was supplied', async () => {
-    const fetchMock = vi.fn(async () => response([{ type: 'result', result: result() }]));
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) =>
+      response([{ type: 'result', result: result() }]),
+    );
     vi.stubGlobal('fetch', fetchMock);
 
+    const headersOfCall = (index: number): Record<string, string> =>
+      (fetchMock.mock.calls[index]?.[1]?.headers ?? {}) as Record<string, string>;
+
     await streamGeneration({ description: 'x y z', mode: 'agent', onStep: () => {} });
-    const withoutToken = fetchMock.mock.calls[0]?.[1] as RequestInit;
-    expect((withoutToken.headers as Record<string, string>)['x-demo-token']).toBeUndefined();
+    expect(headersOfCall(0)['x-demo-token']).toBeUndefined();
 
     await streamGeneration({
       description: 'x y z',
@@ -161,7 +165,6 @@ describe('streamGeneration', () => {
       accessToken: 'letmein',
       onStep: () => {},
     });
-    const withToken = fetchMock.mock.calls[1]?.[1] as RequestInit;
-    expect((withToken.headers as Record<string, string>)['x-demo-token']).toBe('letmein');
+    expect(headersOfCall(1)['x-demo-token']).toBe('letmein');
   });
 });

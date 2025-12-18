@@ -1,0 +1,22 @@
+{
+  "//": "Test files are excluded from the build projects so they never reach dist. This config type checks them anyway, because a test that does not compile is not a test.",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "composite": false,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"]
+  },
+  "include": [
+    "packages/*/src/**/*.test.ts",
+    "packages/*/src/**/*.test.tsx",
+    "packages/web/src/test-setup.ts",
+    "packages/web/src/testUtils.tsx"
+  ]
+}

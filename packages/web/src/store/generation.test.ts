@@ -190,7 +190,9 @@ describe('generate', () => {
   });
 
   it('sends the mode the user selected', async () => {
-    const fetchMock = vi.fn(async () => ndjson([{ type: 'result', result: generated }]));
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) =>
+      ndjson([{ type: 'result', result: generated }]),
+    );
     vi.stubGlobal('fetch', fetchMock);
 
     const store = createAppStore();
@@ -198,7 +200,7 @@ describe('generate', () => {
     store.dispatch(modeChanged('baseline'));
     await store.dispatch(generate());
 
-    const body = JSON.parse((fetchMock.mock.calls[0]?.[1] as RequestInit).body as string);
+    const body = JSON.parse(String(fetchMock.mock.calls[0]?.[1]?.body));
     expect(body).toEqual({ description: 'an expense log', mode: 'baseline' });
   });
 });
