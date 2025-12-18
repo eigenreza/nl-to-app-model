@@ -6,17 +6,14 @@
  * what lets the tests build the same server without any of those things.
  */
 import 'dotenv/config';
-import { fileURLToPath } from 'node:url';
 import { apiKeyFor, loadConfig } from './config.js';
 import { createLogger } from './logging.js';
 import { Metrics } from './metrics.js';
 import { createProvider } from './providers/index.js';
 import { ReplayStore } from './replay/store.js';
 import { buildServer } from './server.js';
+import { REPLAY_DIRECTORY } from './paths.js';
 import type { ServerContext } from './context.js';
-
-/** Fixtures live next to the source so they travel with the package. */
-export const REPLAY_DIRECTORY = fileURLToPath(new URL('../fixtures/replay', import.meta.url));
 
 async function main(): Promise<void> {
   const config = loadConfig();
