@@ -17,4 +17,9 @@ export interface ServerContext {
   metrics: Metrics;
   replay: ReplayStore;
   provider: LLMProvider | undefined;
+  /**
+   * Directory holding the built client, when the two are served together.
+   * Undefined during development, where Vite serves the client itself.
+   */
+  webRoot?: string | undefined;
 }

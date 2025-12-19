@@ -1,4 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import { mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { pino } from 'pino';
 import type { FastifyInstance } from 'fastify';
 import { EXAMPLE_MODELS, type GenerationEvent, type GenerationResult } from '@nlam/shared';
@@ -118,6 +121,40 @@ describe('meta routes', () => {
 
     expect(response.statusCode).toBe(404);
     expect(response.json().error.code).toBe('not_found');
+  });
+});
+
+describe('serving the client from the same process', () => {
+  /** Stands in for a built client, so the fallback can be tested without one. */
+  async function withWebRoot() {
+    const root = await mkdtemp(join(tmpdir(), 'nlam-web-'));
+    await writeFile(join(root, 'index.html'), '<!doctype html><title>client</title>', 'utf8');
+    return root;
+  }
+
+  it('serves the shell for a client route and json for an unknown api route', async () => {
+    const root = await withWebRoot();
+    try {
+      const config = loadConfig({ LOG_LEVEL: 'silent' });
+      app = await buildServer({
+        config,
+        logger: silentLogger,
+        metrics: new Metrics(),
+        replay: new ReplayStore([trace]),
+        provider: undefined,
+        webRoot: root,
+      });
+
+      const shell = await app.inject({ method: 'GET', url: '/anything/client/side' });
+      expect(shell.statusCode).toBe(200);
+      expect(shell.payload).toContain('<title>client</title>');
+
+      const missing = await app.inject({ method: 'GET', url: '/api/nope' });
+      expect(missing.statusCode).toBe(404);
+      expect(missing.json().error.code).toBe('not_found');
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
   });
 });
 

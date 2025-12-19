@@ -6,13 +6,14 @@
  * what lets the tests build the same server without any of those things.
  */
 import 'dotenv/config';
+import { access } from 'node:fs/promises';
 import { apiKeyFor, loadConfig } from './config.js';
 import { createLogger } from './logging.js';
 import { Metrics } from './metrics.js';
 import { createProvider } from './providers/index.js';
 import { ReplayStore } from './replay/store.js';
 import { buildServer } from './server.js';
-import { REPLAY_DIRECTORY } from './paths.js';
+import { REPLAY_DIRECTORY, WEB_DIST_DIRECTORY } from './paths.js';
 import type { ServerContext } from './context.js';
 
 async function main(): Promise<void> {
@@ -36,7 +37,14 @@ async function main(): Promise<void> {
     });
   }
 
-  const context: ServerContext = { config, logger, metrics: new Metrics(), replay, provider };
+  const context: ServerContext = {
+    config,
+    logger,
+    metrics: new Metrics(),
+    replay,
+    provider,
+    webRoot: (await exists(WEB_DIST_DIRECTORY)) ? WEB_DIST_DIRECTORY : undefined,
+  };
   const app = await buildServer(context);
 
   const shutdown = async (signal: string) => {
@@ -61,6 +69,15 @@ async function main(): Promise<void> {
       ? 'listening, live generation enabled'
       : 'listening in replay mode, no provider calls are possible',
   );
+}
+
+async function exists(path: string): Promise<boolean> {
+  try {
+    await access(path);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 main().catch((error) => {

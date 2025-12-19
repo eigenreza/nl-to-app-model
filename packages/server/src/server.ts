@@ -8,6 +8,7 @@
 import Fastify, { type FastifyBaseLogger, type FastifyError, type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
+import fastifyStatic from '@fastify/static';
 import type { ServerContext } from './context.js';
 import { registerGenerateRoutes } from './routes/generate.js';
 import { registerMetaRoutes } from './routes/meta.js';
@@ -43,11 +44,21 @@ export async function buildServer(context: ServerContext): Promise<FastifyInstan
     }),
   });
 
-  app.setNotFoundHandler(async (request, reply) =>
-    reply.status(404).send({
+  if (context.webRoot) {
+    await app.register(fastifyStatic, { root: context.webRoot, wildcard: false });
+  }
+
+  app.setNotFoundHandler(async (request, reply) => {
+    // With the client served from the same process, anything that is not an API
+    // route and not a file on disk is a client-side route, so it gets the shell.
+    if (context.webRoot && request.method === 'GET' && !request.url.startsWith('/api/')) {
+      return reply.sendFile('index.html');
+    }
+
+    return reply.status(404).send({
       error: { code: 'not_found', message: `No route for ${request.method} ${request.url}.` },
-    }),
-  );
+    });
+  });
 
   app.setErrorHandler(async (error: FastifyError, request, reply) => {
     const status = error.statusCode && error.statusCode >= 400 ? error.statusCode : 500;
