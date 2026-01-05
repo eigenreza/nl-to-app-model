@@ -16,7 +16,7 @@ export type ProviderName = (typeof PROVIDER_NAMES)[number];
 
 /** Model used when LLM_MODEL is not set, per provider. */
 export const DEFAULT_MODELS: Record<ProviderName, string> = {
-  gemini: 'gemini-2.5-flash',
+  gemini: 'gemini-3.6-flash',
   anthropic: 'claude-haiku-4-5-20251001',
 };
 
@@ -42,8 +42,13 @@ const EnvSchema = z.object({
   LLM_MAX_RETRIES: numberFromEnv(4, 0, 8),
   LLM_TIMEOUT_MS: numberFromEnv(60_000, 1_000, 300_000),
 
-  AGENT_MAX_ITERATIONS: numberFromEnv(8, 1, 24),
-  AGENT_TIME_BUDGET_MS: numberFromEnv(90_000, 5_000, 600_000),
+  AGENT_MAX_ITERATIONS: numberFromEnv(12, 1, 24),
+  /**
+   * Budget for time spent inside provider calls, not wall clock. Wall clock
+   * would also count the spacing the rate limiter deliberately applies, so a
+   * tighter throttle would shorten the budget, which is backwards.
+   */
+  AGENT_TIME_BUDGET_MS: numberFromEnv(120_000, 5_000, 600_000),
 
   /**
    * "replay" serves precomputed traces and cannot reach a provider at all.

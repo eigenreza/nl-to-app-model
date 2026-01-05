@@ -68,13 +68,15 @@ export async function runEval(options: RunnerOptions): Promise<RunReport> {
   const providerName = options.provider?.name ?? options.providerName ?? 'gemini';
   const modelName = options.provider?.model ?? options.modelName ?? 'gemini-2.5-flash';
 
+  const maxIterations = options.maxIterations ?? 12;
+
   let cacheHits = 0;
   let providerCalls = 0;
 
   const configurations: RunReport['configurations'] = [];
 
   for (const mode of options.modes) {
-    const configuration = configurationFor(providerName, modelName, mode);
+    const configuration = configurationFor(providerName, modelName, mode, maxIterations);
     const outcomes: CaseOutcome[] = [];
 
     let index = 0;
@@ -130,14 +132,14 @@ async function runOne(
     return generateWithAgent({
       description: evalCase.description,
       provider,
-      maxIterations: options.maxIterations ?? 8,
-      timeBudgetMs: options.timeBudgetMs ?? 90_000,
+      maxIterations: options.maxIterations ?? 12,
+      timeBudgetMs: options.timeBudgetMs ?? 120_000,
     });
   }
   return generateBaseline({
     description: evalCase.description,
     provider,
-    timeBudgetMs: options.timeBudgetMs ?? 90_000,
+    timeBudgetMs: options.timeBudgetMs ?? 120_000,
   });
 }
 

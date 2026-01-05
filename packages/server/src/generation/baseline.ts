@@ -165,7 +165,11 @@ export async function generateBaseline(options: BaselineOptions): Promise<Genera
     lastIssues = validation.errors;
 
     if (attempt < maxRepairs) {
-      messages.push({ role: 'assistant', content: response.text });
+      messages.push({
+        role: 'assistant',
+        content: response.text,
+        ...(response.providerState ? { providerState: response.providerState } : {}),
+      });
       messages.push({ role: 'user', content: repairUserPrompt(validation.errors) });
     }
   }

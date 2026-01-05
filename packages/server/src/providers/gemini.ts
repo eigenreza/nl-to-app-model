@@ -14,6 +14,7 @@ import {
   type CompletionResponse,
   type LLMMessage,
   type LLMProvider,
+  type ToolCall,
 } from './types.js';
 
 export interface GeminiProviderOptions {
@@ -81,15 +82,14 @@ export class GeminiProvider implements LLMProvider {
       });
 
       const usage = response.usageMetadata;
-      const calls = response.functionCalls ?? [];
+      const { text, toolCalls, providerState } = readParts(
+        response.candidates?.[0]?.content?.parts ?? [],
+      );
 
       return {
-        text: response.text ?? '',
-        toolCalls: calls.map((call, index) => ({
-          id: call.id ?? `call_${index}`,
-          name: call.name ?? '',
-          arguments: (call.args ?? {}) as Record<string, unknown>,
-        })),
+        text,
+        toolCalls,
+        ...(providerState ? { providerState } : {}),
         usage: {
           inputTokens: usage?.promptTokenCount ?? 0,
           outputTokens: usage?.candidatesTokenCount ?? 0,
@@ -103,6 +103,45 @@ export class GeminiProvider implements LLMProvider {
       throw toProviderError(error);
     }
   }
+}
+
+/**
+ * Reads a response's parts directly rather than through the convenience
+ * getters, for two reasons. Thinking summaries arrive as parts marked
+ * `thought` and must not be replayed as assistant content. And the thinking
+ * models attach a `thoughtSignature` to the parts they produce, which the API
+ * requires back verbatim on the next turn: a conversation that drops it is
+ * rejected outright, which is how this was found.
+ */
+export function readParts(parts: readonly Part[]): {
+  text: string;
+  toolCalls: ToolCall[];
+  providerState: string | undefined;
+} {
+  let text = '';
+  let providerState: string | undefined;
+  const toolCalls: ToolCall[] = [];
+
+  parts.forEach((part, index) => {
+    if (part.functionCall) {
+      toolCalls.push({
+        id: part.functionCall.id ?? `call_${index}`,
+        name: part.functionCall.name ?? '',
+        arguments: (part.functionCall.args ?? {}) as Record<string, unknown>,
+        ...(part.thoughtSignature ? { providerState: part.thoughtSignature } : {}),
+      });
+      return;
+    }
+
+    if (part.thought) return; // A reasoning summary, not something to echo back.
+
+    if (typeof part.text === 'string') {
+      text += part.text;
+      if (part.thoughtSignature) providerState = part.thoughtSignature;
+    }
+  });
+
+  return { text, toolCalls, providerState };
 }
 
 /**
@@ -121,9 +160,17 @@ export function toGeminiContents(messages: readonly LLMMessage[]): Content[] {
 
     if (message.role === 'assistant') {
       const parts: Part[] = [];
-      if (message.content) parts.push({ text: message.content });
+      if (message.content) {
+        parts.push({
+          text: message.content,
+          ...(message.providerState ? { thoughtSignature: message.providerState } : {}),
+        });
+      }
       for (const call of message.toolCalls ?? []) {
-        parts.push({ functionCall: { id: call.id, name: call.name, args: call.arguments } });
+        parts.push({
+          functionCall: { id: call.id, name: call.name, args: call.arguments },
+          ...(call.providerState ? { thoughtSignature: call.providerState } : {}),
+        });
       }
       if (parts.length > 0) contents.push({ role: 'model', parts });
       continue;

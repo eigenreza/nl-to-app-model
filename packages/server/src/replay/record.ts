@@ -7,7 +7,7 @@
  * asked. What it writes is exactly what the server later serves, which is what
  * makes a replayed demo the real thing rather than a mock of it.
  */
-import 'dotenv/config';
+import '../env.js';
 import { parseArgs } from 'node:util';
 import { access, mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';

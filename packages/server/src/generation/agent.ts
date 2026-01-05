@@ -7,10 +7,10 @@
  * is still local and cheap to fix, instead of arriving as a wall of paths after
  * a whole document has been written.
  *
- * The loop is bounded twice, by iteration count and by wall-clock time, and
- * neither bound is allowed to produce nothing. Whatever the reason for
- * stopping, the draft is salvaged into the best model that still validates and
- * returned alongside a structured report of what did not work.
+ * The loop is bounded twice, by iteration count and by time spent inside
+ * provider calls, and neither bound is allowed to produce nothing. Whatever the
+ * reason for stopping, the draft is salvaged into the best model that still
+ * validates and returned alongside a structured report of what did not work.
  */
 import {
   addUsage,
@@ -41,8 +41,8 @@ const MAX_NUDGES = 2;
 export async function generateWithAgent(options: AgentOptions): Promise<GenerationResult> {
   const now = options.now ?? (() => Date.now());
   const startedAt = now();
-  const maxIterations = options.maxIterations ?? 8;
-  const timeBudgetMs = options.timeBudgetMs ?? 90_000;
+  const maxIterations = options.maxIterations ?? 12;
+  const timeBudgetMs = options.timeBudgetMs ?? 120_000;
 
   const draft = new ModelDraft();
   const tools = toolDefinitions();
@@ -54,6 +54,13 @@ export async function generateWithAgent(options: AgentOptions): Promise<Generati
   let iterations = 0;
   let nudges = 0;
   let anyRejection = false;
+  /**
+   * Time spent inside provider calls, which is what the budget guards. Wall
+   * clock would also count the deliberate spacing the rate limiter applies, so
+   * tightening the throttle would shorten the budget, which is backwards. Each
+   * call is separately capped by LLM_TIMEOUT_MS, so this cannot run away.
+   */
+  let providerMs = 0;
 
   const record = (step: Omit<GenerationStep, 'index'>) => {
     const full = { ...step, index: steps.length };
@@ -109,8 +116,8 @@ export async function generateWithAgent(options: AgentOptions): Promise<Generati
     };
   };
 
-  for (iterations = 0; iterations < maxIterations;) {
-    if (now() - startedAt > timeBudgetMs) {
+  for (iterations = 0; iterations < maxIterations; ) {
+    if (providerMs > timeBudgetMs) {
       record({
         kind: 'finalize',
         ok: false,
@@ -120,7 +127,7 @@ export async function generateWithAgent(options: AgentOptions): Promise<Generati
       });
       return settle({
         reason: 'time_budget',
-        message: `Stopped after ${iterations} ${iterations === 1 ? 'iteration' : 'iterations'} because the time budget ran out.`,
+        message: `Stopped after ${iterations} ${iterations === 1 ? 'iteration' : 'iterations'} because the time budget of ${Math.round(timeBudgetMs / 1000)}s of provider time ran out.`,
       });
     }
 
@@ -146,6 +153,7 @@ export async function generateWithAgent(options: AgentOptions): Promise<Generati
 
     iterations += 1;
     usage = addUsage(usage, response.usage);
+    providerMs += response.latencyMs;
 
     if (response.toolCalls.length === 0) {
       nudges += 1;
@@ -165,7 +173,11 @@ export async function generateWithAgent(options: AgentOptions): Promise<Generati
         });
       }
 
-      messages.push({ role: 'assistant', content: response.text || '(no content)' });
+      messages.push({
+        role: 'assistant',
+        content: response.text || '(no content)',
+        ...(response.providerState ? { providerState: response.providerState } : {}),
+      });
       messages.push({ role: 'user', content: agentNudgePrompt() });
       continue;
     }
@@ -174,6 +186,7 @@ export async function generateWithAgent(options: AgentOptions): Promise<Generati
       role: 'assistant',
       content: response.text,
       toolCalls: response.toolCalls,
+      ...(response.providerState ? { providerState: response.providerState } : {}),
     });
 
     let finished = false;

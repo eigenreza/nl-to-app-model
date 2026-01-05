@@ -22,11 +22,24 @@ export interface ToolCall {
   id: string;
   name: string;
   arguments: Record<string, unknown>;
+  /**
+   * Opaque state the provider attached to this call and requires back verbatim
+   * on later turns. Gemini's thinking models use it to carry a signature over
+   * their reasoning and reject a conversation that drops it. Nothing above the
+   * provider layer reads this, it is only carried and returned.
+   */
+  providerState?: string;
 }
 
 export type LLMMessage =
   | { role: 'user'; content: string }
-  | { role: 'assistant'; content: string; toolCalls?: ToolCall[] }
+  | {
+      role: 'assistant';
+      content: string;
+      toolCalls?: ToolCall[];
+      /** Opaque state attached to the assistant's text, echoed back unread. */
+      providerState?: string;
+    }
   | { role: 'tool'; toolCallId: string; name: string; content: string };
 
 export interface CompletionRequest {
@@ -42,6 +55,8 @@ export interface CompletionRequest {
 export interface CompletionResponse {
   text: string;
   toolCalls: ToolCall[];
+  /** Opaque state attached to the response text, echoed back on later turns. */
+  providerState?: string;
   usage: TokenUsage;
   /** Provider-specific stop reason, normalised to lowercase. */
   finishReason: string;

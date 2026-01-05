@@ -11,7 +11,7 @@
  *   caching    is on by default, so a rerun after an unrelated change is free
  *              and a rerun after a prompt change correctly is not.
  */
-import 'dotenv/config';
+import '../env.js';
 import { parseArgs } from 'node:util';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
@@ -29,8 +29,12 @@ const REPO_ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
 const DEFAULT_OUT = join(REPO_ROOT, 'eval');
 const CACHE_DIR = join(REPO_ROOT, '.eval-cache');
 
-/** Rough number of provider calls a single agent-mode case tends to make. */
-const CALLS_PER_AGENT_CASE = 7;
+/**
+ * Calls a single case tends to make, measured against gemini-3.6-flash rather
+ * than guessed: the model issues one tool call per turn, so an agent case costs
+ * roughly ten.
+ */
+const CALLS_PER_AGENT_CASE = 10;
 const CALLS_PER_BASELINE_CASE = 1.3;
 
 async function main(): Promise<void> {
@@ -72,7 +76,15 @@ async function main(): Promise<void> {
   const cache = new OutcomeCache(CACHE_DIR);
 
   if (values['dry-run']) {
-    await reportDryRun(cases, modes, cache, config.LLM_PROVIDER, config.model, values.fresh);
+    await reportDryRun(
+      cases,
+      modes,
+      cache,
+      config.LLM_PROVIDER,
+      config.model,
+      config.AGENT_MAX_ITERATIONS,
+      values.fresh,
+    );
     return;
   }
 
@@ -174,6 +186,7 @@ async function reportDryRun(
   cache: OutcomeCache,
   providerName: string,
   modelName: string,
+  maxIterations: number,
   fresh: boolean,
 ): Promise<void> {
   let cached = 0;
@@ -181,7 +194,7 @@ async function reportDryRun(
   let estimatedCalls = 0;
 
   for (const mode of modes) {
-    const configuration = configurationFor(providerName, modelName, mode);
+    const configuration = configurationFor(providerName, modelName, mode, maxIterations);
     for (const evalCase of cases) {
       const hit = fresh
         ? undefined

@@ -34,11 +34,13 @@ export function configurationFor(
   provider: string,
   model: string,
   mode: RunConfiguration['mode'],
+  maxIterations = 12,
 ): RunConfiguration {
   return {
     provider,
     model,
     mode,
+    maxIterations,
     promptVersion: promptVersion(),
     schemaVersion: SCHEMA_VERSION,
   };
@@ -57,6 +59,7 @@ export function cacheKey(
         provider: configuration.provider,
         model: configuration.model,
         mode: configuration.mode,
+        maxIterations: configuration.maxIterations,
         promptVersion: configuration.promptVersion,
         schemaVersion: configuration.schemaVersion,
       }),

@@ -1,0 +1,343 @@
+{
+  "startedAt": "2026-08-25T22:14:50.663Z",
+  "finishedAt": "2026-08-25T22:16:08.091Z",
+  "configurations": [
+    {
+      "configuration": {
+        "provider": "gemini",
+        "model": "gemini-3.6-flash",
+        "mode": "agent",
+        "maxIterations": 12,
+        "promptVersion": "a1cf4a22427f",
+        "schemaVersion": "1.0.0"
+      },
+      "outcomes": [
+        {
+          "caseId": "book_tracker",
+          "band": "simple",
+          "mode": "agent",
+          "ok": true,
+          "validFirstTry": true,
+          "iterations": 10,
+          "latencyMs": 77416,
+          "inputTokens": 46239,
+          "outputTokens": 854,
+          "failureReason": null,
+          "expectationsMet": true,
+          "expectationFailures": [],
+          "forbiddenMatches": [],
+          "result": {
+            "ok": true,
+            "mode": "agent",
+            "provider": "gemini",
+            "model": "gemini-3.6-flash",
+            "applicationModel": {
+              "schemaVersion": "1.0.0",
+              "app": {
+                "name": "Book Tracker",
+                "description": "A book tracking application to manage books, filter by genre, track unread books, and add new books."
+              },
+              "entities": [
+                {
+                  "id": "book",
+                  "name": "Book",
+                  "pluralName": "Books",
+                  "fields": [
+                    {
+                      "id": "title",
+                      "label": "Title",
+                      "type": "string",
+                      "required": true
+                    },
+                    {
+                      "id": "author",
+                      "label": "Author",
+                      "type": "string",
+                      "required": true
+                    },
+                    {
+                      "id": "genre",
+                      "label": "Genre",
+                      "type": "enum",
+                      "required": false,
+                      "options": [
+                        "Fiction",
+                        "Non-Fiction",
+                        "Sci-Fi",
+                        "Mystery",
+                        "Biography",
+                        "Fantasy"
+                      ]
+                    },
+                    {
+                      "id": "pages",
+                      "label": "Pages",
+                      "type": "number",
+                      "required": false
+                    },
+                    {
+                      "id": "finished",
+                      "label": "Finished Reading",
+                      "type": "boolean",
+                      "required": true
+                    }
+                  ],
+                  "seed": [
+                    {
+                      "title": "Dune",
+                      "author": "Frank Herbert",
+                      "genre": "Sci-Fi",
+                      "pages": 412,
+                      "finished": true
+                    },
+                    {
+                      "title": "The Hobbit",
+                      "author": "J.R.R. Tolkien",
+                      "genre": "Fantasy",
+                      "pages": 310,
+                      "finished": false
+                    },
+                    {
+                      "title": "Sapiens",
+                      "author": "Yuval Noah Harari",
+                      "genre": "Non-Fiction",
+                      "pages": 443,
+                      "finished": true
+                    },
+                    {
+                      "title": "The Great Gatsby",
+                      "author": "F. Scott Fitzgerald",
+                      "genre": "Fiction",
+                      "pages": 180,
+                      "finished": false
+                    },
+                    {
+                      "title": "The Maltese Falcon",
+                      "author": "Dashiell Hammett",
+                      "genre": "Mystery",
+                      "pages": 207,
+                      "finished": false
+                    }
+                  ]
+                }
+              ],
+              "components": [
+                {
+                  "id": "unread_books",
+                  "title": "Unread Books",
+                  "width": "half",
+                  "type": "metric",
+                  "entityId": "book",
+                  "aggregate": "count",
+                  "where": {
+                    "combinator": "and",
+                    "conditions": [
+                      {
+                        "fieldId": "finished",
+                        "op": "isFalse"
+                      }
+                    ]
+                  },
+                  "caption": "Books remaining to read"
+                },
+                {
+                  "id": "total_books",
+                  "title": "Total Books",
+                  "width": "half",
+                  "type": "metric",
+                  "entityId": "book",
+                  "aggregate": "count",
+                  "caption": "Total books in library"
+                },
+                {
+                  "id": "book_table",
+                  "title": "Books",
+                  "width": "full",
+                  "type": "table",
+                  "entityId": "book",
+                  "columns": [
+                    "title",
+                    "author",
+                    "genre",
+                    "pages",
+                    "finished"
+                  ],
+                  "filters": [
+                    {
+                      "fieldId": "genre",
+                      "control": "select",
+                      "label": "Genre"
+                    }
+                  ],
+                  "emptyMessage": "No books found."
+                },
+                {
+                  "id": "add_book",
+                  "title": "Add a Book",
+                  "width": "full",
+                  "type": "form",
+                  "entityId": "book",
+                  "fieldIds": [
+                    "title",
+                    "author",
+                    "genre",
+                    "pages",
+                    "finished"
+                  ],
+                  "submitLabel": "Add Book"
+                }
+              ],
+              "layout": {
+                "type": "grid",
+                "columns": 2
+              }
+            },
+            "validFirstTry": true,
+            "iterations": 10,
+            "steps": [
+              {
+                "kind": "plan",
+                "ok": true,
+                "label": "Planned the application.",
+                "usage": {
+                  "inputTokens": 3447,
+                  "outputTokens": 103
+                },
+                "latencyMs": 4028,
+                "index": 0
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Created entity \"book\" with 5 fields.",
+                "usage": {
+                  "inputTokens": 3870,
+                  "outputTokens": 173
+                },
+                "latencyMs": 2493,
+                "index": 1
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Seeded \"book\" with 5 rows.",
+                "usage": {
+                  "inputTokens": 4173,
+                  "outputTokens": 223
+                },
+                "latencyMs": 4614,
+                "index": 2
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Added metric \"unread_books\".",
+                "usage": {
+                  "inputTokens": 4478,
+                  "outputTokens": 85
+                },
+                "latencyMs": 2867,
+                "index": 3
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Added metric \"total_books\".",
+                "usage": {
+                  "inputTokens": 4782,
+                  "outputTokens": 59
+                },
+                "latencyMs": 1682,
+                "index": 4
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Added table \"book_table\".",
+                "usage": {
+                  "inputTokens": 4875,
+                  "outputTokens": 97
+                },
+                "latencyMs": 2370,
+                "index": 5
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Added form \"add_book\".",
+                "usage": {
+                  "inputTokens": 5038,
+                  "outputTokens": 76
+                },
+                "latencyMs": 1713,
+                "index": 6
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Set a grid layout.",
+                "usage": {
+                  "inputTokens": 5146,
+                  "outputTokens": 20
+                },
+                "latencyMs": 1464,
+                "index": 7
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Validated the draft: no errors.",
+                "usage": {
+                  "inputTokens": 5196,
+                  "outputTokens": 10
+                },
+                "latencyMs": 1932,
+                "index": 8
+              },
+              {
+                "kind": "finalize",
+                "ok": true,
+                "label": "Accepted the model.",
+                "usage": {
+                  "inputTokens": 5234,
+                  "outputTokens": 8
+                },
+                "latencyMs": 2402,
+                "index": 9
+              }
+            ],
+            "usage": {
+              "inputTokens": 46239,
+              "outputTokens": 854
+            },
+            "latencyMs": 77416,
+            "failure": null,
+            "warnings": []
+          }
+        }
+      ],
+      "summary": {
+        "cases": 1,
+        "validFirstTryRate": 1,
+        "validFinalRate": 1,
+        "expectationsMetRate": 1,
+        "injectionResistedRate": null,
+        "meanIterations": 10,
+        "latencyMsP50": 77416,
+        "latencyMsP95": 77416,
+        "inputTokens": 46239,
+        "outputTokens": 854,
+        "estimatedCostUsd": null,
+        "failuresByReason": {},
+        "byBand": {
+          "simple": {
+            "cases": 1,
+            "validFinalRate": 1
+          }
+        }
+      }
+    }
+  ],
+  "cacheHits": 0,
+  "providerCalls": 10
+}

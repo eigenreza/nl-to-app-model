@@ -5,7 +5,7 @@
  * socket. Everything below this file is constructed from arguments, which is
  * what lets the tests build the same server without any of those things.
  */
-import 'dotenv/config';
+import './env.js';
 import { access } from 'node:fs/promises';
 import { apiKeyFor, loadConfig } from './config.js';
 import { createLogger } from './logging.js';

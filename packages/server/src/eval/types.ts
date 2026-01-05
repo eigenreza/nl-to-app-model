@@ -80,6 +80,8 @@ export interface RunConfiguration {
   provider: string;
   model: string;
   mode: GenerationMode;
+  /** Iteration cap in force. Raising it changes the answer, so it is keyed on. */
+  maxIterations: number;
   /** Hash of the prompts used, so a prompt edit invalidates cached outcomes. */
   promptVersion: string;
   schemaVersion: string;

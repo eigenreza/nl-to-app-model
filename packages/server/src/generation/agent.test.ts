@@ -251,23 +251,38 @@ describe('generateWithAgent', () => {
     expect(result.applicationModel?.components).toHaveLength(1);
   });
 
-  it('stops when the time budget is spent', async () => {
-    let clock = 0;
-    const provider = new ScriptedProvider([PLAN, CREATE, TABLE, FINALIZE]);
+  it('stops when the provider time budget is spent', async () => {
+    // Each turn reports 600ms of provider time, so the third check trips a
+    // budget of one second. Wall clock is not what is being measured: the rate
+    // limiter's deliberate spacing must not count against the model.
+    const slow = (turn: Partial<CompletionResponse>) => ({ ...turn, latencyMs: 600 });
+    const provider = new ScriptedProvider([slow(PLAN), slow(CREATE), slow(TABLE), slow(FINALIZE)]);
 
     const result = await generateWithAgent({
       description: 'a book tracker',
       provider,
       timeBudgetMs: 1_000,
-      now: () => {
-        clock += 600;
-        return clock;
-      },
     });
 
     expect(result.ok).toBe(false);
     expect(result.failure?.reason).toBe('time_budget');
+    expect(result.failure?.message).toContain('provider time');
+    expect(result.iterations).toBe(2);
     expect(result.steps.at(-1)?.label).toBe('Stopped: out of time.');
+  });
+
+  it('does not count time spent waiting on the rate limiter', async () => {
+    // Turns report no provider time at all, so however long the wall clock
+    // says the run took, the budget is untouched.
+    const provider = new ScriptedProvider([PLAN, CREATE, TABLE, FINALIZE]);
+
+    const result = await generateWithAgent({
+      description: 'a book tracker',
+      provider,
+      timeBudgetMs: 1,
+    });
+
+    expect(result.ok).toBe(true);
   });
 
   it('rejects an unknown tool without ending the run', async () => {
