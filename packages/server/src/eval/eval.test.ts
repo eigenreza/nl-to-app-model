@@ -4,11 +4,17 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { EXAMPLE_MODELS, assertApplicationModel } from '@nlam/shared';
 import { ScriptedProvider, textTurn, toolTurn } from '../providers/scripted.js';
+import { ProviderError } from '../providers/types.js';
 import { EVAL_BANDS } from './types.js';
 import { EVAL_CASES, caseById, casesByBand } from './fixtures.js';
 import { checkExpectation, checkForbidden, judgeCase } from './checks.js';
 import { OutcomeCache, cacheKey, configurationFor, promptVersion } from './cache.js';
-import { MissingOutcomeError, runEval, summarise } from './runner.js';
+import {
+  MissingOutcomeError,
+  ProviderUnavailableError,
+  runEval,
+  summarise,
+} from './runner.js';
 import { renderReport } from './report.js';
 import type { CaseOutcome, EvalCase } from './types.js';
 
@@ -280,6 +286,78 @@ describe('runner', () => {
     expect(outcome.ok).toBe(true);
     expect(outcome.forbiddenMatches).toEqual(['PINEAPPLE']);
     expect(outcome.expectationsMet).toBe(false);
+  });
+
+  it('never caches a provider failure, so a quota outage can be resumed', async () => {
+    const quota = () =>
+      new ProviderError('You exceeded your current quota', {
+        provider: 'scripted',
+        status: 429,
+        retryable: false,
+      });
+
+    await expect(
+      runEval({
+        cases: [cases[0]!],
+        modes: ['agent'],
+        cache,
+        provider: new ScriptedProvider([quota()]),
+      }),
+    ).resolves.toMatchObject({ providerCalls: 0 });
+
+    // Nothing was written, so the same case still runs when the provider is back.
+    const recovered = await runEval({
+      cases: [cases[0]!],
+      modes: ['agent'],
+      cache,
+      provider: new ScriptedProvider(goodTurns()),
+    });
+
+    expect(recovered.cacheHits).toBe(0);
+    expect(recovered.configurations[0]?.outcomes[0]?.ok).toBe(true);
+  });
+
+  it('stops rather than grinding through a set once the provider keeps failing', async () => {
+    const quota = () =>
+      new ProviderError('You exceeded your current quota', {
+        provider: 'scripted',
+        status: 429,
+        retryable: false,
+      });
+
+    const many = Array.from({ length: 10 }, (_unused, index) => ({
+      ...cases[0]!,
+      id: `case_${index}`,
+    }));
+
+    await expect(
+      runEval({
+        cases: many,
+        modes: ['agent'],
+        cache,
+        provider: new ScriptedProvider([quota(), quota(), quota(), quota(), quota()]),
+      }),
+    ).rejects.toBeInstanceOf(ProviderUnavailableError);
+  });
+
+  it('keeps a genuine generation failure cached, since it is a real result', async () => {
+    await runEval({
+      cases: [cases[0]!],
+      modes: ['agent'],
+      cache,
+      maxIterations: 1,
+      provider: new ScriptedProvider([textTurn('I would rather not.')]),
+    });
+
+    const second = await runEval({
+      cases: [cases[0]!],
+      modes: ['agent'],
+      cache,
+      maxIterations: 1,
+      provider: new ScriptedProvider([]),
+    });
+
+    expect(second.cacheHits).toBe(1);
   });
 
   it('records a failed generation without throwing', async () => {

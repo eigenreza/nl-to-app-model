@@ -49,6 +49,27 @@ export interface RunnerOptions {
   now?: () => number;
 }
 
+/**
+ * How many provider failures in a row mean the provider, not the case, is the
+ * problem. A daily quota does not recover within a run, so grinding through the
+ * remaining cases would spend nothing useful and produce a report full of
+ * failures that say nothing about the generator.
+ */
+const PROVIDER_ERROR_LIMIT = 3;
+
+export class ProviderUnavailableError extends Error {
+  constructor(
+    readonly failures: number,
+    readonly detail: string,
+  ) {
+    super(
+      `Stopped after ${failures} provider failures in a row. The last one said: ${detail}\n` +
+        'Nothing from those attempts was cached, so rerunning picks up exactly where this left off.',
+    );
+    this.name = 'ProviderUnavailableError';
+  }
+}
+
 export class MissingOutcomeError extends Error {
   constructor(
     readonly caseId: string,
@@ -72,6 +93,7 @@ export async function runEval(options: RunnerOptions): Promise<RunReport> {
 
   let cacheHits = 0;
   let providerCalls = 0;
+  let consecutiveProviderErrors = 0;
 
   const configurations: RunReport['configurations'] = [];
 
@@ -96,7 +118,23 @@ export async function runEval(options: RunnerOptions): Promise<RunReport> {
         providerCalls += result.iterations;
         outcome = toOutcome(evalCase, mode, result);
         source = 'provider';
-        await options.cache.set(key, outcome);
+
+        // A provider error is a fact about the network or the quota, not about
+        // the generator, so it is never written to the cache. Caching one would
+        // freeze a transient failure into the published results and quietly
+        // prevent the case from ever being retried.
+        if (outcome.failureReason === 'provider_error') {
+          consecutiveProviderErrors += 1;
+          if (consecutiveProviderErrors >= PROVIDER_ERROR_LIMIT) {
+            throw new ProviderUnavailableError(
+              consecutiveProviderErrors,
+              result.failure?.message ?? 'no detail',
+            );
+          }
+        } else {
+          consecutiveProviderErrors = 0;
+          await options.cache.set(key, outcome);
+        }
       }
 
       outcomes.push(outcome);

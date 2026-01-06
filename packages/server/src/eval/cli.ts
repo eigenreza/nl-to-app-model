@@ -21,7 +21,7 @@ import { apiKeyFor, loadConfig } from '../config.js';
 import { createProvider } from '../providers/index.js';
 import { EVAL_CASES, casesByBand } from './fixtures.js';
 import { OutcomeCache, cacheKey, configurationFor } from './cache.js';
-import { MissingOutcomeError, runEval } from './runner.js';
+import { MissingOutcomeError, ProviderUnavailableError, runEval } from './runner.js';
 import { describeOutcome, describeSummary, renderReport } from './report.js';
 import type { EvalCase } from './types.js';
 
@@ -127,6 +127,12 @@ async function main(): Promise<void> {
       console.log(`  ${describeOutcome(event.outcome, event.source)}`);
     },
   }).catch((error: unknown) => {
+    if (error instanceof ProviderUnavailableError) {
+      throw new Error(
+        `${error.message}
+If this is a daily free-tier quota, wait for it to reset and run the same command again.`,
+      );
+    }
     if (error instanceof MissingOutcomeError) {
       throw new Error(
         `${error.message}\nRun without --offline to produce it, or restrict the run with --case or --bands.`,
