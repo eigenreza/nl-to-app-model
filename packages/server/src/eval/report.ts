@@ -30,7 +30,7 @@ export function renderReport(report: RunReport): string {
   lines.push('## Summary');
   lines.push('');
   lines.push(
-    '| Configuration | Valid first try | Valid final | Met expectations | Mean iterations | p50 | p95 | Tokens | List price |',
+    '| Configuration | Valid first try | Valid final | Met expectations | Mean calls | Provider time p50 | Provider time p95 | Tokens | List price |',
   );
   lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- |');
 
@@ -40,8 +40,8 @@ export function renderReport(report: RunReport): string {
       `| ${config.mode} (${config.model}) | ${percent(summary.validFirstTryRate)} | ${percent(
         summary.validFinalRate,
       )} | ${percent(summary.expectationsMetRate)} | ${summary.meanIterations} | ${seconds(
-        summary.latencyMsP50,
-      )} | ${seconds(summary.latencyMsP95)} | ${(
+        summary.providerMsP50,
+      )} | ${seconds(summary.providerMsP95)} | ${(
         summary.inputTokens + summary.outputTokens
       ).toLocaleString()} | ${formatUsd(summary.estimatedCostUsd)} |`,
     );
@@ -49,8 +49,29 @@ export function renderReport(report: RunReport): string {
 
   lines.push('');
   lines.push(
-    `List price is what these token counts would have cost at published rates as of ${PRICING_SNAPSHOT_DATE}. The runs themselves were made inside a free tier, so the amount actually billed was zero. The column is here because a cost of zero says nothing about whether the design would survive real traffic.`,
+    'Provider time is time spent inside provider calls. Wall clock per case was longer, because outbound requests are deliberately spaced to stay inside a free-tier rate limit; quoting that as though it were model latency would be misleading. For reference, wall clock was:',
   );
+  lines.push('');
+  lines.push('| Configuration | Wall clock p50 | Wall clock p95 |');
+  lines.push('| --- | --- | --- |');
+  for (const entry of report.configurations) {
+    lines.push(
+      `| ${entry.configuration.mode} | ${seconds(entry.summary.latencyMsP50)} | ${seconds(entry.summary.latencyMsP95)} |`,
+    );
+  }
+  lines.push('');
+
+  const unpriced = report.configurations.filter((entry) => !entry.summary.priced);
+  if (unpriced.length > 0) {
+    const models = [...new Set(unpriced.map((entry) => entry.configuration.model))];
+    lines.push(
+      `List price reads "n/a" because ${models.map((model) => `\`${model}\``).join(' and ')} is not in the price snapshot taken on ${PRICING_SNAPSHOT_DATE}. The token counts are exact and the cost can be computed from them once a published rate is to hand; inventing a rate here would be worse than leaving the column empty.`,
+    );
+  } else {
+    lines.push(
+      `List price is what these token counts would have cost at published rates as of ${PRICING_SNAPSHOT_DATE}. The runs themselves were made inside a free tier, so the amount actually billed was zero. The column is here because a cost of zero says nothing about whether the design would survive real traffic.`,
+    );
+  }
   lines.push('');
 
   lines.push('## By difficulty band');
@@ -152,8 +173,9 @@ export function describeSummary(summary: ConfigurationSummary): string {
     `  valid final       ${percent(summary.validFinalRate)}`,
     `  met expectations  ${percent(summary.expectationsMetRate)}`,
     `  injection resisted ${percent(summary.injectionResistedRate)}`,
-    `  mean iterations   ${summary.meanIterations}`,
-    `  latency p50 / p95 ${seconds(summary.latencyMsP50)} / ${seconds(summary.latencyMsP95)}`,
+    `  mean calls        ${summary.meanIterations}`,
+    `  provider p50/p95  ${seconds(summary.providerMsP50)} / ${seconds(summary.providerMsP95)}`,
+    `  wall clock p50/95 ${seconds(summary.latencyMsP50)} / ${seconds(summary.latencyMsP95)}`,
     `  tokens            ${summary.inputTokens.toLocaleString()} in, ${summary.outputTokens.toLocaleString()} out`,
     `  list price        ${formatUsd(summary.estimatedCostUsd)}`,
   ].join('\n');

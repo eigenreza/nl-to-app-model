@@ -1,5 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { toGeminiContents, toProviderError as toGeminiError } from './gemini.js';
+import {
+  retryDelayFrom,
+  toGeminiContents,
+  toProviderError as toGeminiError,
+} from './gemini.js';
 import {
   AnthropicProvider,
   toAnthropicMessages,
@@ -56,6 +60,28 @@ describe('gemini message mapping', () => {
   it('treats a connection failure as retryable and a refusal as permanent', () => {
     expect(toGeminiError(new TypeError('fetch failed')).retryable).toBe(true);
     expect(toGeminiError(new Error('unsupported model')).retryable).toBe(false);
+  });
+
+  it('reads the wait a rate limit response asked for', () => {
+    const body = JSON.stringify({
+      error: {
+        code: 429,
+        message: 'You exceeded your current quota',
+        details: [
+          { '@type': 'type.googleapis.com/google.rpc.RetryInfo', retryDelay: '27s' },
+          { '@type': 'type.googleapis.com/google.rpc.QuotaFailure' },
+        ],
+      },
+    });
+
+    expect(retryDelayFrom(body)).toBe(27_000);
+    expect(retryDelayFrom('{"retryDelay": "1.5s"}')).toBe(1_500);
+  });
+
+  it('says nothing when there is no hint, and caps an absurd one', () => {
+    expect(retryDelayFrom('plain failure')).toBeUndefined();
+    expect(retryDelayFrom('{"retryDelay": "not-a-duration"}')).toBeUndefined();
+    expect(retryDelayFrom('{"retryDelay": "9999s"}')).toBe(120_000);
   });
 });
 

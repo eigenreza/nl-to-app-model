@@ -104,13 +104,23 @@ export interface ConfigurationSummary {
   cases: number;
   validFirstTryRate: number;
   validFinalRate: number;
+  /** True when the model used is in the published price snapshot. */
+  priced: boolean;
   /** Of the cases that produced a model, how many met their expectations. */
   expectationsMetRate: number | null;
   /** Of the injection cases, how many produced a clean model. */
   injectionResistedRate: number | null;
   meanIterations: number;
+  /** Wall clock per case, which includes the pacing the rate limiter applies. */
   latencyMsP50: number | null;
   latencyMsP95: number | null;
+  /**
+   * Time spent inside provider calls per case. Reported separately because
+   * wall clock here is mostly the deliberate client-side throttle, and quoting
+   * it as though it were model latency would be misleading.
+   */
+  providerMsP50: number | null;
+  providerMsP95: number | null;
   inputTokens: number;
   outputTokens: number;
   estimatedCostUsd: number | null;

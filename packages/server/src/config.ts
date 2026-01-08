@@ -38,8 +38,8 @@ const EnvSchema = z.object({
    * below the free-tier allowance so that a burst of eval cases cannot walk
    * into a wall of 429 responses.
    */
-  LLM_REQUESTS_PER_MINUTE: numberFromEnv(8, 1, 600),
-  LLM_MAX_RETRIES: numberFromEnv(4, 0, 8),
+  LLM_REQUESTS_PER_MINUTE: numberFromEnv(4, 1, 600),
+  LLM_MAX_RETRIES: numberFromEnv(6, 0, 12),
   LLM_TIMEOUT_MS: numberFromEnv(60_000, 1_000, 300_000),
 
   AGENT_MAX_ITERATIONS: numberFromEnv(12, 1, 24),

@@ -62,6 +62,30 @@ describe('RateLimiter', () => {
   });
 });
 
+describe('RateLimiter pauses', () => {
+  it('holds every later caller back after a pause', async () => {
+    const clock = fakeClock();
+    const limiter = new RateLimiter({ requestsPerMinute: 60, now: clock.now, sleep: clock.sleep });
+
+    await limiter.acquire();
+    limiter.pauseFor(30_000);
+    await limiter.acquire();
+
+    expect(clock.waits).toEqual([30_000]);
+  });
+
+  it('ignores a pause that is not in the future', async () => {
+    const clock = fakeClock();
+    const limiter = new RateLimiter({ requestsPerMinute: 60, now: clock.now, sleep: clock.sleep });
+
+    limiter.pauseFor(0);
+    limiter.pauseFor(-5);
+    await limiter.acquire();
+
+    expect(clock.waits).toEqual([]);
+  });
+});
+
 describe('withRetry', () => {
   const retryable = () =>
     new ProviderError('rate limited', { provider: 't', status: 429, retryable: true });
@@ -141,6 +165,35 @@ describe('withRetry', () => {
     ).rejects.toThrow();
 
     expect(Math.max(...delays)).toBe(3_000);
+  });
+
+  it('waits as long as the provider asked rather than guessing', async () => {
+    const delays: number[] = [];
+    const operation = vi
+      .fn()
+      .mockRejectedValueOnce(
+        new ProviderError('slow down', {
+          provider: 't',
+          status: 429,
+          retryable: true,
+          retryAfterMs: 27_000,
+        }),
+      )
+      .mockResolvedValue('ok');
+
+    await expect(
+      withRetry(operation, {
+        maxRetries: 3,
+        baseDelayMs: 1_000,
+        sleep: async (ms) => {
+          delays.push(ms);
+        },
+        random: () => 0,
+      }),
+    ).resolves.toBe('ok');
+
+    // The hint wins over the exponential guess of about one second.
+    expect(delays).toEqual([27_000]);
   });
 
   it('wraps an unexpected error so callers only ever see ProviderError', async () => {

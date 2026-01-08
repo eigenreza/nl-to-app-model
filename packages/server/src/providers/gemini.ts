@@ -199,12 +199,14 @@ export function toProviderError(error: unknown): ProviderError {
   if (error instanceof ProviderError) return error;
 
   if (error instanceof ApiError) {
+    const retryAfterMs = retryDelayFrom(error.message);
     return new ProviderError(
       `Gemini request failed with status ${error.status}: ${error.message}`,
       {
         provider: 'gemini',
         status: error.status,
         retryable: RETRYABLE_STATUS.has(error.status),
+        ...(retryAfterMs === undefined ? {} : { retryAfterMs }),
         cause: error,
       },
     );
@@ -220,6 +222,22 @@ export function toProviderError(error: unknown): ProviderError {
     retryable: networkFailure,
     cause: error,
   });
+}
+
+/**
+ * Pulls the wait the API asked for out of a rate-limit response. Gemini returns
+ * a google.rpc.RetryInfo block inside the error body with a duration such as
+ * "27s", which is a far better basis for backing off than a guess.
+ */
+export function retryDelayFrom(message: string): number | undefined {
+  const match = /"retryDelay"\s*:\s*"(\d+(?:\.\d+)?)s"/.exec(message);
+  if (!match?.[1]) return undefined;
+
+  const seconds = Number(match[1]);
+  if (!Number.isFinite(seconds) || seconds < 0) return undefined;
+
+  // A pathological value should not park the process for an hour.
+  return Math.min(Math.round(seconds * 1000), 120_000);
 }
 
 /** Extracts a numeric HTTP status from a Gemini error, when there is one. */

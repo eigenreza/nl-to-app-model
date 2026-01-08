@@ -78,15 +78,29 @@ export class ProviderError extends Error {
   readonly status: number | undefined;
   readonly retryable: boolean;
   readonly provider: string;
+  /**
+   * How long the provider asked us to wait, when it said so. Guessing with
+   * exponential backoff is what you do in the absence of information; a rate
+   * limiter that tells you when to come back has given you the answer, and
+   * ignoring it means either waiting too long or being rejected again.
+   */
+  readonly retryAfterMs: number | undefined;
 
   constructor(
     message: string,
-    options: { provider: string; status?: number; retryable?: boolean; cause?: unknown },
+    options: {
+      provider: string;
+      status?: number;
+      retryable?: boolean;
+      retryAfterMs?: number;
+      cause?: unknown;
+    },
   ) {
     super(message, options.cause === undefined ? undefined : { cause: options.cause });
     this.name = 'ProviderError';
     this.provider = options.provider;
     this.status = options.status;
     this.retryable = options.retryable ?? false;
+    this.retryAfterMs = options.retryAfterMs;
   }
 }

@@ -57,6 +57,18 @@ export class RateLimiter {
     this.sleep = options.sleep ?? realSleep;
   }
 
+  /**
+   * Holds every later request back by at least this long.
+   *
+   * A rejection is information about the whole queue, not about the one request
+   * that happened to receive it. Backing off only the rejected call would send
+   * the next one straight into the same wall.
+   */
+  pauseFor(ms: number): void {
+    if (ms <= 0) return;
+    this.nextSlotAt = Math.max(this.nextSlotAt, this.now() + ms);
+  }
+
   /** Resolves when the caller may start its request. */
   async acquire(signal?: AbortSignal): Promise<void> {
     const wait = this.chain.then(async () => {
@@ -112,8 +124,15 @@ export async function withRetry<T>(
         throw providerError;
       }
 
+      // Prefer the wait the provider asked for over a guess, with a little
+      // jitter on top so concurrent callers do not all return at once.
       const ceiling = Math.min(cap, base * 2 ** attempt);
-      const delayMs = Math.round(ceiling * (0.5 + random() * 0.5));
+      const guessed = Math.round(ceiling * (0.5 + random() * 0.5));
+      const delayMs =
+        providerError.retryAfterMs === undefined
+          ? guessed
+          : providerError.retryAfterMs + Math.round(random() * 500);
+
       options.onRetry?.({ attempt: attempt + 1, delayMs, error: providerError });
       await sleep(delayMs, signal);
       attempt += 1;
@@ -147,7 +166,16 @@ export class ThrottledProvider implements LLMProvider {
     return withRetry(
       async () => {
         await this.options.limiter.acquire(signal);
-        return this.inner.complete(request, signal);
+        try {
+          return await this.inner.complete(request, signal);
+        } catch (error) {
+          // A rate limit rejection slows the whole queue down, not just this
+          // call, so the next request does not walk into the same wall.
+          if (error instanceof ProviderError && error.status === 429) {
+            this.options.limiter.pauseFor(error.retryAfterMs ?? 30_000);
+          }
+          throw error;
+        }
       },
       this.options.retry,
       signal,
