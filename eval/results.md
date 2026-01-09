@@ -1,26 +1,34 @@
 # Eval results
 
-Generated 2026-08-25 from 1 fixture descriptions.
+Generated 2026-08-25 from 2 fixture descriptions.
 
 ## Summary
 
-| Configuration | Valid first try | Valid final | Met expectations | Mean iterations | p50 | p95 | Tokens | List price |
+| Configuration | Valid first try | Valid final | Met expectations | Mean calls | Provider time p50 | Provider time p95 | Tokens | List price |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| agent (gemini-3.6-flash) | 100% | 100% | 100% | 10 | 77.4s | 77.4s | 47,093 | n/a |
+| agent (gemini-3.6-flash) | 0% | 0% | n/a | 0 | 0.0s | 0.0s | 0 | n/a |
 
-List price is what these token counts would have cost at published rates as of 2025-12-01. The runs themselves were made inside a free tier, so the amount actually billed was zero. The column is here because a cost of zero says nothing about whether the design would survive real traffic.
+Provider time is time spent inside provider calls. Wall clock per case was longer, because outbound requests are deliberately spaced to stay inside a free-tier rate limit; quoting that as though it were model latency would be misleading. For reference, wall clock was:
+
+| Configuration | Wall clock p50 | Wall clock p95 |
+| --- | --- | --- |
+| agent | 243.3s | 285.5s |
+
+List price reads "n/a" because `gemini-3.6-flash` is not in the price snapshot taken on 2025-12-01. The token counts are exact and the cost can be computed from them once a published rate is to hand; inventing a rate here would be worse than leaving the column empty.
 
 ## By difficulty band
 
 | Band | Cases | agent |
 | --- | --- | --- |
-| simple | 1 | 100% |
+| simple | 2 | 0% |
 
 ## Failures
 
 ### agent
 
-No failures.
+| Reason | Count |
+| --- | --- |
+| provider_error | 2 |
 
 ## Prompt injection
 

@@ -30,11 +30,11 @@ const DEFAULT_OUT = join(REPO_ROOT, 'eval');
 const CACHE_DIR = join(REPO_ROOT, '.eval-cache');
 
 /**
- * Calls a single case tends to make, measured against gemini-3.6-flash rather
- * than guessed: the model issues one tool call per turn, so an agent case costs
- * roughly ten.
+ * Calls a single case tends to make. Measured rather than guessed: the agent is
+ * asked to batch its tool calls, which brings a case down to roughly three or
+ * four turns.
  */
-const CALLS_PER_AGENT_CASE = 10;
+const CALLS_PER_AGENT_CASE = 4;
 const CALLS_PER_BASELINE_CASE = 1.3;
 
 async function main(): Promise<void> {

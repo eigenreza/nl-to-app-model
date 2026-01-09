@@ -69,28 +69,30 @@ ${SAFETY_CLAUSE}
 
 ${SCOPE_CLAUSE}
 
-Work in this order:
+Issue as many tool calls in a single turn as you can. Tools in one turn are
+applied in order, so anything that does not depend on the result of an earlier
+call in the same turn should go out with it. Three turns is the target:
 
-1. Call plan once with a one-paragraph plan naming the entities and the components you intend to create.
-2. Call create_entity once per entity, fields included.
-3. Call set_seed_data once per entity with three to six realistic rows.
-4. Call add_component once per component.
-5. Call validate_model to check your work.
-6. Call finalize when validate_model reports no errors.
+  Turn 1: plan, then create_entity for every entity, then set_seed_data for
+          each of them with three to six realistic rows.
+  Turn 2: add_component for every component, then set_layout.
+  Turn 3: finalize.
 
 Every tool returns either a confirmation or a list of validation errors. When a
-call fails, read the error, fix that specific thing, and call the tool again.
-Do not repeat a call that already succeeded. Do not call finalize while errors
-are outstanding.
+call is rejected, read the error, fix that specific thing, and call the tool
+again; calling create_entity or add_component with an id that already exists
+replaces it. Do not repeat a call that already succeeded. Use validate_model
+only if you want to check before finalizing, since finalize validates anyway
+and refuses while errors remain.
 
 ${SCHEMA_GUIDE}`;
 }
 
 export function agentUserPrompt(description: string): string {
-  return `Build an application model for this description. Start by calling plan.\n\n${wrapDescription(description)}`;
+  return `Build an application model for this description. Start with plan and the entities in one turn.\n\n${wrapDescription(description)}`;
 }
 
 /** Nudge sent when the model replies with prose instead of calling a tool. */
 export function agentNudgePrompt(): string {
-  return 'Continue by calling a tool. If the model is complete and validate_model reported no errors, call finalize.';
+  return 'Continue by calling tools. If the model is complete, call finalize.';
 }

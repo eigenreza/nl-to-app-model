@@ -234,7 +234,7 @@ describe('generateWithAgent', () => {
     expect(result.failure?.message).toContain('stopped calling tools');
 
     const nudge = provider.requests[2]!.messages.at(-1)!;
-    expect(nudge.role === 'user' && nudge.content).toContain('Continue by calling a tool');
+    expect(nudge.role === 'user' && nudge.content).toContain('Continue by calling tools');
   });
 
   it('surfaces a provider failure and keeps whatever was built', async () => {
