@@ -16,6 +16,7 @@
 import {
   SCHEMA_GUIDE,
   SCHEMA_GUIDE_BRIEF,
+  SCHEMA_GUIDE_FOR_TOOLS,
   formatIssuesForPrompt,
   type ValidationIssue,
 } from '@nlam/shared';
@@ -85,7 +86,7 @@ replaces it. Do not repeat a call that already succeeded. Use validate_model
 only if you want to check before finalizing, since finalize validates anyway
 and refuses while errors remain.
 
-${SCHEMA_GUIDE}`;
+${SCHEMA_GUIDE_FOR_TOOLS}`;
 }
 
 export function agentUserPrompt(description: string): string {

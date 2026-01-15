@@ -128,6 +128,66 @@ ${JSON.stringify(EXAMPLE_MODELS.contact_list, null, 2)}
 `;
 
 /**
+ * Reference for a caller that reaches the schema through tools rather than by
+ * writing a document.
+ *
+ * The tool definitions already carry every property name, type and enum, and
+ * they are sent on the same request, so repeating them in the system prompt
+ * buys nothing and costs the same tokens on every turn of every case. What the
+ * tool schemas cannot express is the reasoning: which combinations are legal,
+ * what the operators mean, and where the ceilings are. That is what this keeps.
+ *
+ * The worked example is dropped for the same reason. It shows a whole
+ * hand-written document, which is precisely the thing a tool-using caller never
+ * produces.
+ */
+export const SCHEMA_GUIDE_FOR_TOOLS = `# Application model rules
+
+The tool definitions describe every property. These are the rules they cannot
+state, and unknown properties are rejected everywhere, so never invent one.
+
+## Identifiers
+
+Every id (entities, fields, components) matches ^[a-z][a-z0-9_]*$. Ids are for
+machines; human wording goes in "label", "name" and "title".
+
+## Fields
+
+Field types: ${list(FIELD_TYPES)}.
+  - "options" is mandatory for "enum" and forbidden for every other type.
+  - "date" values are ISO calendar strings, "2024-03-19", and must be real days.
+  - "number" values are JSON numbers, never strings.
+  - Seed rows are keyed by field id, and every required field must appear in
+    every row.
+
+## Components
+
+  - A "select" table filter needs an enum or boolean field; a "text" filter
+    needs a string field.
+  - A form that lists fieldIds must include every required field, or it cannot
+    create a valid row.
+  - The "count" aggregate counts rows and must not name a field. Every other
+    aggregate (${list(AGGREGATES.filter((a) => a !== 'count'))}) needs a fieldId
+    pointing at a field of type "number".
+  - Widths (${list(COMPONENT_WIDTHS)}) are honoured by the grid layout only.
+
+## Filters
+
+A filter is a flat list of conditions joined by one combinator, "and" or "or".
+It does not nest. "isEmpty", "isNotEmpty", "isTrue" and "isFalse" take no value;
+every other operator requires one whose JSON type matches the field, and an enum
+comparison only accepts a value listed in that field's options.
+
+Operators allowed per field type:
+${operatorTable}
+
+## Limits
+
+At most 6 entities, 12 components, 16 fields per entity, 8 conditions per
+filter, 50 seed rows per entity.
+`;
+
+/**
  * Condensed reference. Used on repair turns, where the conversation already
  * carries a draft model and the full guide would crowd out the errors.
  */

@@ -1,169 +1,281 @@
 {
-  "startedAt": "2026-08-25T22:23:09.686Z",
-  "finishedAt": "2026-08-25T22:31:58.482Z",
+  "startedAt": "2026-08-25T22:59:18.568Z",
+  "finishedAt": "2026-08-25T23:00:04.638Z",
   "configurations": [
     {
       "configuration": {
-        "provider": "gemini",
-        "model": "gemini-3.6-flash",
+        "provider": "anthropic",
+        "model": "claude-haiku-4-5-20251001",
         "mode": "agent",
         "maxIterations": 12,
-        "promptVersion": "a1cf4a22427f",
+        "promptVersion": "c1598e46b628",
         "schemaVersion": "1.0.0"
       },
       "outcomes": [
         {
-          "caseId": "contact_list",
+          "caseId": "book_tracker",
           "band": "simple",
           "mode": "agent",
-          "ok": false,
-          "validFirstTry": false,
-          "iterations": 0,
-          "latencyMs": 243318,
-          "inputTokens": 0,
-          "outputTokens": 0,
-          "failureReason": "provider_error",
-          "expectationsMet": null,
+          "ok": true,
+          "validFirstTry": true,
+          "iterations": 4,
+          "latencyMs": 46030,
+          "inputTokens": 15126,
+          "outputTokens": 1163,
+          "failureReason": null,
+          "expectationsMet": true,
           "expectationFailures": [],
           "forbiddenMatches": [],
           "result": {
-            "ok": false,
+            "ok": true,
             "mode": "agent",
-            "provider": "gemini",
-            "model": "gemini-3.6-flash",
-            "applicationModel": null,
-            "validFirstTry": false,
-            "iterations": 0,
+            "provider": "anthropic",
+            "model": "claude-haiku-4-5-20251001",
+            "applicationModel": {
+              "schemaVersion": "1.0.0",
+              "app": {
+                "name": "Book Tracker",
+                "description": "A book tracker that displays a table of books with genre filtering and shows a count of unread books."
+              },
+              "entities": [
+                {
+                  "id": "book",
+                  "name": "Book",
+                  "pluralName": "Books",
+                  "fields": [
+                    {
+                      "id": "title",
+                      "label": "Title",
+                      "type": "string",
+                      "required": true
+                    },
+                    {
+                      "id": "author",
+                      "label": "Author",
+                      "type": "string",
+                      "required": true
+                    },
+                    {
+                      "id": "genre",
+                      "label": "Genre",
+                      "type": "enum",
+                      "required": true,
+                      "options": [
+                        "Fiction",
+                        "Mystery",
+                        "Science Fiction",
+                        "Fantasy",
+                        "Romance",
+                        "Non-Fiction"
+                      ]
+                    },
+                    {
+                      "id": "read",
+                      "label": "Read",
+                      "type": "boolean",
+                      "required": true
+                    }
+                  ],
+                  "seed": [
+                    {
+                      "title": "The Great Gatsby",
+                      "author": "F. Scott Fitzgerald",
+                      "genre": "Fiction",
+                      "read": true
+                    },
+                    {
+                      "title": "Dune",
+                      "author": "Frank Herbert",
+                      "genre": "Science Fiction",
+                      "read": false
+                    },
+                    {
+                      "title": "The Hobbit",
+                      "author": "J.R.R. Tolkien",
+                      "genre": "Fantasy",
+                      "read": true
+                    },
+                    {
+                      "title": "Murder on the Orient Express",
+                      "author": "Agatha Christie",
+                      "genre": "Mystery",
+                      "read": false
+                    },
+                    {
+                      "title": "Sapiens",
+                      "author": "Yuval Noah Harari",
+                      "genre": "Non-Fiction",
+                      "read": false
+                    }
+                  ]
+                }
+              ],
+              "components": [
+                {
+                  "id": "books_table",
+                  "title": "Books",
+                  "width": "full",
+                  "type": "table",
+                  "entityId": "book",
+                  "filters": [
+                    {
+                      "fieldId": "genre",
+                      "control": "select",
+                      "label": "Filter by Genre"
+                    }
+                  ]
+                },
+                {
+                  "id": "unread_count",
+                  "title": "Unread Books",
+                  "width": "full",
+                  "type": "metric",
+                  "entityId": "book",
+                  "aggregate": "count",
+                  "where": {
+                    "combinator": "and",
+                    "conditions": [
+                      {
+                        "fieldId": "read",
+                        "op": "isFalse"
+                      }
+                    ]
+                  },
+                  "caption": "books to read"
+                }
+              ],
+              "layout": {
+                "type": "vertical"
+              }
+            },
+            "validFirstTry": true,
+            "iterations": 4,
             "steps": [
               {
+                "kind": "plan",
+                "ok": true,
+                "label": "Planned the application.",
+                "usage": {
+                  "inputTokens": 3065,
+                  "outputTokens": 643
+                },
+                "latencyMs": 4360,
+                "index": 0
+              },
+              {
                 "kind": "tool",
-                "ok": false,
-                "label": "The provider call failed.",
-                "detail": "Gemini request failed with status 429: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.387939123s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-3.6-flash\"},\"quotaValue\":\"20\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"45s\"}]}}",
+                "ok": true,
+                "label": "Created entity \"book\" with 4 fields.",
                 "usage": {
                   "inputTokens": 0,
                   "outputTokens": 0
                 },
                 "latencyMs": 0,
-                "index": 0
-              }
-            ],
-            "usage": {
-              "inputTokens": 0,
-              "outputTokens": 0
-            },
-            "latencyMs": 243318,
-            "failure": {
-              "reason": "provider_error",
-              "message": "Gemini request failed with status 429: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 45.387939123s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-3.6-flash\"},\"quotaValue\":\"20\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"45s\"}]}} Nothing valid could be salvaged.",
-              "outstandingIssues": [
-                {
-                  "path": "entities",
-                  "code": "too_small",
-                  "message": "An application needs at least one entity.",
-                  "severity": "error"
-                },
-                {
-                  "path": "components",
-                  "code": "too_small",
-                  "message": "An application needs at least one component.",
-                  "severity": "error"
-                }
-              ]
-            },
-            "warnings": []
-          }
-        },
-        {
-          "caseId": "todo_list",
-          "band": "simple",
-          "mode": "agent",
-          "ok": false,
-          "validFirstTry": false,
-          "iterations": 0,
-          "latencyMs": 285468,
-          "inputTokens": 0,
-          "outputTokens": 0,
-          "failureReason": "provider_error",
-          "expectationsMet": null,
-          "expectationFailures": [],
-          "forbiddenMatches": [],
-          "result": {
-            "ok": false,
-            "mode": "agent",
-            "provider": "gemini",
-            "model": "gemini-3.6-flash",
-            "applicationModel": null,
-            "validFirstTry": false,
-            "iterations": 0,
-            "steps": [
+                "index": 1
+              },
               {
                 "kind": "tool",
-                "ok": false,
-                "label": "The provider call failed.",
-                "detail": "Gemini request failed with status 429: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 59.916960894s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-3.6-flash\"},\"quotaValue\":\"20\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"59s\"}]}}",
+                "ok": true,
+                "label": "Seeded \"book\" with 5 rows.",
                 "usage": {
                   "inputTokens": 0,
                   "outputTokens": 0
                 },
                 "latencyMs": 0,
-                "index": 0
+                "index": 2
+              },
+              {
+                "kind": "tool",
+                "ok": false,
+                "label": "Replied without calling a tool.",
+                "detail": "Perfect! I've created the plan and the Book entity with seed data. The application now has:\n\n**Entity: Book**\n- Title (string, required)\n- Author (string, required)\n- Genre (enum with options: Fiction, Mystery, Science Fiction, Fantasy, Romance, Non-Fiction; required)\n- Read (boolean, required)\n\n**Seed Data:** 5 sample books with varying genres and read statuses.\n\nReady to proceed to the next turn",
+                "usage": {
+                  "inputTokens": 3772,
+                  "outputTokens": 120
+                },
+                "latencyMs": 1632,
+                "index": 3
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Added table \"books_table\".",
+                "usage": {
+                  "inputTokens": 3910,
+                  "outputTokens": 358
+                },
+                "latencyMs": 2636,
+                "index": 4
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Added metric \"unread_count\".",
+                "usage": {
+                  "inputTokens": 0,
+                  "outputTokens": 0
+                },
+                "latencyMs": 0,
+                "index": 5
+              },
+              {
+                "kind": "tool",
+                "ok": true,
+                "label": "Set a vertical layout.",
+                "usage": {
+                  "inputTokens": 0,
+                  "outputTokens": 0
+                },
+                "latencyMs": 0,
+                "index": 6
+              },
+              {
+                "kind": "finalize",
+                "ok": true,
+                "label": "Accepted the model.",
+                "usage": {
+                  "inputTokens": 4379,
+                  "outputTokens": 42
+                },
+                "latencyMs": 1028,
+                "index": 7
               }
             ],
             "usage": {
-              "inputTokens": 0,
-              "outputTokens": 0
+              "inputTokens": 15126,
+              "outputTokens": 1163
             },
-            "latencyMs": 285468,
-            "failure": {
-              "reason": "provider_error",
-              "message": "Gemini request failed with status 429: {\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.6-flash\\nPlease retry in 59.916960894s.\",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]},{\"@type\":\"type.googleapis.com/google.rpc.QuotaFailure\",\"violations\":[{\"quotaMetric\":\"generativelanguage.googleapis.com/generate_content_free_tier_requests\",\"quotaId\":\"GenerateRequestsPerDayPerProjectPerModel-FreeTier\",\"quotaDimensions\":{\"location\":\"global\",\"model\":\"gemini-3.6-flash\"},\"quotaValue\":\"20\"}]},{\"@type\":\"type.googleapis.com/google.rpc.RetryInfo\",\"retryDelay\":\"59s\"}]}} Nothing valid could be salvaged.",
-              "outstandingIssues": [
-                {
-                  "path": "entities",
-                  "code": "too_small",
-                  "message": "An application needs at least one entity.",
-                  "severity": "error"
-                },
-                {
-                  "path": "components",
-                  "code": "too_small",
-                  "message": "An application needs at least one component.",
-                  "severity": "error"
-                }
-              ]
-            },
+            "latencyMs": 46030,
+            "failure": null,
             "warnings": []
           }
         }
       ],
       "summary": {
-        "cases": 2,
-        "validFirstTryRate": 0,
-        "validFinalRate": 0,
-        "expectationsMetRate": null,
+        "cases": 1,
+        "validFirstTryRate": 1,
+        "validFinalRate": 1,
+        "expectationsMetRate": 1,
         "injectionResistedRate": null,
-        "meanIterations": 0,
-        "latencyMsP50": 243318,
-        "latencyMsP95": 285468,
-        "providerMsP50": 0,
-        "providerMsP95": 0,
-        "inputTokens": 0,
-        "outputTokens": 0,
-        "priced": false,
-        "estimatedCostUsd": null,
-        "failuresByReason": {
-          "provider_error": 2
-        },
+        "meanIterations": 4,
+        "latencyMsP50": 46030,
+        "latencyMsP95": 46030,
+        "providerMsP50": 9656,
+        "providerMsP95": 9656,
+        "inputTokens": 15126,
+        "outputTokens": 1163,
+        "priced": true,
+        "estimatedCostUsd": 0.020940999999999998,
+        "failuresByReason": {},
         "byBand": {
           "simple": {
-            "cases": 2,
-            "validFinalRate": 0
+            "cases": 1,
+            "validFinalRate": 1
           }
         }
       }
     }
   ],
   "cacheHits": 0,
-  "providerCalls": 0
+  "providerCalls": 4
 }

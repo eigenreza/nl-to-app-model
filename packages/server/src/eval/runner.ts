@@ -32,15 +32,25 @@ export interface ProgressEvent {
   outcome: CaseOutcome;
 }
 
+/**
+ * One column of the results table: a provider, a model and a mode.
+ *
+ * The provider instance is optional so that an offline run can name the same
+ * column without being able to call anything. Identity still comes from the
+ * names, which is what the cache is keyed on, so an offline regeneration finds
+ * exactly what a live run wrote.
+ */
+export interface RunTarget {
+  providerName: string;
+  modelName: string;
+  mode: GenerationMode;
+  provider?: LLMProvider;
+}
+
 export interface RunnerOptions {
   cases: readonly EvalCase[];
-  modes: readonly GenerationMode[];
+  targets: readonly RunTarget[];
   cache: OutcomeCache;
-  /** Omitted for an offline run, which then answers only from cache. */
-  provider?: LLMProvider;
-  /** Identity used for cache keys when running offline. */
-  providerName?: string;
-  modelName?: string;
   maxIterations?: number;
   timeBudgetMs?: number;
   /** Ignore cached outcomes and call the provider for every case. */
@@ -86,9 +96,6 @@ export async function runEval(options: RunnerOptions): Promise<RunReport> {
   const now = options.now ?? (() => Date.now());
   const startedAt = new Date(now()).toISOString();
 
-  const providerName = options.provider?.name ?? options.providerName ?? 'gemini';
-  const modelName = options.provider?.model ?? options.modelName ?? 'gemini-2.5-flash';
-
   const maxIterations = options.maxIterations ?? 12;
 
   let cacheHits = 0;
@@ -97,7 +104,8 @@ export async function runEval(options: RunnerOptions): Promise<RunReport> {
 
   const configurations: RunReport['configurations'] = [];
 
-  for (const mode of options.modes) {
+  for (const target of options.targets) {
+    const { providerName, modelName, mode } = target;
     const configuration = configurationFor(providerName, modelName, mode, maxIterations);
     const outcomes: CaseOutcome[] = [];
 
@@ -112,9 +120,9 @@ export async function runEval(options: RunnerOptions): Promise<RunReport> {
       if (outcome) {
         cacheHits += 1;
       } else {
-        if (!options.provider) throw new MissingOutcomeError(evalCase.id, mode);
+        if (!target.provider) throw new MissingOutcomeError(evalCase.id, mode);
 
-        const result = await runOne(options.provider, evalCase, mode, options);
+        const result = await runOne(target.provider, evalCase, mode, options);
         providerCalls += result.iterations;
         outcome = toOutcome(evalCase, mode, result);
         source = 'provider';
@@ -181,7 +189,7 @@ async function runOne(
   });
 }
 
-function toOutcome(
+export function toOutcome(
   evalCase: EvalCase,
   mode: GenerationMode,
   result: GenerationResult,

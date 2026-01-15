@@ -9,9 +9,22 @@
 import type { ApplicationModel } from './model.js';
 import type { ValidationIssue } from './issues.js';
 
+/**
+ * Token counts for one call.
+ *
+ * Cached tokens are counted separately rather than folded into the input total,
+ * because they are billed at different rates: a write costs more than an
+ * ordinary input token and a read costs a fraction of one. Adding them together
+ * would make the cost column wrong in whichever direction the cache was working.
+ */
 export interface TokenUsage {
+  /** Input tokens billed at the ordinary rate, excluding anything cached. */
   inputTokens: number;
   outputTokens: number;
+  /** Tokens written into the provider's prompt cache, billed at a premium. */
+  cacheWriteTokens?: number;
+  /** Tokens served from the provider's prompt cache, billed at a discount. */
+  cacheReadTokens?: number;
 }
 
 export function emptyUsage(): TokenUsage {
@@ -19,10 +32,20 @@ export function emptyUsage(): TokenUsage {
 }
 
 export function addUsage(a: TokenUsage, b: TokenUsage): TokenUsage {
+  const cacheWriteTokens = (a.cacheWriteTokens ?? 0) + (b.cacheWriteTokens ?? 0);
+  const cacheReadTokens = (a.cacheReadTokens ?? 0) + (b.cacheReadTokens ?? 0);
+
   return {
     inputTokens: a.inputTokens + b.inputTokens,
     outputTokens: a.outputTokens + b.outputTokens,
+    ...(cacheWriteTokens > 0 ? { cacheWriteTokens } : {}),
+    ...(cacheReadTokens > 0 ? { cacheReadTokens } : {}),
   };
+}
+
+/** Every input token a call consumed, whatever rate it was billed at. */
+export function totalInputTokens(usage: TokenUsage): number {
+  return usage.inputTokens + (usage.cacheWriteTokens ?? 0) + (usage.cacheReadTokens ?? 0);
 }
 
 export type GenerationMode = 'baseline' | 'agent';

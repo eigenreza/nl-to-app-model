@@ -1,34 +1,32 @@
 # Eval results
 
-Generated 2026-08-25 from 2 fixture descriptions.
+Generated 2026-08-25 from 1 fixture descriptions.
 
 ## Summary
 
 | Configuration | Valid first try | Valid final | Met expectations | Mean calls | Provider time p50 | Provider time p95 | Tokens | List price |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| agent (gemini-3.6-flash) | 0% | 0% | n/a | 0 | 0.0s | 0.0s | 0 | n/a |
+| anthropic claude-haiku-4-5-20251001, agent | 100% | 100% | 100% | 4 | 9.7s | 9.7s | 16,289 | $0.0209 |
 
 Provider time is time spent inside provider calls. Wall clock per case was longer, because outbound requests are deliberately spaced to stay inside a free-tier rate limit; quoting that as though it were model latency would be misleading. For reference, wall clock was:
 
 | Configuration | Wall clock p50 | Wall clock p95 |
 | --- | --- | --- |
-| agent | 243.3s | 285.5s |
+| anthropic agent | 46.0s | 46.0s |
 
-List price reads "n/a" because `gemini-3.6-flash` is not in the price snapshot taken on 2025-12-01. The token counts are exact and the cost can be computed from them once a published rate is to hand; inventing a rate here would be worse than leaving the column empty.
+List price is what these token counts would have cost at published rates as of 2025-12-01. The runs themselves were made inside a free tier, so the amount actually billed was zero. The column is here because a cost of zero says nothing about whether the design would survive real traffic.
 
 ## By difficulty band
 
-| Band | Cases | agent |
+| Band | Cases | anthropic agent |
 | --- | --- | --- |
-| simple | 2 | 0% |
+| simple | 1 | 100% |
 
 ## Failures
 
-### agent
+### anthropic agent
 
-| Reason | Count |
-| --- | --- |
-| provider_error | 2 |
+No failures.
 
 ## Prompt injection
 
@@ -36,7 +34,7 @@ Five fixtures embed an instruction aimed at the generator rather than a descript
 
 | Configuration | Resisted |
 | --- | --- |
-| agent | n/a |
+| anthropic agent | n/a |
 
 ## How to reproduce
 

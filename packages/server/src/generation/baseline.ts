@@ -13,7 +13,12 @@ import {
   withSchemaVersion,
   type ValidationIssue,
 } from '@nlam/shared';
-import { addUsage, emptyUsage, type TokenUsage } from '@nlam/shared';
+import {
+  addUsage,
+  emptyUsage,
+  type ApplicationModel,
+  type TokenUsage,
+} from '@nlam/shared';
 import {
   ProviderError,
   type CompletionResponse,
@@ -23,6 +28,77 @@ import {
 import { extractJsonObject } from './json.js';
 import { baselineSystemPrompt, baselineUserPrompt, repairUserPrompt } from './prompts.js';
 import type { FailureReason, GenerationResult, GenerationStep } from './types.js';
+
+/**
+ * What one candidate response amounted to.
+ *
+ * Extracted so the sequential generator and the batched eval runner reach the
+ * same verdict from the same code. They differ only in how the response was
+ * obtained, and a second, separately maintained assessment would eventually
+ * disagree with this one.
+ */
+export interface CandidateAssessment {
+  /** The trace entry describing this attempt. */
+  step: Omit<GenerationStep, 'index'>;
+  /** Present when the response parsed and validated. */
+  model: ApplicationModel | null;
+  warnings: ValidationIssue[];
+  errors: ValidationIssue[];
+  /** Set when the response could not be read at all. */
+  fatal: { reason: FailureReason; message: string } | null;
+}
+
+export function assessCandidate(
+  response: Pick<CompletionResponse, 'text' | 'usage' | 'latencyMs'>,
+  attempt: number,
+): CandidateAssessment {
+  const kind = attempt === 0 ? 'draft' : 'repair';
+  const extraction = extractJsonObject(response.text);
+
+  if (!extraction.ok) {
+    const empty = response.text.trim() === '';
+    const message = empty
+      ? 'The provider returned no text.'
+      : `Could not read a JSON object from the response: ${extraction.error}`;
+
+    return {
+      step: {
+        kind,
+        label: 'The response was not usable JSON.',
+        ok: false,
+        detail: message,
+        usage: response.usage,
+        latencyMs: response.latencyMs,
+      },
+      model: null,
+      warnings: [],
+      errors: [],
+      fatal: { reason: empty ? 'empty_output' : 'unparseable_output', message },
+    };
+  }
+
+  const validation = validateApplicationModel(withSchemaVersion(extraction.value));
+
+  return {
+    step: {
+      kind,
+      label: validation.ok
+        ? attempt === 0
+          ? 'Produced a valid model on the first attempt.'
+          : 'Repair produced a valid model.'
+        : `Candidate rejected: ${summariseIssues(validation.issues)}.`,
+      ok: validation.ok,
+      ...(extraction.recovered ? { detail: 'JSON was recovered from surrounding text.' } : {}),
+      issues: validation.issues,
+      usage: response.usage,
+      latencyMs: response.latencyMs,
+    },
+    model: validation.ok ? validation.model : null,
+    warnings: validation.warnings,
+    errors: validation.errors,
+    fatal: null,
+  };
+}
 
 export interface BaselineOptions {
   description: string;
@@ -116,53 +192,19 @@ export async function generateBaseline(options: BaselineOptions): Promise<Genera
     iterations += 1;
     usage = addUsage(usage, response.usage);
 
-    const kind = attempt === 0 ? 'draft' : 'repair';
-    const extraction = extractJsonObject(response.text);
+    const assessment = assessCandidate(response, attempt);
+    record({ ...assessment.step, index: steps.length });
 
-    if (!extraction.ok) {
-      const detail =
-        response.text.trim() === ''
-          ? 'The provider returned no text.'
-          : `Could not read a JSON object from the response: ${extraction.error}`;
-      record({
-        index: steps.length,
-        kind,
-        label: 'The response was not usable JSON.',
-        ok: false,
-        detail,
-        usage: response.usage,
-        latencyMs: response.latencyMs,
-      });
-      return fail(
-        response.text.trim() === '' ? 'empty_output' : 'unparseable_output',
-        detail,
-        lastIssues,
-      );
+    if (assessment.fatal) {
+      return fail(assessment.fatal.reason, assessment.fatal.message, lastIssues);
     }
 
-    const validation = validateApplicationModel(withSchemaVersion(extraction.value));
-
-    record({
-      index: steps.length,
-      kind,
-      label: validation.ok
-        ? attempt === 0
-          ? 'Produced a valid model on the first attempt.'
-          : 'Repair produced a valid model.'
-        : `Candidate rejected: ${summariseIssues(validation.issues)}.`,
-      ok: validation.ok,
-      ...(extraction.recovered ? { detail: 'JSON was recovered from surrounding text.' } : {}),
-      issues: validation.issues,
-      usage: response.usage,
-      latencyMs: response.latencyMs,
-    });
-
-    if (validation.ok && validation.model) {
+    if (assessment.model) {
       if (attempt === 0) validFirstTry = true;
-      return finish(validation.model, validation.warnings, null);
+      return finish(assessment.model, assessment.warnings, null);
     }
 
-    lastIssues = validation.errors;
+    lastIssues = assessment.errors;
 
     if (attempt < maxRepairs) {
       messages.push({
@@ -170,7 +212,7 @@ export async function generateBaseline(options: BaselineOptions): Promise<Genera
         content: response.text,
         ...(response.providerState ? { providerState: response.providerState } : {}),
       });
-      messages.push({ role: 'user', content: repairUserPrompt(validation.errors) });
+      messages.push({ role: 'user', content: repairUserPrompt(assessment.errors) });
     }
   }
 

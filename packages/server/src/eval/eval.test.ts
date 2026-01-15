@@ -181,6 +181,18 @@ describe('runner', () => {
     },
   ];
 
+  /** One agent-mode column, optionally able to call something. */
+  function agentTarget(provider?: ScriptedProvider) {
+    return [
+      {
+        providerName: 'scripted',
+        modelName: 'scripted-model',
+        mode: 'agent' as const,
+        ...(provider ? { provider } : {}),
+      },
+    ];
+  }
+
   /** A run that finalizes a one-entity, one-table model. */
   function goodTurns() {
     return [
@@ -206,7 +218,7 @@ describe('runner', () => {
 
   it('runs every case and records what happened', async () => {
     const provider = new ScriptedProvider([...goodTurns(), ...goodTurns()]);
-    const report = await runEval({ cases, modes: ['agent'], cache, provider });
+    const report = await runEval({ cases, targets: agentTarget(provider), cache });
 
     expect(report.configurations).toHaveLength(1);
     const outcomes = report.configurations[0]!.outcomes;
@@ -220,16 +232,14 @@ describe('runner', () => {
   it('reuses cached outcomes on a second run and calls nothing', async () => {
     await runEval({
       cases,
-      modes: ['agent'],
       cache,
-      provider: new ScriptedProvider([...goodTurns(), ...goodTurns()]),
+      targets: agentTarget(new ScriptedProvider([...goodTurns(), ...goodTurns()])),
     });
 
     const second = await runEval({
       cases,
-      modes: ['agent'],
       cache,
-      provider: new ScriptedProvider([]),
+      targets: agentTarget(new ScriptedProvider([])),
     });
 
     expect(second.cacheHits).toBe(2);
@@ -240,17 +250,15 @@ describe('runner', () => {
   it('ignores the cache when asked for a fresh run', async () => {
     await runEval({
       cases,
-      modes: ['agent'],
       cache,
-      provider: new ScriptedProvider([...goodTurns(), ...goodTurns()]),
+      targets: agentTarget(new ScriptedProvider([...goodTurns(), ...goodTurns()])),
     });
 
     const fresh = await runEval({
       cases,
-      modes: ['agent'],
       cache,
       fresh: true,
-      provider: new ScriptedProvider([...goodTurns(), ...goodTurns()]),
+      targets: agentTarget(new ScriptedProvider([...goodTurns(), ...goodTurns()])),
     });
 
     expect(fresh.cacheHits).toBe(0);
@@ -258,7 +266,7 @@ describe('runner', () => {
   });
 
   it('refuses to invent an outcome when running offline without one cached', async () => {
-    await expect(runEval({ cases, modes: ['agent'], cache })).rejects.toBeInstanceOf(
+    await expect(runEval({ cases, targets: agentTarget(), cache })).rejects.toBeInstanceOf(
       MissingOutcomeError,
     );
   });
@@ -277,9 +285,8 @@ describe('runner', () => {
 
     const report = await runEval({
       cases: [cases[1]!],
-      modes: ['agent'],
       cache,
-      provider: new ScriptedProvider(injectedTurns),
+      targets: agentTarget(new ScriptedProvider(injectedTurns)),
     });
 
     const outcome = report.configurations[0]!.outcomes[0]!;
@@ -299,18 +306,16 @@ describe('runner', () => {
     await expect(
       runEval({
         cases: [cases[0]!],
-        modes: ['agent'],
         cache,
-        provider: new ScriptedProvider([quota()]),
+        targets: agentTarget(new ScriptedProvider([quota()])),
       }),
     ).resolves.toMatchObject({ providerCalls: 0 });
 
     // Nothing was written, so the same case still runs when the provider is back.
     const recovered = await runEval({
       cases: [cases[0]!],
-      modes: ['agent'],
       cache,
-      provider: new ScriptedProvider(goodTurns()),
+      targets: agentTarget(new ScriptedProvider(goodTurns())),
     });
 
     expect(recovered.cacheHits).toBe(0);
@@ -333,9 +338,8 @@ describe('runner', () => {
     await expect(
       runEval({
         cases: many,
-        modes: ['agent'],
         cache,
-        provider: new ScriptedProvider([quota(), quota(), quota(), quota(), quota()]),
+        targets: agentTarget(new ScriptedProvider([quota(), quota(), quota(), quota(), quota()])),
       }),
     ).rejects.toBeInstanceOf(ProviderUnavailableError);
   });
@@ -343,18 +347,16 @@ describe('runner', () => {
   it('keeps a genuine generation failure cached, since it is a real result', async () => {
     await runEval({
       cases: [cases[0]!],
-      modes: ['agent'],
       cache,
       maxIterations: 1,
-      provider: new ScriptedProvider([textTurn('I would rather not.')]),
+      targets: agentTarget(new ScriptedProvider([textTurn('I would rather not.')])),
     });
 
     const second = await runEval({
       cases: [cases[0]!],
-      modes: ['agent'],
       cache,
       maxIterations: 1,
-      provider: new ScriptedProvider([]),
+      targets: agentTarget(new ScriptedProvider([])),
     });
 
     expect(second.cacheHits).toBe(1);
@@ -363,10 +365,9 @@ describe('runner', () => {
   it('records a failed generation without throwing', async () => {
     const report = await runEval({
       cases: [cases[0]!],
-      modes: ['agent'],
       cache,
       maxIterations: 1,
-      provider: new ScriptedProvider([textTurn('I would rather not.')]),
+      targets: agentTarget(new ScriptedProvider([textTurn('I would rather not.')])),
     });
 
     const outcome = report.configurations[0]!.outcomes[0]!;

@@ -11,6 +11,8 @@
  * page. They move, so they live in one table with a version note rather than
  * being scattered through the reporting code.
  */
+import type { TokenUsage } from '@nlam/shared';
+
 export interface ModelPricing {
   inputPerMillion: number;
   outputPerMillion: number;
@@ -44,16 +46,29 @@ export function pricingFor(model: string): ModelPricing | undefined {
   return best?.pricing;
 }
 
+/**
+ * Rate multipliers for cached prompt tokens. Writing a prefix into the cache
+ * costs more than an ordinary input token; reading it back costs a fraction.
+ * Ignoring the distinction would misreport cost in whichever direction the
+ * cache happened to be working.
+ */
+export const CACHE_WRITE_MULTIPLIER = 1.25;
+export const CACHE_READ_MULTIPLIER = 0.1;
+
+/** Half price, in exchange for asynchronous turnaround. */
+export const BATCH_MULTIPLIER = 0.5;
+
 /** Returns null when the model is not in the table, so callers can say so. */
-export function estimateCostUsd(
-  model: string,
-  usage: { inputTokens: number; outputTokens: number },
-): number | null {
+export function estimateCostUsd(model: string, usage: TokenUsage): number | null {
   const pricing = pricingFor(model);
   if (!pricing) return null;
 
+  const input = pricing.inputPerMillion / 1_000_000;
+
   return (
-    (usage.inputTokens / 1_000_000) * pricing.inputPerMillion +
+    usage.inputTokens * input +
+    (usage.cacheWriteTokens ?? 0) * input * CACHE_WRITE_MULTIPLIER +
+    (usage.cacheReadTokens ?? 0) * input * CACHE_READ_MULTIPLIER +
     (usage.outputTokens / 1_000_000) * pricing.outputPerMillion
   );
 }

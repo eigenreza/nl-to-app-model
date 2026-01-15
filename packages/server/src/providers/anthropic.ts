@@ -12,6 +12,7 @@
  * a network.
  */
 import Anthropic from '@anthropic-ai/sdk';
+import type { TokenUsage } from '@nlam/shared';
 import {
   ProviderError,
   type CompletionRequest,
@@ -25,6 +26,15 @@ export interface AnthropicProviderOptions {
   model: string;
   timeoutMs?: number;
   baseURL?: string;
+  /**
+   * Cache the static prefix (tool definitions and system prompt) between calls.
+   *
+   * On a tool loop that prefix is resent on every turn and dwarfs the part of
+   * the conversation that actually changes, so it is the single largest lever
+   * on cost. A read costs a tenth of an ordinary input token; the first write
+   * costs a quarter more, which pays for itself on the second call.
+   */
+  promptCaching?: boolean;
   /** Injected in tests so the adapter can be driven without a network. */
   fetch?: typeof globalThis.fetch;
 }
@@ -38,12 +48,14 @@ export class AnthropicProvider implements LLMProvider {
   readonly name = 'anthropic';
   readonly model: string;
   private readonly client: Anthropic;
+  private readonly promptCaching: boolean;
 
   constructor(options: AnthropicProviderOptions) {
     if (!options.apiKey) {
       throw new Error('ANTHROPIC_API_KEY is required to use the Anthropic provider.');
     }
     this.model = options.model;
+    this.promptCaching = options.promptCaching ?? false;
     this.client = new Anthropic({
       apiKey: options.apiKey,
       // Retries are handled one layer up, together with the rate limiter, so
@@ -60,22 +72,7 @@ export class AnthropicProvider implements LLMProvider {
 
     try {
       const response = await this.client.messages.create(
-        {
-          model: this.model,
-          max_tokens: request.maxOutputTokens ?? 8192,
-          temperature: request.temperature ?? 0,
-          system: request.system,
-          messages: toAnthropicMessages(request.messages),
-          ...(request.tools && request.tools.length > 0
-            ? {
-                tools: request.tools.map((tool) => ({
-                  name: tool.name,
-                  description: tool.description,
-                  input_schema: tool.parameters as Anthropic.Tool.InputSchema,
-                })),
-              }
-            : {}),
-        },
+        buildRequest(this.model, request, this.promptCaching),
         signal ? { signal } : undefined,
       );
 
@@ -97,10 +94,7 @@ export class AnthropicProvider implements LLMProvider {
       return {
         text,
         toolCalls,
-        usage: {
-          inputTokens: response.usage.input_tokens,
-          outputTokens: response.usage.output_tokens,
-        },
+        usage: readUsage(response.usage),
         finishReason: (response.stop_reason ?? 'unknown').toLowerCase(),
         latencyMs: Date.now() - startedAt,
       };
@@ -108,6 +102,57 @@ export class AnthropicProvider implements LLMProvider {
       throw toProviderError(error);
     }
   }
+}
+
+/**
+ * Builds the request body, optionally marking the end of the static prefix as
+ * cacheable.
+ *
+ * The cacheable region runs in a fixed order: tool definitions, then the system
+ * prompt, then the messages. Marking the last system block therefore covers
+ * both the tools and the system prompt in one breakpoint, which is exactly the
+ * part that is identical on every call of every case.
+ */
+export function buildRequest(
+  model: string,
+  request: CompletionRequest,
+  promptCaching: boolean,
+): Anthropic.MessageCreateParamsNonStreaming {
+  const tools = (request.tools ?? []).map((tool) => ({
+    name: tool.name,
+    description: tool.description,
+    input_schema: tool.parameters as Anthropic.Tool.InputSchema,
+  }));
+
+  const system: Anthropic.TextBlockParam[] | string = promptCaching
+    ? [{ type: 'text', text: request.system, cache_control: { type: 'ephemeral' } }]
+    : request.system;
+
+  return {
+    model,
+    max_tokens: request.maxOutputTokens ?? 8192,
+    temperature: request.temperature ?? 0,
+    system,
+    messages: toAnthropicMessages(request.messages),
+    ...(tools.length > 0 ? { tools } : {}),
+  };
+}
+
+/**
+ * Cached tokens are reported outside input_tokens, so they are carried
+ * separately rather than summed. They are billed at different rates and the
+ * cost column has to reflect that.
+ */
+export function readUsage(usage: Anthropic.Usage): TokenUsage {
+  const cacheWriteTokens = usage.cache_creation_input_tokens ?? 0;
+  const cacheReadTokens = usage.cache_read_input_tokens ?? 0;
+
+  return {
+    inputTokens: usage.input_tokens,
+    outputTokens: usage.output_tokens,
+    ...(cacheWriteTokens > 0 ? { cacheWriteTokens } : {}),
+    ...(cacheReadTokens > 0 ? { cacheReadTokens } : {}),
+  };
 }
 
 /**

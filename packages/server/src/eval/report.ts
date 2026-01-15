@@ -7,7 +7,17 @@
  * zero is a fact about the tier, not a fact about the design.
  */
 import { PRICING_SNAPSHOT_DATE, formatUsd } from '../providers/pricing.js';
-import type { CaseOutcome, ConfigurationSummary, RunReport } from './types.js';
+import type {
+  CaseOutcome,
+  ConfigurationSummary,
+  RunConfiguration,
+  RunReport,
+} from './types.js';
+
+/** How a configuration is named wherever it appears as a column or a heading. */
+function columnLabel(config: RunConfiguration): string {
+  return `${config.provider} ${config.mode}`;
+}
 
 function percent(value: number | null): string {
   return value === null ? 'n/a' : `${(value * 100).toFixed(0)}%`;
@@ -37,7 +47,7 @@ export function renderReport(report: RunReport): string {
   for (const entry of report.configurations) {
     const { configuration: config, summary } = entry;
     lines.push(
-      `| ${config.mode} (${config.model}) | ${percent(summary.validFirstTryRate)} | ${percent(
+      `| ${config.provider} ${config.model}, ${config.mode} | ${percent(summary.validFirstTryRate)} | ${percent(
         summary.validFinalRate,
       )} | ${percent(summary.expectationsMetRate)} | ${summary.meanIterations} | ${seconds(
         summary.providerMsP50,
@@ -56,7 +66,7 @@ export function renderReport(report: RunReport): string {
   lines.push('| --- | --- | --- |');
   for (const entry of report.configurations) {
     lines.push(
-      `| ${entry.configuration.mode} | ${seconds(entry.summary.latencyMsP50)} | ${seconds(entry.summary.latencyMsP95)} |`,
+      `| ${columnLabel(entry.configuration)} | ${seconds(entry.summary.latencyMsP50)} | ${seconds(entry.summary.latencyMsP95)} |`,
     );
   }
   lines.push('');
@@ -80,7 +90,7 @@ export function renderReport(report: RunReport): string {
     ...new Set(report.configurations.flatMap((entry) => Object.keys(entry.summary.byBand))),
   ];
   lines.push(
-    `| Band | Cases | ${report.configurations.map((e) => e.configuration.mode).join(' | ')} |`,
+    `| Band | Cases | ${report.configurations.map((e) => columnLabel(e.configuration)).join(' | ')} |`,
   );
   lines.push(`| --- | --- | ${report.configurations.map(() => '---').join(' | ')} |`);
 
@@ -97,7 +107,7 @@ export function renderReport(report: RunReport): string {
   lines.push('');
 
   for (const entry of report.configurations) {
-    lines.push(`### ${entry.configuration.mode}`);
+    lines.push(`### ${columnLabel(entry.configuration)}`);
     lines.push('');
     const reasons = Object.entries(entry.summary.failuresByReason).sort((a, b) => b[1] - a[1]);
     if (reasons.length === 0) {
@@ -135,7 +145,7 @@ export function renderReport(report: RunReport): string {
   lines.push('| Configuration | Resisted |');
   lines.push('| --- | --- |');
   for (const entry of report.configurations) {
-    lines.push(`| ${entry.configuration.mode} | ${percent(entry.summary.injectionResistedRate)} |`);
+    lines.push(`| ${columnLabel(entry.configuration)} | ${percent(entry.summary.injectionResistedRate)} |`);
   }
   lines.push('');
 

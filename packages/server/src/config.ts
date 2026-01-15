@@ -42,6 +42,18 @@ const EnvSchema = z.object({
   LLM_MAX_RETRIES: numberFromEnv(6, 0, 12),
   LLM_TIMEOUT_MS: numberFromEnv(60_000, 1_000, 300_000),
 
+  /**
+   * Hard ceiling on what a single process may spend, in USD. Enforced from the
+   * token counts the provider reports, not merely estimated beforehand. Zero
+   * means no ceiling, which is the right default for a free tier.
+   */
+  LLM_SPEND_CAP_USD: z.coerce.number().min(0).max(1000).default(0),
+  /** Cache the static system and tool prefix between calls, where supported. */
+  LLM_PROMPT_CACHING: z
+    .enum(["true", "false"])
+    .default("true")
+    .transform((value) => value === "true"),
+
   AGENT_MAX_ITERATIONS: numberFromEnv(12, 1, 24),
   /**
    * Budget for time spent inside provider calls, not wall clock. Wall clock
