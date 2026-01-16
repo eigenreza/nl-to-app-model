@@ -286,6 +286,56 @@ free tier, so nothing was billed. That is a fact about the tier, not about the
 design, and reporting zero would hide the thing a reader actually wants to know.
 The report prices the same token counts at published list rates.
 
+## What running it against a real provider changed
+
+The agent loop was fully tested against a scripted provider before it ever made
+a network call: every tool, every rejection path, the iteration cap, the salvage
+behaviour. All of it passed. The first live run then failed four times in a row,
+for four reasons none of those tests could have found. That gap is the most
+useful thing this project taught me, so it is written down rather than quietly
+fixed.
+
+**A model id that was current when I wrote it was dead by the time it ran.**
+`gemini-2.0-flash` returned a 404 saying it was retired. Its replacement,
+`gemini-2.5-flash`, returned a 404 saying it was closed to new projects, which
+is a different failure wearing the same status code. The stale id came from this
+repository's own `.env.example`, which nothing tested because it is a document,
+not code. Config that names an external resource is code that has not been given
+a test.
+
+**Provider state has to survive the round trip.** Gemini 3 attaches a thought
+signature to the parts it produces and rejects the following turn if it is
+missing. The first tool call succeeded; the second call failed with a 400. The
+neutral `ToolCall` type needed a field for opaque provider state that nothing
+above the adapter reads and every adapter must return verbatim. An abstraction
+with one implementation would never have found that, which is the argument for
+writing the second adapter in the first place.
+
+**My bounds were guesses wearing the clothes of decisions.** The iteration cap
+of 8 was chosen before there was any evidence. The model issued one tool call
+per turn and needed ten, so every run hit the cap holding a complete, valid
+model it had never been allowed to finalize. And the wall-clock time budget was
+counting the rate limiter's own deliberate spacing, which meant tightening the
+throttle shortened the budget. It now measures time inside provider calls.
+
+**Quotas are the real constraint, and they are not where you expect.** The
+Gemini free tier here is twenty requests per day, per model, per project. Not
+per minute. That is discoverable only from the quota block inside a 429 body,
+which also names the exact quota id. Meanwhile the same 429 carries a
+`RetryInfo` block saying precisely how long to wait, which is strictly better
+information than exponential backoff invents. Both are now used, and a rate
+limit slows the whole queue rather than only the request that received it.
+
+**A saving that is documented is not the same as a saving that applies.** I
+added prompt caching for the static system and tool prefix, expecting it to be
+the largest lever, and it did nothing: the API accepted `cache_control` and
+silently reported zero cache activity. Measured against Claude Haiku 4.5, a
+3,026 token prefix does not cache, nor does 4,313, while 14,694 caches
+immediately. This workload's prefix is about 3,000 tokens, so caching is simply
+unavailable to it, and nothing in the response says so. The measurement is in
+the eval notes because "we enabled caching" would otherwise have read as a
+saving that was never there.
+
 ## Limitations
 
 - One level of filtering. Conditions are joined by a single combinator and do
