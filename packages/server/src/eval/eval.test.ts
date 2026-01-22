@@ -6,7 +6,7 @@ import { EXAMPLE_MODELS, assertApplicationModel } from '@nlam/shared';
 import { ScriptedProvider, textTurn, toolTurn } from '../providers/scripted.js';
 import { ProviderError } from '../providers/types.js';
 import { EVAL_BANDS } from './types.js';
-import { EVAL_CASES, caseById, casesByBand } from './fixtures.js';
+import { EVAL_CASES, balancedSample, caseById, casesByBand } from './fixtures.js';
 import { checkExpectation, checkForbidden, judgeCase } from './checks.js';
 import { OutcomeCache, cacheKey, configurationFor, promptVersion } from './cache.js';
 import {
@@ -507,5 +507,38 @@ describe('report rendering', () => {
     });
 
     expect(markdown).toContain('`wants_chart`: no "table" component');
+  });
+});
+
+describe('balanced subset', () => {
+  it('returns the whole set when the size is not smaller', () => {
+    expect(balancedSample(EVAL_CASES.length)).toHaveLength(EVAL_CASES.length);
+    expect(balancedSample(1000)).toHaveLength(EVAL_CASES.length);
+  });
+
+  it('returns exactly the size asked for', () => {
+    for (const size of [10, 15, 20, 25, 30]) {
+      expect(balancedSample(size)).toHaveLength(size);
+    }
+  });
+
+  it('keeps every band represented rather than taking the easy ones', () => {
+    const sample = balancedSample(20);
+    const bands = new Set(sample.map((evalCase) => evalCase.band));
+    for (const band of EVAL_BANDS) expect(bands).toContain(band);
+  });
+
+  it('keeps roughly the shape of the full set', () => {
+    const sample = balancedSample(20);
+    const share = (cases: readonly EvalCase[], band: string) =>
+      cases.filter((evalCase) => evalCase.band === band).length / cases.length;
+
+    for (const band of EVAL_BANDS) {
+      expect(share(sample, band)).toBeCloseTo(share(EVAL_CASES, band), 1);
+    }
+  });
+
+  it('is deterministic, so a published subset can be reproduced', () => {
+    expect(balancedSample(20).map((c) => c.id)).toEqual(balancedSample(20).map((c) => c.id));
   });
 });

@@ -26,7 +26,7 @@ import {
   type SpendGuard,
 } from '../providers/index.js';
 import { runBaselineBatch } from './batch-baseline.js';
-import { EVAL_CASES, casesByBand } from './fixtures.js';
+import { EVAL_CASES, balancedSample, casesByBand } from './fixtures.js';
 import { OutcomeCache, cacheKey, configurationFor } from './cache.js';
 import {
   MissingOutcomeError,
@@ -59,6 +59,7 @@ async function main(): Promise<void> {
       bands: { type: 'string', default: '' },
       case: { type: 'string', multiple: true, default: [] },
       limit: { type: 'string' },
+      balanced: { type: 'string' },
       offline: { type: 'boolean', default: false },
       fresh: { type: 'boolean', default: false },
       'dry-run': { type: 'boolean', default: false },
@@ -86,7 +87,7 @@ async function main(): Promise<void> {
     }
   }
 
-  const cases = selectCases(values.bands, values.case, values.limit);
+  const cases = selectCases(values.bands, values.case, values.limit, values.balanced);
   if (cases.length === 0) throw new Error('No cases matched the selection.');
 
   const providerNames = (values.provider.trim() === '' ? config.LLM_PROVIDER : values.provider)
@@ -234,7 +235,25 @@ If this is a daily free-tier quota, wait for it to reset and run the same comman
   );
 }
 
-function selectCases(bands: string, ids: readonly string[], limit: string | undefined): EvalCase[] {
+function selectCases(
+  bands: string,
+  ids: readonly string[],
+  limit: string | undefined,
+  balanced: string | undefined,
+): EvalCase[] {
+  if (balanced) {
+    const size = Number(balanced);
+    if (!Number.isInteger(size) || size < 1) {
+      throw new Error('--balanced must be a positive integer.');
+    }
+    const sample = balancedSample(size);
+    console.log(
+      `Balanced subset of ${sample.length} fixtures: ${sample.map((c) => c.id).join(', ')}`,
+    );
+    console.log('');
+    return sample;
+  }
+
   let selected =
     ids.length > 0
       ? EVAL_CASES.filter((evalCase) => ids.includes(evalCase.id))
@@ -411,6 +430,9 @@ function printHelp(): void {
                     out_of_scope, adversarial. Default all.
   --case <id>       Run one case. Repeatable.
   --limit <n>       Take only the first n selected cases.
+  --balanced <n>    Run a subset of n fixtures spread proportionally across the
+                    difficulty bands. Deterministic, and the chosen ids are
+                    printed so a report can say exactly what was run.
   --offline         Use cached outcomes only. Fails if any are missing.
   --fresh           Ignore the cache and call the provider for every case.
   --batch           Send baseline fixtures through the batch endpoint at half

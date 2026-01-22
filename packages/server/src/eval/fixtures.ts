@@ -503,3 +503,62 @@ export function casesByBand(bands: readonly string[]): EvalCase[] {
 export function caseById(id: string): EvalCase | undefined {
   return EVAL_CASES.find((evalCase) => evalCase.id === id);
 }
+
+/**
+ * A smaller set that keeps the shape of the full one.
+ *
+ * When a provider's daily quota cannot cover all forty-five fixtures, the
+ * honest fallback is a subset that is still representative rather than the
+ * first N, which would be almost entirely the easy band and would report a
+ * flattering number. Each band contributes in proportion to its size, and the
+ * choice is deterministic (declaration order), so the same subset comes back
+ * every time and the report can name exactly which fixtures were run.
+ */
+export function balancedSample(size: number): EvalCase[] {
+  if (size >= EVAL_CASES.length) return [...EVAL_CASES];
+
+  const byBand = new Map<string, EvalCase[]>();
+  for (const evalCase of EVAL_CASES) {
+    const bucket = byBand.get(evalCase.band) ?? [];
+    bucket.push(evalCase);
+    byBand.set(evalCase.band, bucket);
+  }
+
+  // Give every band at least one case, then share the rest by proportion.
+  const quotas = new Map<string, number>();
+  for (const [band, bucket] of byBand) {
+    quotas.set(band, Math.min(bucket.length, Math.max(1, Math.round((bucket.length / EVAL_CASES.length) * size))));
+  }
+
+  // Rounding can overshoot or undershoot; settle up against the largest bands.
+  const bands = [...byBand.keys()].sort(
+    (a, b) => (byBand.get(b)?.length ?? 0) - (byBand.get(a)?.length ?? 0),
+  );
+
+  let total = [...quotas.values()].reduce((sum, count) => sum + count, 0);
+  while (total !== size) {
+    let moved = false;
+    for (const band of bands) {
+      const current = quotas.get(band) ?? 0;
+      const available = byBand.get(band)?.length ?? 0;
+      if (total < size && current < available) {
+        quotas.set(band, current + 1);
+        total += 1;
+        moved = true;
+      } else if (total > size && current > 1) {
+        quotas.set(band, current - 1);
+        total -= 1;
+        moved = true;
+      }
+      if (total === size) break;
+    }
+    if (!moved) break; // Cannot get closer without emptying a band.
+  }
+
+  return EVAL_CASES.filter((evalCase) => {
+    const remaining = quotas.get(evalCase.band) ?? 0;
+    if (remaining <= 0) return false;
+    quotas.set(evalCase.band, remaining - 1);
+    return true;
+  });
+}

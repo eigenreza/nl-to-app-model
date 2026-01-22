@@ -59,9 +59,24 @@ Other useful commands:
 ```bash
 npm test                  # unit tests across all three packages
 npm run verify            # charset check, lint, typecheck, tests
-npm run eval -- --dry-run # what an eval run would cost, without spending it
+npm run eval -- --dry-run # what an eval run would call, without sending anything
 npm run eval -- --offline # regenerate the results table from cached outcomes
+npm run estimate          # what a paid run would cost, measured not guessed
 ```
+
+The eval runs one column per provider and mode, and reads and writes a cache
+keyed on the case, the model, the prompts and the schema version:
+
+```bash
+npm run eval -- --provider anthropic --mode agent,baseline --batch
+```
+
+`--batch` sends the baseline fixtures through the batch endpoint at half price.
+The agent loop is deliberately excluded: its second turn cannot be written until
+the first turn's tool results exist, so batching it would change what is being
+measured. Set `LLM_SPEND_CAP_USD` to refuse the next call once a ceiling is in
+sight, enforced from the token counts the provider reports rather than from an
+estimate made beforehand.
 
 ## Architecture
 
