@@ -151,8 +151,9 @@ export function renderReport(report: RunReport): string {
 
   lines.push('## How to reproduce');
   lines.push('');
+  const providers = [...new Set(report.configurations.map((e) => e.configuration.provider))];
   lines.push('```bash');
-  lines.push('npm run eval -- --offline');
+  lines.push(`npm run eval -- --offline --provider ${providers.join(',')}`);
   lines.push('```');
   lines.push('');
   lines.push(
