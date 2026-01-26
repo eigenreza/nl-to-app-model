@@ -204,3 +204,52 @@ describe('generate', () => {
     expect(body).toEqual({ description: 'an expense log', mode: 'baseline' });
   });
 });
+
+describe('an unreachable server', () => {
+  it('is recorded rather than passed over in silence', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new TypeError('fetch failed');
+      }),
+    );
+
+    const store = createAppStore();
+    await store.dispatch(loadDeploymentInfo());
+
+    expect(store.getState().generation.unreachable).toBe(true);
+    expect(store.getState().generation.health).toBeNull();
+  });
+
+  it('clears once the server answers again', async () => {
+    const store = createAppStore();
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        throw new TypeError('fetch failed');
+      }),
+    );
+    await store.dispatch(loadDeploymentInfo());
+    expect(store.getState().generation.unreachable).toBe(true);
+
+    vi.unstubAllGlobals();
+    stubApi({
+      '/api/health': () =>
+        json({
+          status: 'ok',
+          demoMode: 'replay',
+          provider: 'gemini',
+          model: 'gemini-3.6-flash',
+          schemaVersion: '1.0.0',
+          replayTraces: 0,
+          liveGenerationEnabled: false,
+        }),
+      '/api/catalogue': () => json({ entries: [] }),
+    });
+    await store.dispatch(loadDeploymentInfo());
+
+    expect(store.getState().generation.unreachable).toBe(false);
+    expect(store.getState().generation.health?.status).toBe('ok');
+  });
+});

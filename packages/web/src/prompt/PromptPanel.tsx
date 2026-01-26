@@ -10,8 +10,18 @@ import { TraceView } from './TraceView.js';
 
 export function PromptPanel() {
   const dispatch = useAppDispatch();
-  const { status, description, mode, steps, summary, failure, error, health, catalogue } =
-    useAppSelector((state) => state.generation);
+  const {
+    status,
+    description,
+    mode,
+    steps,
+    summary,
+    failure,
+    error,
+    health,
+    catalogue,
+    unreachable,
+  } = useAppSelector((state) => state.generation);
 
   useEffect(() => {
     void dispatch(loadDeploymentInfo());
@@ -19,7 +29,7 @@ export function PromptPanel() {
 
   const running = status === 'running';
   const replayOnly = health !== null && !health.liveGenerationEnabled;
-  const canSubmit = description.trim().length >= 3 && !running;
+  const canSubmit = description.trim().length >= 3 && !running && !unreachable;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -36,6 +46,7 @@ export function PromptPanel() {
             {replayOnly ? 'replay mode' : 'live'}
           </span>
         )}
+        {unreachable && <span className="badge">api offline</span>}
       </header>
 
       <form onSubmit={handleSubmit}>
@@ -75,6 +86,13 @@ export function PromptPanel() {
           </button>
         </div>
       </form>
+
+      {unreachable && (
+        <p className="trace-status error" role="alert">
+          The API is not responding, so nothing can be generated. The reference models below
+          still work: this pane is the only part that needs the server.
+        </p>
+      )}
 
       {replayOnly && catalogue.length > 0 && (
         <div className="replay-catalogue">

@@ -38,6 +38,8 @@ export interface GenerationState {
   error: { code: string; message: string } | null;
   health: HealthResponse | null;
   catalogue: CatalogueEntry[];
+  /** Set when the server could not be reached at all. */
+  unreachable: boolean;
 }
 
 const initialState: GenerationState = {
@@ -51,6 +53,7 @@ const initialState: GenerationState = {
   error: null,
   health: null,
   catalogue: [],
+  unreachable: false,
 };
 
 /** Loads what this deployment can do, so the browser can say so up front. */
@@ -126,6 +129,11 @@ const generationSlice = createSlice({
       .addCase(loadDeploymentInfo.fulfilled, (state, action) => {
         state.health = action.payload.health;
         state.catalogue = action.payload.entries;
+        state.unreachable = false;
+      })
+      .addCase(loadDeploymentInfo.rejected, (state) => {
+        // Saying nothing would leave an enabled button that cannot work.
+        state.unreachable = true;
       })
       .addCase(generate.pending, (state) => {
         state.status = 'running';
