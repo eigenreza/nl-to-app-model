@@ -15,6 +15,7 @@ import {
 } from '@nlam/shared';
 import {
   addUsage,
+  deepNormalisePunctuation,
   emptyUsage,
   type ApplicationModel,
   type TokenUsage,
@@ -134,7 +135,8 @@ export async function generateBaseline(options: BaselineOptions): Promise<Genera
     applicationModel: GenerationResult['applicationModel'],
     warnings: ValidationIssue[],
     failure: GenerationResult['failure'],
-  ): GenerationResult => ({
+  ): GenerationResult =>
+    deepNormalisePunctuation({
     ok: failure === null && applicationModel !== null,
     mode: 'baseline',
     provider: options.provider.name,
@@ -147,7 +149,7 @@ export async function generateBaseline(options: BaselineOptions): Promise<Genera
     latencyMs: now() - startedAt,
     failure,
     warnings,
-  });
+    });
 
   const fail = (reason: FailureReason, message: string, outstanding: ValidationIssue[] = []) =>
     finish(null, [], { reason, message, outstandingIssues: outstanding });

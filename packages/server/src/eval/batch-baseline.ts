@@ -12,7 +12,13 @@
  * collapse into one-item batches or change what the loop does, and the loop is
  * the thing being measured.
  */
-import { addUsage, emptyUsage, type GenerationResult, type ValidationIssue } from '@nlam/shared';
+import {
+  addUsage,
+  deepNormalisePunctuation,
+  emptyUsage,
+  type GenerationResult,
+  type ValidationIssue,
+} from '@nlam/shared';
 import { assessCandidate } from '../generation/baseline.js';
 import { baselineSystemPrompt, baselineUserPrompt, repairUserPrompt } from '../generation/prompts.js';
 import type { BatchItem, BatchOutcome, BatchRunner } from '../providers/batch.js';
@@ -176,7 +182,8 @@ export async function runBaselineBatch(
 
   const results = new Map<string, GenerationResult>();
   for (const [id, state] of states) {
-    if (state.result) results.set(id, state.result);
+    // Same normalisation the sequential generators apply on the way out.
+    if (state.result) results.set(id, deepNormalisePunctuation(state.result));
   }
   return results;
 }

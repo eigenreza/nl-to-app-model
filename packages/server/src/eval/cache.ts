@@ -11,7 +11,7 @@
 import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { SCHEMA_VERSION } from '@nlam/shared';
+import { SCHEMA_VERSION, deepNormalisePunctuation } from '@nlam/shared';
 import { agentSystemPrompt, baselineSystemPrompt } from '../generation/prompts.js';
 import { toolDefinitions } from '../generation/tools.js';
 import type { CaseOutcome, RunConfiguration } from './types.js';
@@ -74,7 +74,9 @@ export class OutcomeCache {
   async get(key: string): Promise<CaseOutcome | undefined> {
     try {
       const raw = await readFile(join(this.directory, `${key}.json`), 'utf8');
-      return JSON.parse(raw) as CaseOutcome;
+      // Normalised on the way out as well as in, so an entry written before the
+      // rule existed does not carry old punctuation into a fresh report.
+      return deepNormalisePunctuation(JSON.parse(raw) as CaseOutcome);
     } catch {
       return undefined;
     }

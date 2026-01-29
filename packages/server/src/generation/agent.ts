@@ -14,6 +14,7 @@
  */
 import {
   addUsage,
+  deepNormalisePunctuation,
   emptyUsage,
   summariseIssues,
   type TokenUsage,
@@ -68,7 +69,16 @@ export async function generateWithAgent(options: AgentOptions): Promise<Generati
     options.onStep?.(full);
   };
 
-  const settle = (failure: { reason: FailureReason; message: string } | null): GenerationResult => {
+  /**
+   * Everything a provider wrote passes through here before it leaves, so no
+   * later stage has to remember to normalise it.
+   */
+  const settle = (failure: { reason: FailureReason; message: string } | null): GenerationResult =>
+    deepNormalisePunctuation(buildResult(failure));
+
+  const buildResult = (
+    failure: { reason: FailureReason; message: string } | null,
+  ): GenerationResult => {
     const validation = draft.validate();
 
     if (failure === null && validation.ok && validation.model) {
