@@ -464,6 +464,27 @@ describe('summary', () => {
 });
 
 describe('report rendering', () => {
+  it('says a batch column has no timings rather than printing zero', () => {
+    const batched = outcome({ result: { ...outcome().result, steps: [] } });
+    const markdown = renderReport({
+      startedAt: '2025-11-02T10:00:00.000Z',
+      finishedAt: '2025-11-02T10:30:00.000Z',
+      cacheHits: 0,
+      providerCalls: 1,
+      configurations: [
+        {
+          configuration: configurationFor('anthropic', 'claude-haiku-4-5', 'baseline'),
+          outcomes: [batched],
+          summary: summarise([batched], 'claude-haiku-4-5'),
+        },
+      ],
+    });
+
+    expect(markdown).toContain('not measured');
+    expect(markdown).toContain('returns no per-item timing');
+    expect(markdown).not.toContain('| 0.0s |');
+  });
+
   it('produces a table and states what the cost column means', () => {
     const markdown = renderReport({
       startedAt: '2025-11-02T10:00:00.000Z',
@@ -481,7 +502,7 @@ describe('report rendering', () => {
 
     expect(markdown).toContain('# Eval results');
     expect(markdown).toContain('| Configuration | Valid first try |');
-    expect(markdown).toContain('the amount actually billed was zero');
+    expect(markdown).toContain('What was actually paid differs by provider');
     expect(markdown).toContain('npm run eval -- --offline');
   });
 

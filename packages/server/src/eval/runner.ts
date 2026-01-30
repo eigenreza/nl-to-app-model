@@ -279,6 +279,9 @@ export function summarise(
     // for outcomes that were cached before the metric existed.
     providerMsP50: percentile(outcomes.map(providerMsOf), 50),
     providerMsP95: percentile(outcomes.map(providerMsOf), 95),
+    // The batch endpoint reports no per-item timing, so every case comes back
+    // as zero. That is missing data, not a fast run.
+    timingsComparable: cases > 0 && outcomes.some((outcome) => providerMsOf(outcome) > 0),
     inputTokens,
     outputTokens,
     priced: pricingFor(modelName) !== undefined,

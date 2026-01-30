@@ -121,6 +121,12 @@ export interface ConfigurationSummary {
    */
   providerMsP50: number | null;
   providerMsP95: number | null;
+  /**
+   * False when the work went through the batch endpoint, which reports no
+   * per-item timing at all. Presenting its zeroes as latency would invite a
+   * comparison that the numbers cannot support.
+   */
+  timingsComparable: boolean;
   inputTokens: number;
   outputTokens: number;
   estimatedCostUsd: number | null;

@@ -2,9 +2,9 @@
  * Report rendering.
  *
  * The markdown this produces is what goes in front of a reader, so it says what
- * the numbers are and what they are not. In particular it prints an estimated
- * cost at published list prices next to a real cost of zero, because a bill of
- * zero is a fact about the tier, not a fact about the design.
+ * the numbers are and what they are not: which cost column is list price rather
+ * than what was paid, and which timings are missing rather than fast. A report
+ * about cost and latency that quietly rounds either one is worse than no report.
  */
 import { PRICING_SNAPSHOT_DATE, formatUsd } from '../providers/pricing.js';
 import type {
@@ -25,6 +25,14 @@ function percent(value: number | null): string {
 
 function seconds(value: number | null): string {
   return value === null ? 'n/a' : `${(value / 1000).toFixed(1)}s`;
+}
+
+/**
+ * Timings from the batch endpoint are absent rather than zero. Printing 0.0s
+ * would read as the fastest column on the page.
+ */
+function timing(summary: ConfigurationSummary, value: number | null): string {
+  return summary.timingsComparable ? seconds(value) : 'not measured';
 }
 
 export function renderReport(report: RunReport): string {
@@ -49,9 +57,10 @@ export function renderReport(report: RunReport): string {
     lines.push(
       `| ${config.provider} ${config.model}, ${config.mode} | ${percent(summary.validFirstTryRate)} | ${percent(
         summary.validFinalRate,
-      )} | ${percent(summary.expectationsMetRate)} | ${summary.meanIterations} | ${seconds(
+      )} | ${percent(summary.expectationsMetRate)} | ${summary.meanIterations} | ${timing(
+        summary,
         summary.providerMsP50,
-      )} | ${seconds(summary.providerMsP95)} | ${(
+      )} | ${timing(summary, summary.providerMsP95)} | ${(
         summary.inputTokens + summary.outputTokens
       ).toLocaleString()} | ${formatUsd(summary.estimatedCostUsd)} |`,
     );
@@ -59,17 +68,27 @@ export function renderReport(report: RunReport): string {
 
   lines.push('');
   lines.push(
-    'Provider time is time spent inside provider calls. Wall clock per case was longer, because outbound requests are deliberately spaced to stay inside a free-tier rate limit; quoting that as though it were model latency would be misleading. For reference, wall clock was:',
+    'Provider time is time spent inside provider calls. Wall clock per case was longer, because outbound requests are deliberately spaced to stay inside a rate limit; quoting that as though it were model latency would be misleading. For reference, wall clock was:',
   );
   lines.push('');
   lines.push('| Configuration | Wall clock p50 | Wall clock p95 |');
   lines.push('| --- | --- | --- |');
   for (const entry of report.configurations) {
     lines.push(
-      `| ${columnLabel(entry.configuration)} | ${seconds(entry.summary.latencyMsP50)} | ${seconds(entry.summary.latencyMsP95)} |`,
+      `| ${columnLabel(entry.configuration)} | ${timing(entry.summary, entry.summary.latencyMsP50)} | ${timing(entry.summary, entry.summary.latencyMsP95)} |`,
     );
   }
   lines.push('');
+
+  const unmeasured = report.configurations.filter((entry) => !entry.summary.timingsComparable);
+  if (unmeasured.length > 0) {
+    lines.push(
+      `Timings read "not measured" for ${unmeasured
+        .map((entry) => columnLabel(entry.configuration))
+        .join(' and ')} because that work went through the batch endpoint, which returns no per-item timing. Its answers arrive together after the whole batch completes, so there is no per-case latency to report and a zero would read as the fastest column on the page.`,
+    );
+    lines.push('');
+  }
 
   const unpriced = report.configurations.filter((entry) => !entry.summary.priced);
   if (unpriced.length > 0) {
@@ -77,11 +96,12 @@ export function renderReport(report: RunReport): string {
     lines.push(
       `List price reads "n/a" because ${models.map((model) => `\`${model}\``).join(' and ')} is not in the price snapshot taken on ${PRICING_SNAPSHOT_DATE}. The token counts are exact and the cost can be computed from them once a published rate is to hand; inventing a rate here would be worse than leaving the column empty.`,
     );
-  } else {
-    lines.push(
-      `List price is what these token counts would have cost at published rates as of ${PRICING_SNAPSHOT_DATE}. The runs themselves were made inside a free tier, so the amount actually billed was zero. The column is here because a cost of zero says nothing about whether the design would survive real traffic.`,
-    );
+    lines.push('');
   }
+
+  lines.push(
+    `List price is what these token counts would cost at published rates as of ${PRICING_SNAPSHOT_DATE}, at full price and without any batch discount. What was actually paid differs by provider: work on a free tier was billed nothing, and batched work was billed half. Actual spend is reported by the run itself, from the same token counts.`,
+  );
   lines.push('');
 
   lines.push('## By difficulty band');
