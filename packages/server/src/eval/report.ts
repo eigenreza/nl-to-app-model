@@ -7,6 +7,7 @@
  * about cost and latency that quietly rounds either one is worse than no report.
  */
 import { PRICING_SNAPSHOT_DATE, formatUsd } from '../providers/pricing.js';
+import { EVAL_CASES } from './fixtures.js';
 import type {
   CaseOutcome,
   ConfigurationSummary,
@@ -168,6 +169,25 @@ export function renderReport(report: RunReport): string {
     lines.push(`| ${columnLabel(entry.configuration)} | ${percent(entry.summary.injectionResistedRate)} |`);
   }
   lines.push('');
+
+  const corrected = EVAL_CASES.filter((evalCase) => evalCase.correction);
+  if (corrected.length > 0) {
+    lines.push('## Fixture corrections');
+    lines.push('');
+    lines.push(
+      `${corrected.length === 1 ? 'One assertion was' : `${corrected.length} assertions were`} changed after results had been seen. Editing a test once you know the answers is how a benchmark quietly turns into a description of whatever the model did, so each change is recorded here with its reason rather than absorbed into the numbers. Every configuration above was re-judged under the corrected rules, from the same cached generations, so no column is scored under rules another column was not.`,
+    );
+    lines.push('');
+    for (const evalCase of corrected) {
+      lines.push(`- \`${evalCase.id}\` (${evalCase.band}): ${evalCase.correction?.changed}.`);
+      lines.push(`  ${evalCase.correction?.reason}`);
+    }
+    lines.push('');
+    lines.push(
+      'Assertions that merely turned out to be demanding were left alone. The rule applied was that a maximum entity count may only be asserted where the description names exactly one kind of record; both corrections are cases where it does not, and no other fixture met that test.',
+    );
+    lines.push('');
+  }
 
   lines.push('## How to reproduce');
   lines.push('');

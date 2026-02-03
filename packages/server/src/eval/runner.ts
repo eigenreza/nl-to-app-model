@@ -145,6 +145,13 @@ export async function runEval(options: RunnerOptions): Promise<RunReport> {
         }
       }
 
+      // The verdict is derived from the fixture, not part of the generation, so
+      // it is recomputed every time rather than trusted from the cache. That is
+      // what lets an assertion be corrected without rerunning anything, and it
+      // guarantees every configuration is judged under the same rules however
+      // long ago its generation was produced.
+      outcome = rejudge(evalCase, outcome);
+
       outcomes.push(outcome);
       options.onProgress?.({
         configuration,
@@ -187,6 +194,23 @@ async function runOne(
     provider,
     timeBudgetMs: options.timeBudgetMs ?? 120_000,
   });
+}
+
+/**
+ * Re-applies the fixture's assertions to an outcome that already exists.
+ *
+ * Used on every outcome, cached or fresh, so that judging is a pure function of
+ * the fixture and the produced model. A stored verdict from an earlier run is
+ * treated as stale by construction.
+ */
+export function rejudge(evalCase: EvalCase, outcome: CaseOutcome): CaseOutcome {
+  const verdict = judgeCase(evalCase, outcome.result.applicationModel);
+  return {
+    ...outcome,
+    expectationsMet: verdict.expectationsMet,
+    expectationFailures: verdict.expectationFailures,
+    forbiddenMatches: verdict.forbiddenMatches,
+  };
 }
 
 export function toOutcome(

@@ -53,6 +53,17 @@ export interface EvalCase {
   forbid?: string[];
   /** Why this case is in the set, for the report and for whoever reads it later. */
   note?: string;
+  /**
+   * An assertion that was changed after results had been seen.
+   *
+   * Editing a test after looking at the answers is how a benchmark quietly
+   * becomes a description of whatever the model happened to do, so the change
+   * is recorded on the fixture itself and printed in the report rather than
+   * absorbed into the numbers. Every configuration is re-judged under the
+   * corrected rule from the same cached generations, so no provider or mode is
+   * scored under rules the others were not.
+   */
+  correction?: { changed: string; reason: string };
 }
 
 export interface CaseOutcome {

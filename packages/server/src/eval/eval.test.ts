@@ -12,6 +12,7 @@ import { OutcomeCache, cacheKey, configurationFor, promptVersion } from './cache
 import {
   MissingOutcomeError,
   ProviderUnavailableError,
+  rejudge,
   runEval,
   summarise,
 } from './runner.js';
@@ -561,5 +562,70 @@ describe('balanced subset', () => {
 
   it('is deterministic, so a published subset can be reproduced', () => {
     expect(balancedSample(20).map((c) => c.id)).toEqual(balancedSample(20).map((c) => c.id));
+  });
+});
+
+describe('fixture corrections', () => {
+  it('records a reason for every corrected assertion', () => {
+    for (const evalCase of EVAL_CASES) {
+      if (!evalCase.correction) continue;
+      expect(evalCase.correction.changed.length).toBeGreaterThan(10);
+      expect(evalCase.correction.reason.length).toBeGreaterThan(40);
+    }
+  });
+
+  it('only relaxed the entity ceiling where the description names more than one record', () => {
+    const corrected = EVAL_CASES.filter((evalCase) => evalCase.correction);
+    expect(corrected.map((evalCase) => evalCase.id).sort()).toEqual([
+      'injection_abandon_format',
+      'terse_two_words',
+    ]);
+
+    // The correction is what it says it is: no ceiling any more.
+    for (const evalCase of corrected) {
+      expect(evalCase.expect?.entities?.max).toBeUndefined();
+      expect(evalCase.expect?.entities?.min).toBe(1);
+    }
+  });
+
+  it('left the enum-filter assertions alone, since those are real misses', () => {
+    for (const id of ['habit_tracker', 'podcast_queue']) {
+      const evalCase = caseById(id)!;
+      expect(evalCase.correction).toBeUndefined();
+      expect(evalCase.expect?.filterOnFieldType).toEqual(['enum']);
+    }
+  });
+});
+
+describe('re-judging', () => {
+  it('applies the current fixture, not the verdict stored with the outcome', () => {
+    const evalCase: EvalCase = {
+      id: 'contacts',
+      band: 'simple',
+      description: 'a contact list',
+      expect: { entities: { min: 1, max: 1 } },
+    };
+
+    // An outcome carrying a stale verdict from a stricter rule.
+    const stale: CaseOutcome = {
+      ...outcome(),
+      expectationsMet: false,
+      expectationFailures: ['expected at most 0 entities, found 1'],
+      result: { ...outcome().result, applicationModel: EXAMPLE_MODELS.contact_list },
+    };
+
+    const fresh = rejudge(evalCase, stale);
+    expect(fresh.expectationsMet).toBe(true);
+    expect(fresh.expectationFailures).toEqual([]);
+  });
+
+  it('leaves everything except the verdict untouched', () => {
+    const evalCase = caseById('book_tracker')!;
+    const original = outcome({ iterations: 7, inputTokens: 123 });
+    const fresh = rejudge(evalCase, original);
+
+    expect(fresh.iterations).toBe(7);
+    expect(fresh.inputTokens).toBe(123);
+    expect(fresh.result).toBe(original.result);
   });
 });

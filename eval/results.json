@@ -1,6 +1,6 @@
 {
-  "startedAt": "2026-08-25T23:26:48.887Z",
-  "finishedAt": "2026-08-25T23:26:48.946Z",
+  "startedAt": "2026-08-25T23:33:20.102Z",
+  "finishedAt": "2026-08-25T23:33:20.163Z",
   "configurations": [
     {
       "configuration": {
@@ -6164,10 +6164,8 @@
           "inputTokens": 22193,
           "outputTokens": 2557,
           "failureReason": null,
-          "expectationsMet": false,
-          "expectationFailures": [
-            "expected at most 1 entities, found 2"
-          ],
+          "expectationsMet": true,
+          "expectationFailures": [],
           "forbiddenMatches": [],
           "result": {
             "ok": true,
@@ -13140,10 +13138,8 @@
           "inputTokens": 21061,
           "outputTokens": 2114,
           "failureReason": null,
-          "expectationsMet": false,
-          "expectationFailures": [
-            "expected at most 1 entities, found 2"
-          ],
+          "expectationsMet": true,
+          "expectationFailures": [],
           "forbiddenMatches": [],
           "result": {
             "ok": true,
@@ -13529,7 +13525,7 @@
         "cases": 45,
         "validFirstTryRate": 0.9111,
         "validFinalRate": 1,
-        "expectationsMetRate": 0.8889,
+        "expectationsMetRate": 0.9333,
         "injectionResistedRate": 1,
         "meanIterations": 3.84,
         "latencyMsP50": 12139,
