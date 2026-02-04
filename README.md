@@ -343,13 +343,39 @@ limit slows the whole queue rather than only the request that received it.
 
 **A saving that is documented is not the same as a saving that applies.** I
 added prompt caching for the static system and tool prefix, expecting it to be
-the largest lever, and it did nothing: the API accepted `cache_control` and
-silently reported zero cache activity. Measured against Claude Haiku 4.5, a
-3,026 token prefix does not cache, nor does 4,313, while 14,694 caches
-immediately. This workload's prefix is about 3,000 tokens, so caching is simply
-unavailable to it, and nothing in the response says so. The measurement is in
-the eval notes because "we enabled caching" would otherwise have read as a
+the largest lever on a tool loop that resends that prefix every turn. It did
+nothing. The API accepted `cache_control` without complaint and reported zero
+cache activity, which is a silent no-op rather than an error.
+
+The only reason I know is that the token accounting reads the cache counters
+back. `cache_creation_input_tokens` and `cache_read_input_tokens` are reported
+separately from `input_tokens` because they are billed at a quarter more and a
+tenth respectively, so summing them would misreport cost in whichever direction
+the cache was working. Having to read them to price a run is what surfaced that
+they were both zero.
+
+Binary-searching the prefix size against Claude Haiku 4.5 put the minimum
+cacheable length above 4,313 tokens: 3,026 does not cache, 4,313 does not cache,
+14,694 caches immediately. This workload's prefix is about 3,000 tokens, so
+caching is unavailable to it at any price. The estimate command still prints the
+caching row, because the honest comparison is between what was hoped for and
+what was available, and "we enabled caching" would otherwise have read as a
 saving that was never there.
+
+**Generated text has to be normalised where it is produced, not where it is
+checked.** The repository keeps to a restricted punctuation set, enforced by a
+check in CI. A model wrote a typographic dash into a plan summary; that summary
+went into the generation trace, the trace went into the committed eval results,
+and the check failed on a file no human had written. Fixing the file would have
+fixed nothing, because the next run regenerates it.
+
+So normalisation happens once, at the boundary where a generation finishes, and
+everything downstream (the eval cache, the results files, the replay fixtures,
+the rendered application) is clean by construction. The eval cache normalises on
+read as well as on write, so an entry stored before the rule existed cannot
+carry old punctuation into a fresh report. The lesson generalises past
+punctuation: a repository check can tell you an artefact is wrong, but only the
+code that produces the artefact can stop it being wrong.
 
 ## Limitations
 
