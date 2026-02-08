@@ -12,7 +12,8 @@
     "eval": "tsx src/eval/cli.ts",
     "clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\"",
     "record": "tsx src/replay/record.ts",
-    "estimate": "tsx src/eval/estimate-cli.ts"
+    "estimate": "tsx src/eval/estimate-cli.ts",
+    "record:cached": "tsx src/replay/record-from-eval.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.120.0",

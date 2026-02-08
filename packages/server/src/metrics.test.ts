@@ -106,3 +106,38 @@ describe('ReplayStore', () => {
     expect(store.catalogue()).toEqual([]);
   });
 });
+
+describe('replay provenance', () => {
+  const traceFrom = (provider: string, model: string, id: string): ReplayTrace => ({
+    id,
+    description: `a ${id} application`,
+    mode: 'agent',
+    recordedAt: '2025-11-02T10:00:00.000Z',
+    result: result({ provider, model }),
+  });
+
+  it('reports what the stored traces were generated with', () => {
+    const store = new ReplayStore([
+      traceFrom('anthropic', 'claude-haiku-4-5', 'a'),
+      traceFrom('anthropic', 'claude-haiku-4-5', 'b'),
+    ]);
+
+    expect(store.provenance()).toEqual({
+      provider: 'anthropic',
+      model: 'claude-haiku-4-5',
+    });
+  });
+
+  it('names every source when a store holds more than one', () => {
+    const store = new ReplayStore([
+      traceFrom('anthropic', 'claude-haiku-4-5', 'a'),
+      traceFrom('gemini', 'gemini-3-flash-preview', 'b'),
+    ]);
+
+    expect(store.provenance()?.provider).toBe('anthropic, gemini');
+  });
+
+  it('has nothing to report when there are no traces', () => {
+    expect(new ReplayStore().provenance()).toBeUndefined();
+  });
+});

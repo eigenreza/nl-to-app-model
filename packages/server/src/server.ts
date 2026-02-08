@@ -45,13 +45,22 @@ export async function buildServer(context: ServerContext): Promise<FastifyInstan
   });
 
   if (context.webRoot) {
-    await app.register(fastifyStatic, { root: context.webRoot, wildcard: false });
+    // wildcard:true serves whatever is on disk at request time. The alternative
+    // snapshots the directory when the plugin is registered, which means an
+    // asset written after startup is silently answered by the SPA fallback
+    // below, as text/html, and the page loads blank with only a MIME type
+    // complaint in the console. A missing file still reaches the not-found
+    // handler, so the fallback keeps working.
+    await app.register(fastifyStatic, { root: context.webRoot, wildcard: true });
   }
 
   app.setNotFoundHandler(async (request, reply) => {
-    // With the client served from the same process, anything that is not an API
-    // route and not a file on disk is a client-side route, so it gets the shell.
-    if (context.webRoot && request.method === 'GET' && !request.url.startsWith('/api/')) {
+    // With the client served from the same process, a navigation to a route the
+    // client handles should get the shell. A request for a file that is not
+    // there should not: answering a missing script with HTML is how a broken
+    // build turns into a blank page and a MIME type complaint instead of a 404,
+    // which is a considerably worse afternoon.
+    if (context.webRoot && request.method === 'GET' && isClientNavigation(request.url)) {
       return reply.sendFile('index.html');
     }
 
@@ -84,4 +93,17 @@ export async function buildServer(context: ServerContext): Promise<FastifyInstan
   registerGenerateRoutes(app, context);
 
   return app;
+}
+
+/**
+ * True for a URL that looks like a page the client routes, rather than a
+ * request for a file. A path whose last segment carries an extension is asking
+ * for an asset, and if that asset is missing the honest answer is 404.
+ */
+export function isClientNavigation(url: string): boolean {
+  if (url.startsWith('/api/')) return false;
+
+  const path = url.split('?')[0] ?? '';
+  const lastSegment = path.split('/').pop() ?? '';
+  return !lastSegment.includes('.');
 }

@@ -13,11 +13,18 @@ import type { ServerContext } from '../context.js';
 
 export function registerMetaRoutes(app: FastifyInstance, context: ServerContext): void {
   app.get('/api/health', async (): Promise<HealthResponse> => {
+    // In replay mode no provider is constructed, so naming the configured one
+    // would credit the answers to somewhere they did not come from. What the
+    // recorded traces were generated with is the honest answer.
+    const provenance = context.config.liveGenerationEnabled
+      ? undefined
+      : context.replay.provenance();
+
     return {
       status: 'ok',
       demoMode: context.config.DEMO_MODE,
-      provider: context.config.LLM_PROVIDER,
-      model: context.config.model,
+      provider: provenance?.provider ?? context.config.LLM_PROVIDER,
+      model: provenance?.model ?? context.config.model,
       schemaVersion: SCHEMA_VERSION,
       replayTraces: context.replay.size,
       liveGenerationEnabled: context.config.liveGenerationEnabled,

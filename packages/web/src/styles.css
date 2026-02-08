@@ -669,3 +669,11 @@ tbody tr:hover {
   margin: 0;
   font-variant-numeric: tabular-nums;
 }
+
+.catalogue-mode {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  white-space: nowrap;
+}

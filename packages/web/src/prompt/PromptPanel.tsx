@@ -113,7 +113,10 @@ export function PromptPanel() {
                   }}
                 >
                   {entry.description}
-                </button>
+                </button>{' '}
+                <span className="catalogue-mode">
+                  {entry.mode === 'agent' ? 'agent loop' : 'baseline'}
+                </span>
               </li>
             ))}
           </ul>

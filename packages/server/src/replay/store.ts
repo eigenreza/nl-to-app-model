@@ -139,6 +139,24 @@ export class ReplayStore {
     return this.byKey.get(keyFor(description, mode));
   }
 
+  /**
+   * What the stored traces were generated with.
+   *
+   * In replay mode the configured provider is irrelevant, because none is ever
+   * constructed. Reporting it would tell a visitor the answers came from
+   * somewhere they did not. Returns undefined when there is nothing to report,
+   * and names every distinct source when a store holds more than one.
+   */
+  provenance(): { provider: string; model: string } | undefined {
+    const traces = [...this.byKey.values()];
+    if (traces.length === 0) return undefined;
+
+    const providers = [...new Set(traces.map((trace) => trace.result.provider))].sort();
+    const models = [...new Set(traces.map((trace) => trace.result.model))].sort();
+
+    return { provider: providers.join(', '), model: models.join(', ') };
+  }
+
   /** The prompts a replay-only deployment can answer, for the browser to offer. */
   catalogue(): Array<{ id: string; description: string; mode: GenerationResult['mode'] }> {
     return [...this.byKey.values()]

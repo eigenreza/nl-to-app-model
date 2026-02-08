@@ -1,0 +1,152 @@
+{
+  "id": "book_tracker",
+  "description": "a book tracker with a table of books, a filter by genre, and a count of unread books",
+  "mode": "baseline",
+  "recordedAt": "2026-08-26T00:45:26.212Z",
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Book Tracker",
+        "description": "Track your books with genre filtering and unread count"
+      },
+      "entities": [
+        {
+          "id": "book",
+          "name": "Book",
+          "pluralName": "Books",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "author",
+              "label": "Author",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "genre",
+              "label": "Genre",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Fiction",
+                "Nonfiction",
+                "Mystery",
+                "Science Fiction",
+                "Romance",
+                "Biography"
+              ]
+            },
+            {
+              "id": "read",
+              "label": "Read",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "title": "The Great Gatsby",
+              "author": "F. Scott Fitzgerald",
+              "genre": "Fiction",
+              "read": true
+            },
+            {
+              "title": "To Kill a Mockingbird",
+              "author": "Harper Lee",
+              "genre": "Fiction",
+              "read": true
+            },
+            {
+              "title": "1984",
+              "author": "George Orwell",
+              "genre": "Science Fiction",
+              "read": false
+            },
+            {
+              "title": "Educated",
+              "author": "Tara Westover",
+              "genre": "Biography",
+              "read": false
+            },
+            {
+              "title": "The Girl with the Dragon Tattoo",
+              "author": "Stieg Larsson",
+              "genre": "Mystery",
+              "read": true
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "unread_count",
+          "width": "third",
+          "type": "metric",
+          "entityId": "book",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "read",
+                "op": "isFalse"
+              }
+            ]
+          },
+          "caption": "Unread books"
+        },
+        {
+          "id": "book_table",
+          "title": "Books",
+          "width": "full",
+          "type": "table",
+          "entityId": "book",
+          "filters": [
+            {
+              "fieldId": "genre",
+              "control": "select",
+              "label": "Genre"
+            }
+          ]
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2041,
+          "outputTokens": 724
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2041,
+      "outputTokens": 724
+    },
+    "latencyMs": 144228,
+    "failure": null,
+    "warnings": []
+  }
+}

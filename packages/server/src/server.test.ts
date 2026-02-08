@@ -9,7 +9,7 @@ import { loadConfig } from './config.js';
 import { Metrics } from './metrics.js';
 import { ReplayStore, type ReplayTrace } from './replay/store.js';
 import { ScriptedProvider, toolTurn } from './providers/scripted.js';
-import { buildServer } from './server.js';
+import { buildServer, isClientNavigation } from './server.js';
 import type { ServerContext } from './context.js';
 
 const silentLogger = pino({ level: 'silent' });
@@ -152,6 +152,12 @@ describe('serving the client from the same process', () => {
       const missing = await app.inject({ method: 'GET', url: '/api/nope' });
       expect(missing.statusCode).toBe(404);
       expect(missing.json().error.code).toBe('not_found');
+
+      // A missing asset must not be answered with the shell: that is how a
+      // broken build presents as a blank page rather than as an error.
+      const asset = await app.inject({ method: 'GET', url: '/assets/missing.js' });
+      expect(asset.statusCode).toBe(404);
+      expect(asset.headers['content-type']).toContain('application/json');
     } finally {
       await rm(root, { recursive: true, force: true });
     }
@@ -357,5 +363,24 @@ describe('guard rails', () => {
     expect(stats.succeeded).toBe(1);
     expect(stats.servedFromReplay).toBe(1);
     expect(stats.tokens.input).toBe(0); // Replayed answers spend nothing.
+  });
+});
+
+describe('client navigation detection', () => {
+  it('treats extensionless paths as pages the client routes', () => {
+    for (const url of ['/', '/anything', '/deep/client/route', '/route?q=1']) {
+      expect(isClientNavigation(url)).toBe(true);
+    }
+  });
+
+  it('treats anything with a file extension as an asset request', () => {
+    for (const url of ['/assets/index-abc.js', '/styles.css', '/favicon.ico', '/a/b/c.map']) {
+      expect(isClientNavigation(url)).toBe(false);
+    }
+  });
+
+  it('never claims an api route', () => {
+    expect(isClientNavigation('/api/health')).toBe(false);
+    expect(isClientNavigation('/api/generate')).toBe(false);
   });
 });
