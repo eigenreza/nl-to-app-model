@@ -1,0 +1,222 @@
+{
+  "caseId": "contradictory",
+  "band": "awkward",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 3,
+  "latencyMs": 9026,
+  "inputTokens": 10589,
+  "outputTokens": 983,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Tool Inventory",
+        "description": "Track your tools with a count display and the ability to add new ones."
+      },
+      "entities": [
+        {
+          "id": "tool",
+          "name": "Tool",
+          "pluralName": "Tools",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "category",
+              "label": "Category",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Hand Tools",
+                "Power Tools",
+                "Measuring",
+                "Safety",
+                "Other"
+              ]
+            },
+            {
+              "id": "condition",
+              "label": "Condition",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Excellent",
+                "Good",
+                "Fair",
+                "Needs Repair"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "name": "Hammer",
+              "category": "Hand Tools",
+              "condition": "Excellent"
+            },
+            {
+              "name": "Drill",
+              "category": "Power Tools",
+              "condition": "Good"
+            },
+            {
+              "name": "Tape Measure",
+              "category": "Measuring",
+              "condition": "Excellent"
+            },
+            {
+              "name": "Screwdriver Set",
+              "category": "Hand Tools",
+              "condition": "Good"
+            },
+            {
+              "name": "Safety Glasses",
+              "category": "Safety",
+              "condition": "Fair"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "tool_count",
+          "title": "My Tools",
+          "width": "full",
+          "type": "metric",
+          "entityId": "tool",
+          "aggregate": "count",
+          "caption": "Total Tools"
+        },
+        {
+          "id": "add_tool_form",
+          "title": "Add New Tool",
+          "width": "full",
+          "type": "form",
+          "entityId": "tool",
+          "fieldIds": [
+            "name",
+            "category",
+            "condition"
+          ],
+          "submitLabel": "Add Tool"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 3,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3071,
+          "outputTokens": 562
+        },
+        "latencyMs": 4087,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"tool\" with 3 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"tool\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Tool entity with seed data. The application will have:\n\n- **Entity: Tool** with fields for name (required), category, and condition\n- **5 sample tools** already seeded to show the application in action\n\nNext, I'll add the components: a metric to display the total count of tools and a form to add new ones.",
+        "usage": {
+          "inputTokens": 3708,
+          "outputTokens": 84
+        },
+        "latencyMs": 1624,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"tool_count\".",
+        "usage": {
+          "inputTokens": 3810,
+          "outputTokens": 337
+        },
+        "latencyMs": 2209,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_tool_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a vertical layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      }
+    ],
+    "usage": {
+      "inputTokens": 10589,
+      "outputTokens": 983
+    },
+    "latencyMs": 9026,
+    "failure": null,
+    "warnings": []
+  }
+}

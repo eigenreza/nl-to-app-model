@@ -1,0 +1,165 @@
+{
+  "caseId": "expense_tracker",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144232,
+  "inputTokens": 2051,
+  "outputTokens": 731,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Expense Tracker",
+        "description": "Track expenses by category with totals and averages"
+      },
+      "entities": [
+        {
+          "id": "expense",
+          "name": "Expense",
+          "pluralName": "Expenses",
+          "fields": [
+            {
+              "id": "category",
+              "label": "Category",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Food",
+                "Transport",
+                "Entertainment",
+                "Utilities",
+                "Shopping",
+                "Other"
+              ]
+            },
+            {
+              "id": "amount",
+              "label": "Amount",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "category": "Food",
+              "amount": 15.5,
+              "date": "2024-03-19"
+            },
+            {
+              "category": "Transport",
+              "amount": 8,
+              "date": "2024-03-19"
+            },
+            {
+              "category": "Entertainment",
+              "amount": 25,
+              "date": "2024-03-18"
+            },
+            {
+              "category": "Utilities",
+              "amount": 120,
+              "date": "2024-03-17"
+            },
+            {
+              "category": "Shopping",
+              "amount": 45.75,
+              "date": "2024-03-16"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "total_spent",
+          "width": "full",
+          "type": "metric",
+          "entityId": "expense",
+          "aggregate": "sum",
+          "fieldId": "amount",
+          "caption": "Total Spent"
+        },
+        {
+          "id": "average_expense",
+          "width": "full",
+          "type": "metric",
+          "entityId": "expense",
+          "aggregate": "average",
+          "fieldId": "amount",
+          "caption": "Average Expense"
+        },
+        {
+          "id": "expense_table",
+          "title": "Expenses",
+          "width": "full",
+          "type": "table",
+          "entityId": "expense",
+          "columns": [
+            "category",
+            "amount",
+            "date"
+          ],
+          "filters": [
+            {
+              "fieldId": "category",
+              "control": "select",
+              "label": "Category"
+            }
+          ]
+        },
+        {
+          "id": "add_expense",
+          "title": "Add Expense",
+          "width": "full",
+          "type": "form",
+          "entityId": "expense",
+          "submitLabel": "Add Expense"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2051,
+          "outputTokens": 731
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2051,
+      "outputTokens": 731
+    },
+    "latencyMs": 144232,
+    "failure": null,
+    "warnings": []
+  }
+}

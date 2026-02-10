@@ -1,0 +1,161 @@
+{
+  "caseId": "rambling",
+  "band": "awkward",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144238,
+  "inputTokens": 2097,
+  "outputTokens": 810,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Book Lending Tracker",
+        "description": "Track which books you've lent out, who has them, and when they were borrowed."
+      },
+      "entities": [
+        {
+          "id": "loan",
+          "name": "Loan",
+          "pluralName": "Loans",
+          "fields": [
+            {
+              "id": "book_title",
+              "label": "Book Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "borrower",
+              "label": "Borrower",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "date_lent",
+              "label": "Date Lent",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "returned",
+              "label": "Returned",
+              "type": "boolean",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "book_title": "The Midnight Library",
+              "borrower": "Sarah",
+              "date_lent": "2022-11-15",
+              "returned": false
+            },
+            {
+              "book_title": "Educated",
+              "borrower": "James",
+              "date_lent": "2024-01-20",
+              "returned": true
+            },
+            {
+              "book_title": "Project Hail Mary",
+              "borrower": "Emma",
+              "date_lent": "2024-02-10",
+              "returned": false
+            },
+            {
+              "book_title": "Atomic Habits",
+              "borrower": "Michael",
+              "date_lent": "2023-08-05",
+              "returned": true
+            },
+            {
+              "book_title": "The Thursday Murder Club",
+              "borrower": "Lisa",
+              "date_lent": "2024-03-01",
+              "returned": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "loans_table",
+          "title": "Books Out on Loan",
+          "width": "full",
+          "type": "table",
+          "entityId": "loan",
+          "filters": [
+            {
+              "fieldId": "returned",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_loan",
+          "title": "Record a Loan",
+          "width": "full",
+          "type": "form",
+          "entityId": "loan",
+          "submitLabel": "Add loan"
+        },
+        {
+          "id": "unreturned_count",
+          "title": "Books Still Out",
+          "width": "third",
+          "type": "metric",
+          "entityId": "loan",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "returned",
+                "op": "isFalse"
+              }
+            ]
+          }
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2097,
+          "outputTokens": 810
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2097,
+      "outputTokens": 810
+    },
+    "latencyMs": 144238,
+    "failure": null,
+    "warnings": []
+  }
+}

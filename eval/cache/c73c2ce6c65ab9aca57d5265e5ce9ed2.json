@@ -1,0 +1,270 @@
+{
+  "caseId": "wine_cellar",
+  "band": "simple",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 11577,
+  "inputTokens": 15534,
+  "outputTokens": 1413,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Wine Cellar",
+        "description": "Track wines in your cellar with producer, vintage year, bottle count, and region."
+      },
+      "entities": [
+        {
+          "id": "wine",
+          "name": "Wine",
+          "pluralName": "Wines",
+          "fields": [
+            {
+              "id": "producer",
+              "label": "Producer",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "vintage_year",
+              "label": "Vintage Year",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "bottles_left",
+              "label": "Bottles Left",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "region",
+              "label": "Region",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "producer": "Château Margaux",
+              "vintage_year": 2015,
+              "bottles_left": 3,
+              "region": "Bordeaux"
+            },
+            {
+              "producer": "Barolo DOCG",
+              "vintage_year": 2018,
+              "bottles_left": 5,
+              "region": "Piedmont"
+            },
+            {
+              "producer": "Cloudy Bay",
+              "vintage_year": 2021,
+              "bottles_left": 8,
+              "region": "Marlborough"
+            },
+            {
+              "producer": "Opus One",
+              "vintage_year": 2019,
+              "bottles_left": 2,
+              "region": "Napa Valley"
+            },
+            {
+              "producer": "Chablis William Fèvre",
+              "vintage_year": 2020,
+              "bottles_left": 6,
+              "region": "Burgundy"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "wine_table",
+          "title": "Wine Cellar",
+          "width": "full",
+          "type": "table",
+          "entityId": "wine",
+          "columns": [
+            "producer",
+            "vintage_year",
+            "bottles_left",
+            "region"
+          ],
+          "filters": [
+            {
+              "fieldId": "region",
+              "control": "text",
+              "label": "Search Region"
+            },
+            {
+              "fieldId": "producer",
+              "control": "text",
+              "label": "Search Producer"
+            }
+          ]
+        },
+        {
+          "id": "add_wine_form",
+          "title": "Add Wine",
+          "width": "full",
+          "type": "form",
+          "entityId": "wine",
+          "fieldIds": [
+            "producer",
+            "vintage_year",
+            "bottles_left",
+            "region"
+          ],
+          "submitLabel": "Add to Cellar"
+        },
+        {
+          "id": "total_bottles",
+          "title": "Total Bottles",
+          "width": "full",
+          "type": "metric",
+          "entityId": "wine",
+          "aggregate": "sum",
+          "fieldId": "bottles_left",
+          "caption": "bottles in cellar"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3065,
+          "outputTokens": 699
+        },
+        "latencyMs": 4187,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"wine\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"wine\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Wine entity with seed data. The application now has:\n\n**Entity: Wine**\n- Producer (string, required)\n- Vintage Year (number, required)\n- Bottles Left (number, required)\n- Region (string, required)\n\nThe entity is seeded with 5 realistic wine examples from different regions and vintages. Ready to proceed with components in the next turn.",
+        "usage": {
+          "inputTokens": 3830,
+          "outputTokens": 95
+        },
+        "latencyMs": 1596,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"wine_table\".",
+        "usage": {
+          "inputTokens": 3943,
+          "outputTokens": 571
+        },
+        "latencyMs": 3429,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_wine_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_bottles\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4696,
+          "outputTokens": 48
+        },
+        "latencyMs": 999,
+        "index": 9
+      }
+    ],
+    "usage": {
+      "inputTokens": 15534,
+      "outputTokens": 1413
+    },
+    "latencyMs": 11577,
+    "failure": null,
+    "warnings": []
+  }
+}

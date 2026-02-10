@@ -1,0 +1,223 @@
+{
+  "caseId": "birthday_list",
+  "band": "simple",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 9573,
+  "inputTokens": 14906,
+  "outputTokens": 1036,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Birthday List",
+        "description": "Track birthdays of people you know with their relationship to you."
+      },
+      "entities": [
+        {
+          "id": "person",
+          "name": "Person",
+          "pluralName": "People",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "birthday",
+              "label": "Birthday",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "relationship",
+              "label": "How I Know Them",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "name": "Sarah Johnson",
+              "birthday": "1990-03-15",
+              "relationship": "Best friend from college"
+            },
+            {
+              "name": "Michael Chen",
+              "birthday": "1988-07-22",
+              "relationship": "Work colleague"
+            },
+            {
+              "name": "Emma Wilson",
+              "birthday": "1995-11-08",
+              "relationship": "Sister"
+            },
+            {
+              "name": "David Martinez",
+              "birthday": "1985-01-30",
+              "relationship": "Childhood friend"
+            },
+            {
+              "name": "Lisa Anderson",
+              "birthday": "1992-06-14",
+              "relationship": "Neighbor"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "people_table",
+          "title": "Birthday List",
+          "width": "full",
+          "type": "table",
+          "entityId": "person",
+          "columns": [
+            "name",
+            "birthday",
+            "relationship"
+          ]
+        },
+        {
+          "id": "add_person_form",
+          "title": "Add Person",
+          "width": "full",
+          "type": "form",
+          "entityId": "person",
+          "fieldIds": [
+            "name",
+            "birthday",
+            "relationship"
+          ],
+          "submitLabel": "Add to List"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3058,
+          "outputTokens": 579
+        },
+        "latencyMs": 3693,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"person\" with 3 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"person\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Person entity with seed data. The application has:\n\n- **Entity: Person** with three fields:\n  - Name (required string)\n  - Birthday (required date)\n  - How I Know Them (required string for the relationship)\n\n- **5 sample people** with their birthdays and relationships to demonstrate the application\n\nReady for the next turn to add components and layout!",
+        "usage": {
+          "inputTokens": 3716,
+          "outputTokens": 94
+        },
+        "latencyMs": 1499,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"people_table\".",
+        "usage": {
+          "inputTokens": 3828,
+          "outputTokens": 328
+        },
+        "latencyMs": 2133,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_person_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a vertical layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4304,
+          "outputTokens": 35
+        },
+        "latencyMs": 739,
+        "index": 8
+      }
+    ],
+    "usage": {
+      "inputTokens": 14906,
+      "outputTokens": 1036
+    },
+    "latencyMs": 9573,
+    "failure": null,
+    "warnings": []
+  }
+}

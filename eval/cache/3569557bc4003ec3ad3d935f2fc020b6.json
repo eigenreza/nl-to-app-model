@@ -1,0 +1,764 @@
+{
+  "caseId": "vague_purpose",
+  "band": "awkward",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 5,
+  "latencyMs": 25250,
+  "inputTokens": 26303,
+  "outputTokens": 4113,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Band Tracker",
+        "description": "An application to keep track of band members, songs, rehearsals, and performances."
+      },
+      "entities": [
+        {
+          "id": "member",
+          "name": "Member",
+          "pluralName": "Members",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "instrument",
+              "label": "Instrument",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Vocals",
+                "Guitar",
+                "Bass",
+                "Drums",
+                "Keyboard",
+                "Other"
+              ]
+            },
+            {
+              "id": "email",
+              "label": "Email",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "phone",
+              "label": "Phone",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "joined_date",
+              "label": "Joined Date",
+              "type": "date",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "name": "Alex Johnson",
+              "instrument": "Vocals",
+              "email": "alex@email.com",
+              "phone": "555-0101",
+              "joined_date": "2022-03-15"
+            },
+            {
+              "name": "Jordan Smith",
+              "instrument": "Guitar",
+              "email": "jordan@email.com",
+              "phone": "555-0102",
+              "joined_date": "2021-06-20"
+            },
+            {
+              "name": "Casey Lee",
+              "instrument": "Bass",
+              "email": "casey@email.com",
+              "phone": "555-0103",
+              "joined_date": "2022-01-10"
+            },
+            {
+              "name": "Morgan Davis",
+              "instrument": "Drums",
+              "email": "morgan@email.com",
+              "phone": "555-0104",
+              "joined_date": "2020-11-05"
+            }
+          ]
+        },
+        {
+          "id": "song",
+          "name": "Song",
+          "pluralName": "Songs",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "artist",
+              "label": "Artist",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "duration_seconds",
+              "label": "Duration (seconds)",
+              "type": "number",
+              "required": false
+            },
+            {
+              "id": "key",
+              "label": "Key",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "difficulty",
+              "label": "Difficulty",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Easy",
+                "Medium",
+                "Hard"
+              ]
+            },
+            {
+              "id": "in_setlist",
+              "label": "In Setlist",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "title": "Midnight Echo",
+              "artist": "Original",
+              "duration_seconds": 240,
+              "key": "A minor",
+              "difficulty": "Medium",
+              "in_setlist": true
+            },
+            {
+              "title": "Electric Dreams",
+              "artist": "Original",
+              "duration_seconds": 210,
+              "key": "E major",
+              "difficulty": "Hard",
+              "in_setlist": true
+            },
+            {
+              "title": "Summer Nights",
+              "artist": "Original",
+              "duration_seconds": 180,
+              "key": "G major",
+              "difficulty": "Easy",
+              "in_setlist": true
+            },
+            {
+              "title": "Broken Strings",
+              "artist": "Cover",
+              "duration_seconds": 220,
+              "key": "D minor",
+              "difficulty": "Medium",
+              "in_setlist": false
+            },
+            {
+              "title": "Rising Sun",
+              "artist": "Original",
+              "duration_seconds": 195,
+              "key": "C major",
+              "difficulty": "Hard",
+              "in_setlist": true
+            }
+          ]
+        },
+        {
+          "id": "rehearsal",
+          "name": "Rehearsal",
+          "pluralName": "Rehearsals",
+          "fields": [
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "time",
+              "label": "Time",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "location",
+              "label": "Location",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "duration_hours",
+              "label": "Duration (hours)",
+              "type": "number",
+              "required": false
+            },
+            {
+              "id": "notes",
+              "label": "Notes",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "date": "2024-01-15",
+              "time": "19:00",
+              "location": "Studio A",
+              "duration_hours": 2,
+              "notes": "Work on new song arrangements"
+            },
+            {
+              "date": "2024-01-22",
+              "time": "19:00",
+              "location": "Studio A",
+              "duration_hours": 2.5,
+              "notes": "Practice setlist for upcoming gig"
+            },
+            {
+              "date": "2024-01-29",
+              "time": "19:00",
+              "location": "Studio A",
+              "duration_hours": 2,
+              "notes": "Sound check and mixing"
+            },
+            {
+              "date": "2024-02-05",
+              "time": "19:00",
+              "location": "Studio A",
+              "duration_hours": 2,
+              "notes": "Rehearse covers"
+            }
+          ]
+        },
+        {
+          "id": "performance",
+          "name": "Performance",
+          "pluralName": "Performances",
+          "fields": [
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "venue",
+              "label": "Venue",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "city",
+              "label": "City",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "time",
+              "label": "Time",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "ticket_price",
+              "label": "Ticket Price",
+              "type": "number",
+              "required": false
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Scheduled",
+                "Completed",
+                "Cancelled"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "date": "2024-02-10",
+              "venue": "The Blue Note",
+              "city": "Portland",
+              "time": "20:00",
+              "ticket_price": 15,
+              "status": "Scheduled"
+            },
+            {
+              "date": "2024-02-24",
+              "venue": "Riverside Theater",
+              "city": "Seattle",
+              "time": "21:00",
+              "ticket_price": 20,
+              "status": "Scheduled"
+            },
+            {
+              "date": "2024-01-20",
+              "venue": "Local Pub",
+              "city": "Portland",
+              "time": "19:30",
+              "ticket_price": 10,
+              "status": "Completed"
+            },
+            {
+              "date": "2024-01-10",
+              "venue": "Community Center",
+              "city": "Portland",
+              "time": "18:00",
+              "ticket_price": 0,
+              "status": "Cancelled"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "members_table",
+          "title": "Band Members",
+          "width": "full",
+          "type": "table",
+          "entityId": "member",
+          "filters": [
+            {
+              "fieldId": "instrument",
+              "control": "select"
+            }
+          ]
+        },
+        {
+          "id": "add_member",
+          "title": "Add New Member",
+          "width": "full",
+          "type": "form",
+          "entityId": "member",
+          "fieldIds": [
+            "name",
+            "instrument",
+            "email",
+            "phone",
+            "joined_date"
+          ],
+          "submitLabel": "Add Member"
+        },
+        {
+          "id": "songs_table",
+          "title": "Songs",
+          "width": "full",
+          "type": "table",
+          "entityId": "song",
+          "filters": [
+            {
+              "fieldId": "in_setlist",
+              "control": "select"
+            },
+            {
+              "fieldId": "difficulty",
+              "control": "select"
+            }
+          ]
+        },
+        {
+          "id": "add_song",
+          "title": "Add New Song",
+          "width": "full",
+          "type": "form",
+          "entityId": "song",
+          "fieldIds": [
+            "title",
+            "artist",
+            "duration_seconds",
+            "key",
+            "difficulty",
+            "in_setlist"
+          ],
+          "submitLabel": "Add Song"
+        },
+        {
+          "id": "rehearsals_table",
+          "title": "Rehearsals",
+          "width": "full",
+          "type": "table",
+          "entityId": "rehearsal"
+        },
+        {
+          "id": "add_rehearsal",
+          "title": "Schedule Rehearsal",
+          "width": "full",
+          "type": "form",
+          "entityId": "rehearsal",
+          "fieldIds": [
+            "date",
+            "time",
+            "location",
+            "duration_hours",
+            "notes"
+          ],
+          "submitLabel": "Schedule Rehearsal"
+        },
+        {
+          "id": "performances_table",
+          "title": "Performances",
+          "width": "full",
+          "type": "table",
+          "entityId": "performance",
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select"
+            }
+          ]
+        },
+        {
+          "id": "add_performance",
+          "title": "Add Performance",
+          "width": "full",
+          "type": "form",
+          "entityId": "performance",
+          "fieldIds": [
+            "date",
+            "venue",
+            "city",
+            "time",
+            "ticket_price",
+            "status"
+          ],
+          "submitLabel": "Add Performance"
+        },
+        {
+          "id": "setlist_count",
+          "title": "Setlist Songs",
+          "width": "full",
+          "type": "metric",
+          "entityId": "song",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "in_setlist",
+                "op": "isTrue"
+              }
+            ]
+          },
+          "caption": "Songs in current setlist"
+        },
+        {
+          "id": "upcoming_performances",
+          "title": "Upcoming Gigs",
+          "width": "full",
+          "type": "metric",
+          "entityId": "performance",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "Scheduled"
+              }
+            ]
+          },
+          "caption": "Scheduled performances"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 5,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3053,
+          "outputTokens": 1349
+        },
+        "latencyMs": 7157,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"member\" with 5 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"song\" with 6 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"rehearsal\" with 5 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"performance\" with 6 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"member\" with 4 rows.",
+        "usage": {
+          "inputTokens": 4326,
+          "outputTokens": 1058
+        },
+        "latencyMs": 6576,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"song\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"rehearsal\" with 4 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"performance\" with 4 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've completed the first turn with:\n\n1. **Plan**: Created a Band Tracker application with four main entities\n2. **Entities**: \n   - **Members**: Track band members with their instruments and contact info\n   - **Songs**: Manage the band's repertoire with difficulty levels and setlist status\n   - **Rehearsals**: Schedule and document practice sessions\n   - **Performances**: Track gigs and s",
+        "usage": {
+          "inputTokens": 5558,
+          "outputTokens": 137
+        },
+        "latencyMs": 2129,
+        "index": 9
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"members_table\".",
+        "usage": {
+          "inputTokens": 5713,
+          "outputTokens": 1518
+        },
+        "latencyMs": 6989,
+        "index": 10
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_member\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 11
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"songs_table\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 12
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_song\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 13
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"rehearsals_table\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 14
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_rehearsal\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 15
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"performances_table\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 16
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_performance\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 17
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"setlist_count\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 18
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"upcoming_performances\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 19
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 20
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 21
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 7653,
+          "outputTokens": 51
+        },
+        "latencyMs": 1274,
+        "index": 22
+      }
+    ],
+    "usage": {
+      "inputTokens": 26303,
+      "outputTokens": 4113
+    },
+    "latencyMs": 25250,
+    "failure": null,
+    "warnings": []
+  }
+}

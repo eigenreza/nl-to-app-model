@@ -1,0 +1,307 @@
+{
+  "caseId": "wants_notifications",
+  "band": "out_of_scope",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 12283,
+  "inputTokens": 15900,
+  "outputTokens": 1646,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Stock Tracker",
+        "description": "A stock tracker that monitors inventory levels and alerts when items drop below five units."
+      },
+      "entities": [
+        {
+          "id": "item",
+          "name": "Item",
+          "pluralName": "Items",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Product Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "stock_quantity",
+              "label": "Stock Quantity",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "reorder_level",
+              "label": "Reorder Level",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "last_updated",
+              "label": "Last Updated",
+              "type": "date",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "name": "Wireless Mouse",
+              "stock_quantity": 12,
+              "reorder_level": 5,
+              "last_updated": "2024-01-15"
+            },
+            {
+              "name": "USB-C Cable",
+              "stock_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2024-01-14"
+            },
+            {
+              "name": "Keyboard",
+              "stock_quantity": 8,
+              "reorder_level": 5,
+              "last_updated": "2024-01-13"
+            },
+            {
+              "name": "Monitor Stand",
+              "stock_quantity": 2,
+              "reorder_level": 5,
+              "last_updated": "2024-01-12"
+            },
+            {
+              "name": "Desk Lamp",
+              "stock_quantity": 15,
+              "reorder_level": 5,
+              "last_updated": "2024-01-11"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "low_stock_count",
+          "width": "full",
+          "type": "metric",
+          "entityId": "item",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "stock_quantity",
+                "op": "lessThan",
+                "value": 5
+              }
+            ]
+          },
+          "caption": "Items below reorder level"
+        },
+        {
+          "id": "all_items_table",
+          "title": "All Items",
+          "width": "full",
+          "type": "table",
+          "entityId": "item",
+          "columns": [
+            "name",
+            "stock_quantity",
+            "reorder_level",
+            "last_updated"
+          ],
+          "filters": [
+            {
+              "fieldId": "name",
+              "control": "text",
+              "label": "Search by name"
+            }
+          ]
+        },
+        {
+          "id": "low_stock_table",
+          "title": "Low Stock Alert",
+          "width": "full",
+          "type": "table",
+          "entityId": "item",
+          "columns": [
+            "name",
+            "stock_quantity",
+            "reorder_level"
+          ],
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "stock_quantity",
+                "op": "lessThan",
+                "value": 5
+              }
+            ]
+          },
+          "emptyMessage": "All items are well stocked!"
+        },
+        {
+          "id": "add_item_form",
+          "title": "Add New Item",
+          "width": "full",
+          "type": "form",
+          "entityId": "item",
+          "fieldIds": [
+            "name",
+            "stock_quantity",
+            "reorder_level",
+            "last_updated"
+          ],
+          "submitLabel": "Add Item"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3062,
+          "outputTokens": 747
+        },
+        "latencyMs": 4845,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"item\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"item\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Item entity with seed data. The application will track inventory items with their stock quantities and reorder levels. The seed data includes 5 sample items, with some already below the 5-unit reorder threshold (USB-C Cable at 3 units and Monitor Stand at 2 units).\n\nReady for the next turn to add components for viewing all items, adding new items, and highlig",
+        "usage": {
+          "inputTokens": 3875,
+          "outputTokens": 99
+        },
+        "latencyMs": 1769,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"low_stock_count\".",
+        "usage": {
+          "inputTokens": 3992,
+          "outputTokens": 752
+        },
+        "latencyMs": 4284,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"all_items_table\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"low_stock_table\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_item_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4971,
+          "outputTokens": 48
+        },
+        "latencyMs": 1151,
+        "index": 10
+      }
+    ],
+    "usage": {
+      "inputTokens": 15900,
+      "outputTokens": 1646
+    },
+    "latencyMs": 12283,
+    "failure": null,
+    "warnings": []
+  }
+}

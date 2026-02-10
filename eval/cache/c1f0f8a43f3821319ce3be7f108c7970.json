@@ -1,0 +1,169 @@
+{
+  "caseId": "habit_tracker",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144234,
+  "inputTokens": 2052,
+  "outputTokens": 833,
+  "failureReason": null,
+  "expectationsMet": false,
+  "expectationFailures": [
+    "no table filter on a field of type \"enum\""
+  ],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Habit Tracker",
+        "description": "Track daily habits with completion status and notes"
+      },
+      "entities": [
+        {
+          "id": "habit_entry",
+          "name": "Habit Entry",
+          "pluralName": "Habit Entries",
+          "fields": [
+            {
+              "id": "habit",
+              "label": "Habit",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "completed",
+              "label": "Completed",
+              "type": "boolean",
+              "required": true
+            },
+            {
+              "id": "note",
+              "label": "Note",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "habit": "Morning Exercise",
+              "date": "2024-03-19",
+              "completed": true,
+              "note": "30 minute run"
+            },
+            {
+              "habit": "Read",
+              "date": "2024-03-19",
+              "completed": true,
+              "note": "Finished chapter 5"
+            },
+            {
+              "habit": "Meditation",
+              "date": "2024-03-19",
+              "completed": false,
+              "note": "Forgot in the morning"
+            },
+            {
+              "habit": "Morning Exercise",
+              "date": "2024-03-18",
+              "completed": true,
+              "note": "20 minute jog"
+            },
+            {
+              "habit": "Read",
+              "date": "2024-03-18",
+              "completed": true,
+              "note": "Read 2 chapters"
+            },
+            {
+              "habit": "Meditation",
+              "date": "2024-03-18",
+              "completed": true,
+              "note": "10 minutes"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "completed_count",
+          "title": "Completed Today",
+          "width": "third",
+          "type": "metric",
+          "entityId": "habit_entry",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "completed",
+                "op": "isTrue"
+              }
+            ]
+          }
+        },
+        {
+          "id": "habit_entries_table",
+          "title": "Habit Entries",
+          "width": "full",
+          "type": "table",
+          "entityId": "habit_entry",
+          "filters": [
+            {
+              "fieldId": "habit",
+              "control": "text",
+              "label": "Habit"
+            }
+          ]
+        },
+        {
+          "id": "add_entry",
+          "title": "Log Habit",
+          "width": "full",
+          "type": "form",
+          "entityId": "habit_entry",
+          "submitLabel": "Add entry"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2052,
+          "outputTokens": 833
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2052,
+      "outputTokens": 833
+    },
+    "latencyMs": 144234,
+    "failure": null,
+    "warnings": []
+  }
+}

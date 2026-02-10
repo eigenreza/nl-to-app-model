@@ -1,0 +1,225 @@
+{
+  "caseId": "issue_tracker",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144232,
+  "inputTokens": 2060,
+  "outputTokens": 1091,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Issue Tracker",
+        "description": "Track issues with status, priority, and time estimates"
+      },
+      "entities": [
+        {
+          "id": "issue",
+          "name": "Issue",
+          "pluralName": "Issues",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Open",
+                "In Progress",
+                "Done"
+              ]
+            },
+            {
+              "id": "priority",
+              "label": "Priority",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Low",
+                "Medium",
+                "High"
+              ]
+            },
+            {
+              "id": "estimate_hours",
+              "label": "Estimate (hours)",
+              "type": "number",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "title": "Fix login bug",
+              "status": "In Progress",
+              "priority": "High",
+              "estimate_hours": 3
+            },
+            {
+              "title": "Add dark mode",
+              "status": "Open",
+              "priority": "Medium",
+              "estimate_hours": 8
+            },
+            {
+              "title": "Update documentation",
+              "status": "Done",
+              "priority": "Low",
+              "estimate_hours": 2
+            },
+            {
+              "title": "Optimize database queries",
+              "status": "In Progress",
+              "priority": "High",
+              "estimate_hours": 5
+            },
+            {
+              "title": "Refactor authentication module",
+              "status": "Done",
+              "priority": "Medium",
+              "estimate_hours": 6
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "not_done_count",
+          "title": "Issues Not Done",
+          "width": "third",
+          "type": "metric",
+          "entityId": "issue",
+          "aggregate": "count",
+          "where": {
+            "combinator": "or",
+            "conditions": [
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "Open"
+              },
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "In Progress"
+              }
+            ]
+          }
+        },
+        {
+          "id": "active_issues_table",
+          "title": "Active Issues",
+          "width": "full",
+          "type": "table",
+          "entityId": "issue",
+          "columns": [
+            "title",
+            "status",
+            "priority",
+            "estimate_hours"
+          ],
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select",
+              "label": "Status"
+            },
+            {
+              "fieldId": "priority",
+              "control": "select",
+              "label": "Priority"
+            }
+          ],
+          "where": {
+            "combinator": "or",
+            "conditions": [
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "Open"
+              },
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "In Progress"
+              }
+            ]
+          }
+        },
+        {
+          "id": "finished_issues_table",
+          "title": "Finished Issues",
+          "width": "full",
+          "type": "table",
+          "entityId": "issue",
+          "columns": [
+            "title",
+            "priority",
+            "estimate_hours"
+          ],
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "Done"
+              }
+            ]
+          }
+        },
+        {
+          "id": "add_issue",
+          "title": "Add Issue",
+          "width": "full",
+          "type": "form",
+          "entityId": "issue",
+          "submitLabel": "Create issue"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2060,
+          "outputTokens": 1091
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2060,
+      "outputTokens": 1091
+    },
+    "latencyMs": 144232,
+    "failure": null,
+    "warnings": []
+  }
+}

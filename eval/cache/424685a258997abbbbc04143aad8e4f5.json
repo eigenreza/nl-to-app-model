@@ -1,0 +1,309 @@
+{
+  "caseId": "incident_log",
+  "band": "moderate",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 12482,
+  "inputTokens": 16139,
+  "outputTokens": 1693,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Incident Log",
+        "description": "Track service incidents with severity, duration, and resolution status."
+      },
+      "entities": [
+        {
+          "id": "incident",
+          "name": "Incident",
+          "pluralName": "Incidents",
+          "fields": [
+            {
+              "id": "summary",
+              "label": "Summary",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "severity",
+              "label": "Severity",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "critical",
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            {
+              "id": "start_time",
+              "label": "Started",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "duration_minutes",
+              "label": "Duration (minutes)",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "resolved",
+              "label": "Resolved",
+              "type": "boolean",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "summary": "Database connection timeout",
+              "severity": "critical",
+              "start_time": "2024-01-15",
+              "duration_minutes": 45,
+              "resolved": true
+            },
+            {
+              "summary": "API rate limiting issue",
+              "severity": "high",
+              "start_time": "2024-01-16",
+              "duration_minutes": 120,
+              "resolved": true
+            },
+            {
+              "summary": "Memory leak in worker process",
+              "severity": "high",
+              "start_time": "2024-01-17",
+              "duration_minutes": 30,
+              "resolved": false
+            },
+            {
+              "summary": "Slow response times on dashboard",
+              "severity": "medium",
+              "start_time": "2024-01-18",
+              "duration_minutes": 15,
+              "resolved": true
+            },
+            {
+              "summary": "Email notification service down",
+              "severity": "medium",
+              "start_time": "2024-01-19",
+              "duration_minutes": 60,
+              "resolved": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "incidents_table",
+          "title": "All Incidents",
+          "width": "full",
+          "type": "table",
+          "entityId": "incident",
+          "filters": [
+            {
+              "fieldId": "severity",
+              "control": "select"
+            },
+            {
+              "fieldId": "resolved",
+              "control": "select"
+            }
+          ]
+        },
+        {
+          "id": "add_incident_form",
+          "title": "Report New Incident",
+          "width": "full",
+          "type": "form",
+          "entityId": "incident",
+          "fieldIds": [
+            "summary",
+            "severity",
+            "start_time",
+            "duration_minutes",
+            "resolved"
+          ],
+          "submitLabel": "Log Incident"
+        },
+        {
+          "id": "open_incidents_count",
+          "title": "Open Incidents",
+          "width": "full",
+          "type": "metric",
+          "entityId": "incident",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "resolved",
+                "op": "isFalse"
+              }
+            ]
+          },
+          "caption": "incidents still open"
+        },
+        {
+          "id": "total_downtime",
+          "title": "Total Downtime",
+          "width": "full",
+          "type": "metric",
+          "entityId": "incident",
+          "aggregate": "sum",
+          "fieldId": "duration_minutes",
+          "caption": "minutes"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3082,
+          "outputTokens": 814
+        },
+        "latencyMs": 5020,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"incident\" with 5 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"incident\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Incident entity with seed data. The application has:\n\n**Entity: Incident**\n- Summary (string) - description of the incident\n- Severity (enum: critical, high, medium, low) - incident priority level\n- Started (date) - when the incident began\n- Duration (minutes) (number) - how long the incident lasted\n- Resolved (boolean) - whether the incident is resolved\n\nI'v",
+        "usage": {
+          "inputTokens": 3947,
+          "outputTokens": 130
+        },
+        "latencyMs": 2091,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"incidents_table\".",
+        "usage": {
+          "inputTokens": 4095,
+          "outputTokens": 701
+        },
+        "latencyMs": 3884,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_incident_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"open_incidents_count\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_downtime\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 5015,
+          "outputTokens": 48
+        },
+        "latencyMs": 1482,
+        "index": 10
+      }
+    ],
+    "usage": {
+      "inputTokens": 16139,
+      "outputTokens": 1693
+    },
+    "latencyMs": 12482,
+    "failure": null,
+    "warnings": []
+  }
+}

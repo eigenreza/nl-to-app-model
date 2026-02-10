@@ -1,0 +1,187 @@
+{
+  "caseId": "podcast_queue",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144237,
+  "inputTokens": 2061,
+  "outputTokens": 900,
+  "failureReason": null,
+  "expectationsMet": false,
+  "expectationFailures": [
+    "no table filter on a field of type \"enum\""
+  ],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Podcast Queue",
+        "description": "Track your podcast episodes with listening status and queue management"
+      },
+      "entities": [
+        {
+          "id": "episode",
+          "name": "Episode",
+          "pluralName": "Episodes",
+          "fields": [
+            {
+              "id": "show",
+              "label": "Show",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "title",
+              "label": "Episode Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "length_minutes",
+              "label": "Length (minutes)",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "listened",
+              "label": "Listened",
+              "type": "boolean",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "show": "The Daily",
+              "title": "The Supreme Court's Shadow Docket",
+              "length_minutes": 28,
+              "listened": false
+            },
+            {
+              "show": "The Daily",
+              "title": "The Debt Ceiling Explained",
+              "length_minutes": 22,
+              "listened": true
+            },
+            {
+              "show": "Stuff You Should Know",
+              "title": "How Cryonics Works",
+              "length_minutes": 45,
+              "listened": false
+            },
+            {
+              "show": "Stuff You Should Know",
+              "title": "The History of Bubble Wrap",
+              "length_minutes": 38,
+              "listened": false
+            },
+            {
+              "show": "Radiolab",
+              "title": "Loops",
+              "length_minutes": 52,
+              "listened": true
+            },
+            {
+              "show": "Radiolab",
+              "title": "Emergence",
+              "length_minutes": 41,
+              "listened": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "unplayed_count",
+          "title": "Unplayed Episodes",
+          "width": "third",
+          "type": "metric",
+          "entityId": "episode",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "listened",
+                "op": "isFalse"
+              }
+            ]
+          }
+        },
+        {
+          "id": "unplayed_time",
+          "title": "Total Unplayed Time",
+          "width": "third",
+          "type": "metric",
+          "entityId": "episode",
+          "aggregate": "sum",
+          "fieldId": "length_minutes",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "listened",
+                "op": "isFalse"
+              }
+            ]
+          },
+          "caption": "minutes"
+        },
+        {
+          "id": "episode_table",
+          "title": "Queue",
+          "width": "full",
+          "type": "table",
+          "entityId": "episode",
+          "columns": [
+            "show",
+            "title",
+            "length_minutes",
+            "listened"
+          ],
+          "filters": [
+            {
+              "fieldId": "show",
+              "control": "text",
+              "label": "Show"
+            }
+          ]
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2061,
+          "outputTokens": 900
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2061,
+      "outputTokens": 900
+    },
+    "latencyMs": 144237,
+    "failure": null,
+    "warnings": []
+  }
+}

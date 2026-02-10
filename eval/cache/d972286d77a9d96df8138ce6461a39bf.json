@@ -1,0 +1,241 @@
+{
+  "caseId": "contact_list",
+  "band": "simple",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 10498,
+  "inputTokens": 14976,
+  "outputTokens": 1085,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Contact List",
+        "description": "A contact list with names, emails and the team each person belongs to."
+      },
+      "entities": [
+        {
+          "id": "contact",
+          "name": "Contact",
+          "pluralName": "Contacts",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "email",
+              "label": "Email",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "team",
+              "label": "Team",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Engineering",
+                "Sales",
+                "Marketing",
+                "HR",
+                "Operations"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "name": "Alice Johnson",
+              "email": "alice.johnson@company.com",
+              "team": "Engineering"
+            },
+            {
+              "name": "Bob Smith",
+              "email": "bob.smith@company.com",
+              "team": "Sales"
+            },
+            {
+              "name": "Carol Williams",
+              "email": "carol.williams@company.com",
+              "team": "Marketing"
+            },
+            {
+              "name": "David Brown",
+              "email": "david.brown@company.com",
+              "team": "Engineering"
+            },
+            {
+              "name": "Emma Davis",
+              "email": "emma.davis@company.com",
+              "team": "HR"
+            },
+            {
+              "name": "Frank Miller",
+              "email": "frank.miller@company.com",
+              "team": "Operations"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "contacts_table",
+          "title": "Contacts",
+          "width": "full",
+          "type": "table",
+          "entityId": "contact",
+          "filters": [
+            {
+              "fieldId": "team",
+              "control": "select"
+            },
+            {
+              "fieldId": "name",
+              "control": "text"
+            }
+          ]
+        },
+        {
+          "id": "add_contact_form",
+          "title": "Add Contact",
+          "width": "full",
+          "type": "form",
+          "entityId": "contact",
+          "fieldIds": [
+            "name",
+            "email",
+            "team"
+          ],
+          "submitLabel": "Add Contact"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3058,
+          "outputTokens": 593
+        },
+        "latencyMs": 4191,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"contact\" with 3 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"contact\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Contact entity with seed data. The application now has:\n\n- **Entity: Contact** with three fields:\n  - Name (required string)\n  - Email (required string)\n  - Team (required enum with options: Engineering, Sales, Marketing, HR, Operations)\n\n- **6 sample contacts** representing different teams\n\nReady for the next turn to add components and layout!",
+        "usage": {
+          "inputTokens": 3728,
+          "outputTokens": 93
+        },
+        "latencyMs": 1582,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"contacts_table\".",
+        "usage": {
+          "inputTokens": 3839,
+          "outputTokens": 364
+        },
+        "latencyMs": 3180,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_contact_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4351,
+          "outputTokens": 35
+        },
+        "latencyMs": 1114,
+        "index": 8
+      }
+    ],
+    "usage": {
+      "inputTokens": 14976,
+      "outputTokens": 1085
+    },
+    "latencyMs": 10498,
+    "failure": null,
+    "warnings": []
+  }
+}

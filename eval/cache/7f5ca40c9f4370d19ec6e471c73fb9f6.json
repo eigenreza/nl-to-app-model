@@ -1,0 +1,243 @@
+{
+  "caseId": "plant_care",
+  "band": "simple",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 3,
+  "latencyMs": 9235,
+  "inputTokens": 10855,
+  "outputTokens": 1266,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "House Plant Tracker",
+        "description": "Track your house plants with their location, watering schedule, and add new plants."
+      },
+      "entities": [
+        {
+          "id": "plant",
+          "name": "Plant",
+          "pluralName": "Plants",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Plant Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "room",
+              "label": "Room",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Living Room",
+                "Bedroom",
+                "Kitchen",
+                "Bathroom",
+                "Office",
+                "Hallway",
+                "Dining Room"
+              ]
+            },
+            {
+              "id": "last_watered",
+              "label": "Last Watered",
+              "type": "date",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "name": "Monstera Deliciosa",
+              "room": "Living Room",
+              "last_watered": "2024-01-15"
+            },
+            {
+              "name": "Snake Plant",
+              "room": "Bedroom",
+              "last_watered": "2024-01-10"
+            },
+            {
+              "name": "Pothos",
+              "room": "Kitchen",
+              "last_watered": "2024-01-18"
+            },
+            {
+              "name": "Spider Plant",
+              "room": "Office",
+              "last_watered": "2024-01-12"
+            },
+            {
+              "name": "Fiddle Leaf Fig",
+              "room": "Living Room",
+              "last_watered": "2024-01-16"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "plants_table",
+          "title": "My House Plants",
+          "width": "full",
+          "type": "table",
+          "entityId": "plant",
+          "filters": [
+            {
+              "fieldId": "room",
+              "control": "select",
+              "label": "Filter by Room"
+            }
+          ]
+        },
+        {
+          "id": "plant_count",
+          "title": "Total Plants",
+          "width": "full",
+          "type": "metric",
+          "entityId": "plant",
+          "aggregate": "count",
+          "caption": "plants in your collection"
+        },
+        {
+          "id": "add_plant_form",
+          "title": "Add a New Plant",
+          "width": "full",
+          "type": "form",
+          "entityId": "plant",
+          "fieldIds": [
+            "name",
+            "room",
+            "last_watered"
+          ],
+          "submitLabel": "Add Plant"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 3,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3072,
+          "outputTokens": 675
+        },
+        "latencyMs": 4306,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"plant\" with 3 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"plant\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Plant entity with seed data. The application now has:\n\n**Entity: Plant**\n- Plant Name (required string)\n- Room (required enum with options: Living Room, Bedroom, Kitchen, Bathroom, Office, Hallway, Dining Room)\n- Last Watered (required date)\n\n**Seed Data:** 5 sample plants with their locations and watering dates.\n\nReady to proceed with adding the components (",
+        "usage": {
+          "inputTokens": 3824,
+          "outputTokens": 117
+        },
+        "latencyMs": 1933,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"plants_table\".",
+        "usage": {
+          "inputTokens": 3959,
+          "outputTokens": 474
+        },
+        "latencyMs": 2919,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"plant_count\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_plant_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a vertical layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      }
+    ],
+    "usage": {
+      "inputTokens": 10855,
+      "outputTokens": 1266
+    },
+    "latencyMs": 9235,
+    "failure": null,
+    "warnings": []
+  }
+}

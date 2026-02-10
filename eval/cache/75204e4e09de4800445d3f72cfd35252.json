@@ -1,0 +1,180 @@
+{
+  "caseId": "terse_two_words",
+  "band": "awkward",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144238,
+  "inputTokens": 2023,
+  "outputTokens": 941,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Gig Tickets",
+        "description": "Manage and track concert and event tickets"
+      },
+      "entities": [
+        {
+          "id": "ticket",
+          "name": "Ticket",
+          "pluralName": "Tickets",
+          "fields": [
+            {
+              "id": "event_name",
+              "label": "Event Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "artist",
+              "label": "Artist",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "venue",
+              "label": "Venue",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "event_date",
+              "label": "Event Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "ticket_price",
+              "label": "Ticket Price",
+              "type": "number",
+              "required": false
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Purchased",
+                "Attended",
+                "Cancelled",
+                "Pending"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "event_name": "Summer Festival 2024",
+              "artist": "The Midnight Riders",
+              "venue": "Central Park",
+              "event_date": "2024-07-15",
+              "ticket_price": 85,
+              "status": "Purchased"
+            },
+            {
+              "event_name": "Jazz Night",
+              "artist": "Miles Davis Tribute",
+              "venue": "Blue Note",
+              "event_date": "2024-06-22",
+              "ticket_price": 65,
+              "status": "Attended"
+            },
+            {
+              "event_name": "Rock Legends Tour",
+              "artist": "Classic Rock Revival",
+              "venue": "Madison Square Garden",
+              "event_date": "2024-08-10",
+              "ticket_price": 120,
+              "status": "Purchased"
+            },
+            {
+              "event_name": "Electronic Beats",
+              "artist": "Synthwave Collective",
+              "venue": "The Fillmore",
+              "event_date": "2024-07-28",
+              "ticket_price": 55,
+              "status": "Pending"
+            },
+            {
+              "event_name": "Indie Pop Showcase",
+              "artist": "Neon Dreams",
+              "venue": "Bowery Ballroom",
+              "event_date": "2024-06-10",
+              "ticket_price": 45,
+              "status": "Attended"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "ticket_table",
+          "title": "Gig Tickets",
+          "width": "full",
+          "type": "table",
+          "entityId": "ticket",
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_ticket",
+          "title": "Add New Ticket",
+          "width": "full",
+          "type": "form",
+          "entityId": "ticket",
+          "fieldIds": [
+            "event_name",
+            "artist",
+            "venue",
+            "event_date",
+            "ticket_price",
+            "status"
+          ],
+          "submitLabel": "Add Ticket"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2023,
+          "outputTokens": 941
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2023,
+      "outputTokens": 941
+    },
+    "latencyMs": 144238,
+    "failure": null,
+    "warnings": []
+  }
+}

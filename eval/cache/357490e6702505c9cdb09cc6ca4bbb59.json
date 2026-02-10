@@ -1,0 +1,224 @@
+{
+  "caseId": "ui_jargon",
+  "band": "awkward",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144240,
+  "inputTokens": 2058,
+  "outputTokens": 1271,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Purchase Order Dashboard",
+        "description": "Dashboard for tracking purchase orders with KPI metrics, searchable data grid, and inline form for creating new orders."
+      },
+      "entities": [
+        {
+          "id": "purchase_order",
+          "name": "Purchase Order",
+          "pluralName": "Purchase Orders",
+          "fields": [
+            {
+              "id": "po_number",
+              "label": "PO Number",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "vendor",
+              "label": "Vendor",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "amount",
+              "label": "Amount",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Draft",
+                "Submitted",
+                "Approved",
+                "Received",
+                "Cancelled"
+              ]
+            },
+            {
+              "id": "order_date",
+              "label": "Order Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "expected_delivery",
+              "label": "Expected Delivery",
+              "type": "date",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "po_number": "PO-2024-001",
+              "vendor": "Acme Supplies",
+              "amount": 5000,
+              "status": "Approved",
+              "order_date": "2024-01-15",
+              "expected_delivery": "2024-02-15"
+            },
+            {
+              "po_number": "PO-2024-002",
+              "vendor": "Global Parts Inc",
+              "amount": 12500,
+              "status": "Received",
+              "order_date": "2024-01-10",
+              "expected_delivery": "2024-02-10"
+            },
+            {
+              "po_number": "PO-2024-003",
+              "vendor": "Tech Solutions Ltd",
+              "amount": 8750,
+              "status": "Submitted",
+              "order_date": "2024-01-20",
+              "expected_delivery": "2024-02-20"
+            },
+            {
+              "po_number": "PO-2024-004",
+              "vendor": "Office Essentials",
+              "amount": 2300,
+              "status": "Draft",
+              "order_date": "2024-01-22",
+              "expected_delivery": null
+            },
+            {
+              "po_number": "PO-2024-005",
+              "vendor": "Industrial Supplies Co",
+              "amount": 15000,
+              "status": "Approved",
+              "order_date": "2024-01-18",
+              "expected_delivery": "2024-02-18"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "total_orders_metric",
+          "title": "Total Orders",
+          "width": "third",
+          "type": "metric",
+          "entityId": "purchase_order",
+          "aggregate": "count"
+        },
+        {
+          "id": "total_amount_metric",
+          "title": "Total Amount",
+          "width": "third",
+          "type": "metric",
+          "entityId": "purchase_order",
+          "aggregate": "sum",
+          "fieldId": "amount"
+        },
+        {
+          "id": "approved_orders_metric",
+          "title": "Approved Orders",
+          "width": "third",
+          "type": "metric",
+          "entityId": "purchase_order",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "Approved"
+              }
+            ]
+          }
+        },
+        {
+          "id": "po_table",
+          "title": "Purchase Orders",
+          "width": "full",
+          "type": "table",
+          "entityId": "purchase_order",
+          "columns": [
+            "po_number",
+            "vendor",
+            "amount",
+            "status",
+            "order_date",
+            "expected_delivery"
+          ],
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_po_form",
+          "title": "Create New Purchase Order",
+          "width": "full",
+          "type": "form",
+          "entityId": "purchase_order",
+          "fieldIds": [
+            "po_number",
+            "vendor",
+            "amount",
+            "status",
+            "order_date"
+          ],
+          "submitLabel": "Create Order"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2058,
+          "outputTokens": 1271
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2058,
+      "outputTokens": 1271
+    },
+    "latencyMs": 144240,
+    "failure": null,
+    "warnings": []
+  }
+}

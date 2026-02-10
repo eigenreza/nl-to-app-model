@@ -1,0 +1,272 @@
+{
+  "caseId": "time_log",
+  "band": "moderate",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": false,
+  "iterations": 3,
+  "latencyMs": 11536,
+  "inputTokens": 11165,
+  "outputTokens": 1550,
+  "failureReason": null,
+  "expectationsMet": false,
+  "expectationFailures": [
+    "no \"table\" component"
+  ],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Freelance Time Log",
+        "description": "Track freelance work hours by client and project, manage invoicing status, and monitor unbilled hours."
+      },
+      "entities": [
+        {
+          "id": "time_entry",
+          "name": "Time Entry",
+          "pluralName": "Time Entries",
+          "fields": [
+            {
+              "id": "client",
+              "label": "Client",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "project",
+              "label": "Project",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "hours",
+              "label": "Hours Worked",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "invoiced",
+              "label": "Invoiced",
+              "type": "boolean",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "client": "Acme Corp",
+              "project": "Website Redesign",
+              "hours": 8,
+              "date": "2024-01-15",
+              "invoiced": true
+            },
+            {
+              "client": "Acme Corp",
+              "project": "Website Redesign",
+              "hours": 6,
+              "date": "2024-01-16",
+              "invoiced": false
+            },
+            {
+              "client": "TechStart Inc",
+              "project": "Mobile App Development",
+              "hours": 7.5,
+              "date": "2024-01-17",
+              "invoiced": false
+            },
+            {
+              "client": "TechStart Inc",
+              "project": "Mobile App Development",
+              "hours": 5,
+              "date": "2024-01-18",
+              "invoiced": true
+            },
+            {
+              "client": "Creative Studios",
+              "project": "Logo Design",
+              "hours": 4,
+              "date": "2024-01-19",
+              "invoiced": false
+            },
+            {
+              "client": "Acme Corp",
+              "project": "Content Writing",
+              "hours": 3,
+              "date": "2024-01-20",
+              "invoiced": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "unbilled_hours_metric",
+          "title": "Total Unbilled Hours",
+          "width": "full",
+          "type": "metric",
+          "entityId": "time_entry",
+          "aggregate": "sum",
+          "fieldId": "hours",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "invoiced",
+                "op": "isFalse"
+              }
+            ]
+          },
+          "caption": "hours not yet invoiced"
+        },
+        {
+          "id": "add_time_entry_form",
+          "title": "Log New Time Entry",
+          "width": "full",
+          "type": "form",
+          "entityId": "time_entry",
+          "fieldIds": [
+            "client",
+            "project",
+            "hours",
+            "date",
+            "invoiced"
+          ],
+          "submitLabel": "Log Entry"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": false,
+    "iterations": 3,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3081,
+          "outputTokens": 838
+        },
+        "latencyMs": 5185,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"time_entry\" with 5 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"time_entry\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the TimeEntry entity with seed data. The entity has fields for:\n- **Client** (required string)\n- **Project** (required string)\n- **Hours Worked** (required number)\n- **Date** (required date)\n- **Invoiced** (required boolean)\n\nI've seeded it with 6 realistic time entries across different clients and projects, with a mix of invoiced and unbilled hours. Ready for th",
+        "usage": {
+          "inputTokens": 3976,
+          "outputTokens": 114
+        },
+        "latencyMs": 1473,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Component \"time_entries_table\" rejected. 1 error.",
+        "issues": [
+          {
+            "path": "filters[0].control",
+            "code": "filter_control_mismatch",
+            "message": "A \"select\" filter needs a field of type \"enum\" or \"boolean\", but \"client\" has type \"string\". Use control \"text\" instead.",
+            "severity": "error"
+          }
+        ],
+        "usage": {
+          "inputTokens": 4108,
+          "outputTokens": 598
+        },
+        "latencyMs": 3824,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"unbilled_hours_metric\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_time_entry_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      }
+    ],
+    "usage": {
+      "inputTokens": 11165,
+      "outputTokens": 1550
+    },
+    "latencyMs": 11536,
+    "failure": null,
+    "warnings": []
+  }
+}

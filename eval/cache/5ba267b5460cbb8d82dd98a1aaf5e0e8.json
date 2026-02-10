@@ -1,0 +1,197 @@
+{
+  "caseId": "two_apps",
+  "band": "awkward",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144239,
+  "inputTokens": 2062,
+  "outputTokens": 1089,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Greenhouse Tracker",
+        "description": "Track plants in the greenhouse and seeds in storage"
+      },
+      "entities": [
+        {
+          "id": "plant",
+          "name": "Plant",
+          "pluralName": "Plants",
+          "fields": [
+            {
+              "id": "species",
+              "label": "Species",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "pot_size",
+              "label": "Pot Size",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "location",
+              "label": "Location",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "date_planted",
+              "label": "Date Planted",
+              "type": "date",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "species": "Tomato",
+              "pot_size": "8 inch",
+              "location": "Shelf A",
+              "date_planted": "2024-03-15"
+            },
+            {
+              "species": "Basil",
+              "pot_size": "6 inch",
+              "location": "Shelf B",
+              "date_planted": "2024-03-20"
+            },
+            {
+              "species": "Pepper",
+              "pot_size": "10 inch",
+              "location": "Shelf A",
+              "date_planted": "2024-03-10"
+            }
+          ]
+        },
+        {
+          "id": "seed",
+          "name": "Seed",
+          "pluralName": "Seeds",
+          "fields": [
+            {
+              "id": "species",
+              "label": "Species",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "packet_count",
+              "label": "Packet Count",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "expiry_date",
+              "label": "Expiry Date",
+              "type": "date",
+              "required": false
+            },
+            {
+              "id": "storage_location",
+              "label": "Storage Location",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "species": "Carrot",
+              "packet_count": 5,
+              "expiry_date": "2025-06-30",
+              "storage_location": "Cabinet 1"
+            },
+            {
+              "species": "Lettuce",
+              "packet_count": 3,
+              "expiry_date": "2024-12-31",
+              "storage_location": "Cabinet 1"
+            },
+            {
+              "species": "Cucumber",
+              "packet_count": 2,
+              "expiry_date": "2025-09-15",
+              "storage_location": "Cabinet 2"
+            },
+            {
+              "species": "Spinach",
+              "packet_count": 4,
+              "expiry_date": "2025-03-20",
+              "storage_location": "Cabinet 2"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "plant_table",
+          "title": "Plants in Greenhouse",
+          "width": "full",
+          "type": "table",
+          "entityId": "plant"
+        },
+        {
+          "id": "add_plant",
+          "title": "Add Plant",
+          "width": "half",
+          "type": "form",
+          "entityId": "plant",
+          "submitLabel": "Add plant"
+        },
+        {
+          "id": "seed_table",
+          "title": "Seeds in Storage",
+          "width": "full",
+          "type": "table",
+          "entityId": "seed"
+        },
+        {
+          "id": "add_seed",
+          "title": "Add Seed",
+          "width": "half",
+          "type": "form",
+          "entityId": "seed",
+          "submitLabel": "Add seed"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2062,
+          "outputTokens": 1089
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2062,
+      "outputTokens": 1089
+    },
+    "latencyMs": 144239,
+    "failure": null,
+    "warnings": []
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "caseId": "wants_auth",
+  "band": "out_of_scope",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144241,
+  "inputTokens": 2036,
+  "outputTokens": 1062,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Shared Shopping List",
+        "description": "A collaborative shopping list application where users can view and manage items together."
+      },
+      "entities": [
+        {
+          "id": "shopping_item",
+          "name": "Shopping Item",
+          "pluralName": "Shopping Items",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Item Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "quantity",
+              "label": "Quantity",
+              "type": "number",
+              "required": false
+            },
+            {
+              "id": "category",
+              "label": "Category",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Produce",
+                "Dairy",
+                "Meat",
+                "Pantry",
+                "Frozen",
+                "Other"
+              ]
+            },
+            {
+              "id": "purchased",
+              "label": "Purchased",
+              "type": "boolean",
+              "required": false
+            },
+            {
+              "id": "added_date",
+              "label": "Date Added",
+              "type": "date",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "name": "Milk",
+              "quantity": 2,
+              "category": "Dairy",
+              "purchased": false,
+              "added_date": "2024-03-19"
+            },
+            {
+              "name": "Bread",
+              "quantity": 1,
+              "category": "Pantry",
+              "purchased": true,
+              "added_date": "2024-03-18"
+            },
+            {
+              "name": "Apples",
+              "quantity": 6,
+              "category": "Produce",
+              "purchased": false,
+              "added_date": "2024-03-19"
+            },
+            {
+              "name": "Chicken Breast",
+              "quantity": 1,
+              "category": "Meat",
+              "purchased": false,
+              "added_date": "2024-03-19"
+            },
+            {
+              "name": "Frozen Vegetables",
+              "quantity": 2,
+              "category": "Frozen",
+              "purchased": true,
+              "added_date": "2024-03-17"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "shopping_list_table",
+          "title": "Shopping List",
+          "width": "full",
+          "type": "table",
+          "entityId": "shopping_item",
+          "columns": [
+            "name",
+            "quantity",
+            "category",
+            "purchased"
+          ],
+          "filters": [
+            {
+              "fieldId": "category",
+              "control": "select",
+              "label": "Category"
+            },
+            {
+              "fieldId": "purchased",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_item",
+          "title": "Add Item",
+          "width": "full",
+          "type": "form",
+          "entityId": "shopping_item",
+          "fieldIds": [
+            "name",
+            "quantity",
+            "category"
+          ],
+          "submitLabel": "Add to List"
+        },
+        {
+          "id": "unpurchased_count",
+          "title": "Items to Buy",
+          "width": "third",
+          "type": "metric",
+          "entityId": "shopping_item",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "purchased",
+                "op": "isFalse"
+              }
+            ]
+          }
+        },
+        {
+          "id": "purchased_count",
+          "title": "Items Purchased",
+          "width": "third",
+          "type": "metric",
+          "entityId": "shopping_item",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "purchased",
+                "op": "isTrue"
+              }
+            ]
+          }
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2036,
+          "outputTokens": 1062
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2036,
+      "outputTokens": 1062
+    },
+    "latencyMs": 144241,
+    "failure": null,
+    "warnings": []
+  }
+}

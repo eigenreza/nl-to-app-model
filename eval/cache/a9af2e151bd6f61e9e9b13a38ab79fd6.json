@@ -1,0 +1,167 @@
+{
+  "caseId": "film_watchlist",
+  "band": "simple",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144231,
+  "inputTokens": 2045,
+  "outputTokens": 782,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Film Watchlist",
+        "description": "Track films to watch with title, director, year, and watched status"
+      },
+      "entities": [
+        {
+          "id": "film",
+          "name": "Film",
+          "pluralName": "Films",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "director",
+              "label": "Director",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "year",
+              "label": "Year",
+              "type": "number",
+              "required": false
+            },
+            {
+              "id": "watched",
+              "label": "Watched",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "title": "Inception",
+              "director": "Christopher Nolan",
+              "year": 2010,
+              "watched": true
+            },
+            {
+              "title": "The Shawshank Redemption",
+              "director": "Frank Darabont",
+              "year": 1994,
+              "watched": true
+            },
+            {
+              "title": "Parasite",
+              "director": "Bong Joon-ho",
+              "year": 2019,
+              "watched": false
+            },
+            {
+              "title": "Oppenheimer",
+              "director": "Christopher Nolan",
+              "year": 2023,
+              "watched": false
+            },
+            {
+              "title": "Dune",
+              "director": "Denis Villeneuve",
+              "year": 2021,
+              "watched": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "unwatched_count",
+          "title": "Unwatched Films",
+          "width": "third",
+          "type": "metric",
+          "entityId": "film",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "watched",
+                "op": "isFalse"
+              }
+            ]
+          }
+        },
+        {
+          "id": "film_table",
+          "title": "My Watchlist",
+          "width": "full",
+          "type": "table",
+          "entityId": "film",
+          "columns": [
+            "title",
+            "director",
+            "year",
+            "watched"
+          ],
+          "filters": [
+            {
+              "fieldId": "watched",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_film",
+          "title": "Add Film",
+          "width": "full",
+          "type": "form",
+          "entityId": "film",
+          "submitLabel": "Add to watchlist"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2045,
+          "outputTokens": 782
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2045,
+      "outputTokens": 782
+    },
+    "latencyMs": 144231,
+    "failure": null,
+    "warnings": []
+  }
+}

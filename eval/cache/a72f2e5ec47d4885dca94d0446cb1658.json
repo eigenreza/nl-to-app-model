@@ -1,0 +1,313 @@
+{
+  "caseId": "wants_uploads",
+  "band": "out_of_scope",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": false,
+  "iterations": 4,
+  "latencyMs": 16644,
+  "inputTokens": 16446,
+  "outputTokens": 1987,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Painting Catalogue",
+        "description": "A catalogue to organize and view photos of your paintings."
+      },
+      "entities": [
+        {
+          "id": "painting",
+          "name": "Painting",
+          "pluralName": "Paintings",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "artist",
+              "label": "Artist",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "date_created",
+              "label": "Date Created",
+              "type": "date",
+              "required": false
+            },
+            {
+              "id": "medium",
+              "label": "Medium",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "dimensions",
+              "label": "Dimensions",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "description",
+              "label": "Description",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "title": "Sunset Over Mountains",
+              "artist": "You",
+              "date_created": "2024-01-15",
+              "medium": "Oil on canvas",
+              "dimensions": "24 x 36 inches",
+              "description": "A vibrant landscape capturing the golden hour"
+            },
+            {
+              "title": "Abstract Dreams",
+              "artist": "You",
+              "date_created": "2024-02-20",
+              "medium": "Acrylic on canvas",
+              "dimensions": "18 x 24 inches",
+              "description": "Experimental abstract composition with bold colors"
+            },
+            {
+              "title": "Portrait Study",
+              "artist": "You",
+              "date_created": "2024-03-10",
+              "medium": "Watercolor",
+              "dimensions": "12 x 16 inches",
+              "description": "Character study in soft watercolor tones"
+            },
+            {
+              "title": "Urban Reflections",
+              "artist": "You",
+              "date_created": "2024-03-25",
+              "medium": "Mixed media",
+              "dimensions": "20 x 20 inches",
+              "description": "City scene with reflective surfaces"
+            },
+            {
+              "title": "Garden in Bloom",
+              "artist": "You",
+              "date_created": "2024-04-05",
+              "medium": "Oil on canvas",
+              "dimensions": "30 x 40 inches",
+              "description": "Floral landscape with rich, layered colors"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "add_painting_form",
+          "title": "Add New Painting",
+          "width": "full",
+          "type": "form",
+          "entityId": "painting",
+          "fieldIds": [
+            "title",
+            "artist",
+            "date_created",
+            "medium",
+            "dimensions",
+            "description"
+          ],
+          "submitLabel": "Add Painting"
+        },
+        {
+          "id": "total_paintings",
+          "title": "Total Paintings",
+          "width": "full",
+          "type": "metric",
+          "entityId": "painting",
+          "aggregate": "count",
+          "caption": "paintings in your catalogue"
+        },
+        {
+          "id": "paintings_table",
+          "title": "My Paintings",
+          "width": "full",
+          "type": "table",
+          "entityId": "painting",
+          "columns": [
+            "title",
+            "artist",
+            "date_created",
+            "medium",
+            "dimensions"
+          ],
+          "filters": [
+            {
+              "fieldId": "medium",
+              "control": "text",
+              "label": "Filter by Medium"
+            },
+            {
+              "fieldId": "title",
+              "control": "text",
+              "label": "Search by Title"
+            }
+          ]
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": false,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3058,
+          "outputTokens": 925
+        },
+        "latencyMs": 5964,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"painting\" with 6 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"painting\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Painting entity for your catalogue application. Here's what I've set up:\n\n**Plan Summary:**\n- **App Name:** Painting Catalogue\n- **Purpose:** A catalogue to organize and view photos of your paintings\n- **Entity:** A single \"Painting\" entity with fields for title, artist, date created, medium, dimensions, and description\n\n**Painting Entity Fields:**\n- Title (r",
+        "usage": {
+          "inputTokens": 4023,
+          "outputTokens": 250
+        },
+        "latencyMs": 3597,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Component \"paintings_table\" rejected. 1 error.",
+        "issues": [
+          {
+            "path": "filters[0].control",
+            "code": "filter_control_mismatch",
+            "message": "A \"select\" filter needs a field of type \"enum\" or \"boolean\", but \"medium\" has type \"string\". Use control \"text\" instead.",
+            "severity": "error"
+          }
+        ],
+        "usage": {
+          "inputTokens": 4291,
+          "outputTokens": 557
+        },
+        "latencyMs": 3422,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_painting_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_paintings\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"paintings_table\".",
+        "usage": {
+          "inputTokens": 5074,
+          "outputTokens": 255
+        },
+        "latencyMs": 2466,
+        "index": 9
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 10
+      }
+    ],
+    "usage": {
+      "inputTokens": 16446,
+      "outputTokens": 1987
+    },
+    "latencyMs": 16644,
+    "failure": null,
+    "warnings": []
+  }
+}

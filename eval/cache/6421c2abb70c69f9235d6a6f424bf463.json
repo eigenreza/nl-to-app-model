@@ -1,0 +1,138 @@
+{
+  "caseId": "todo_list",
+  "band": "simple",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144227,
+  "inputTokens": 2038,
+  "outputTokens": 586,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "To Do List",
+        "description": "A simple to do list where each task has a title, a due date and a done checkbox"
+      },
+      "entities": [
+        {
+          "id": "task",
+          "name": "Task",
+          "pluralName": "Tasks",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "due_date",
+              "label": "Due Date",
+              "type": "date",
+              "required": false
+            },
+            {
+              "id": "done",
+              "label": "Done",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "title": "Buy groceries",
+              "due_date": "2024-03-22",
+              "done": false
+            },
+            {
+              "title": "Complete project report",
+              "due_date": "2024-03-20",
+              "done": false
+            },
+            {
+              "title": "Call dentist",
+              "due_date": "2024-03-25",
+              "done": true
+            },
+            {
+              "title": "Review team feedback",
+              "due_date": "2024-03-19",
+              "done": false
+            },
+            {
+              "title": "Update documentation",
+              "due_date": "2024-03-23",
+              "done": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "task_table",
+          "title": "Tasks",
+          "width": "full",
+          "type": "table",
+          "entityId": "task",
+          "columns": [
+            "title",
+            "due_date",
+            "done"
+          ],
+          "filters": [
+            {
+              "fieldId": "done",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_task",
+          "title": "Add a task",
+          "width": "full",
+          "type": "form",
+          "entityId": "task",
+          "submitLabel": "Add task"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2038,
+          "outputTokens": 586
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2038,
+      "outputTokens": 586
+    },
+    "latencyMs": 144227,
+    "failure": null,
+    "warnings": []
+  }
+}

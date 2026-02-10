@@ -1,0 +1,165 @@
+{
+  "caseId": "inventory",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144233,
+  "inputTokens": 2049,
+  "outputTokens": 842,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Shop Inventory",
+        "description": "Track product inventory with supplier information and stock valuation"
+      },
+      "entities": [
+        {
+          "id": "product",
+          "name": "Product",
+          "pluralName": "Products",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Product Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "supplier",
+              "label": "Supplier",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "unit_price",
+              "label": "Unit Price",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "quantity_in_stock",
+              "label": "Quantity in Stock",
+              "type": "number",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "name": "Wireless Mouse",
+              "supplier": "TechSupply Co",
+              "unit_price": 15.99,
+              "quantity_in_stock": 45
+            },
+            {
+              "name": "USB-C Cable",
+              "supplier": "CableWorld",
+              "unit_price": 8.5,
+              "quantity_in_stock": 120
+            },
+            {
+              "name": "Mechanical Keyboard",
+              "supplier": "TechSupply Co",
+              "unit_price": 89.99,
+              "quantity_in_stock": 12
+            },
+            {
+              "name": "Monitor Stand",
+              "supplier": "OfficeGear Ltd",
+              "unit_price": 34.5,
+              "quantity_in_stock": 28
+            },
+            {
+              "name": "Laptop Stand",
+              "supplier": "OfficeGear Ltd",
+              "unit_price": 42,
+              "quantity_in_stock": 15
+            },
+            {
+              "name": "HDMI Cable",
+              "supplier": "CableWorld",
+              "unit_price": 12.99,
+              "quantity_in_stock": 87
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "inventory_table",
+          "title": "Inventory",
+          "width": "full",
+          "type": "table",
+          "entityId": "product",
+          "columns": [
+            "name",
+            "supplier",
+            "unit_price",
+            "quantity_in_stock"
+          ],
+          "filters": [
+            {
+              "fieldId": "supplier",
+              "control": "text",
+              "label": "Supplier"
+            }
+          ]
+        },
+        {
+          "id": "total_stock_value",
+          "title": "Total Stock Value",
+          "width": "third",
+          "type": "metric",
+          "entityId": "product",
+          "aggregate": "sum",
+          "fieldId": "unit_price"
+        },
+        {
+          "id": "add_product",
+          "title": "Add Product",
+          "width": "full",
+          "type": "form",
+          "entityId": "product",
+          "submitLabel": "Add to Inventory"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2049,
+          "outputTokens": 842
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2049,
+      "outputTokens": 842
+    },
+    "latencyMs": 144233,
+    "failure": null,
+    "warnings": []
+  }
+}

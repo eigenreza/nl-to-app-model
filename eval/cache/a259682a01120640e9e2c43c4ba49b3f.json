@@ -1,0 +1,238 @@
+{
+  "caseId": "wants_relations",
+  "band": "out_of_scope",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144241,
+  "inputTokens": 2042,
+  "outputTokens": 1269,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Customer Orders",
+        "description": "Manage customers and their orders"
+      },
+      "entities": [
+        {
+          "id": "customer",
+          "name": "Customer",
+          "pluralName": "Customers",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "email",
+              "label": "Email",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "phone",
+              "label": "Phone",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "name": "Alice Johnson",
+              "email": "alice@example.com",
+              "phone": "555-0101"
+            },
+            {
+              "name": "Bob Smith",
+              "email": "bob@example.com",
+              "phone": "555-0102"
+            },
+            {
+              "name": "Carol Davis",
+              "email": "carol@example.com",
+              "phone": "555-0103"
+            }
+          ]
+        },
+        {
+          "id": "order",
+          "name": "Order",
+          "pluralName": "Orders",
+          "fields": [
+            {
+              "id": "order_number",
+              "label": "Order Number",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "customer_id",
+              "label": "Customer",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "amount",
+              "label": "Amount",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "order_date",
+              "label": "Order Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Pending",
+                "Shipped",
+                "Delivered",
+                "Cancelled"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "order_number": "ORD-001",
+              "customer_id": "Alice Johnson",
+              "amount": 150.5,
+              "order_date": "2024-01-15",
+              "status": "Delivered"
+            },
+            {
+              "order_number": "ORD-002",
+              "customer_id": "Bob Smith",
+              "amount": 275,
+              "order_date": "2024-01-18",
+              "status": "Shipped"
+            },
+            {
+              "order_number": "ORD-003",
+              "customer_id": "Alice Johnson",
+              "amount": 89.99,
+              "order_date": "2024-01-20",
+              "status": "Pending"
+            },
+            {
+              "order_number": "ORD-004",
+              "customer_id": "Carol Davis",
+              "amount": 320,
+              "order_date": "2024-01-22",
+              "status": "Delivered"
+            },
+            {
+              "order_number": "ORD-005",
+              "customer_id": "Bob Smith",
+              "amount": 125.75,
+              "order_date": "2024-01-25",
+              "status": "Pending"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "customer_table",
+          "title": "Customers",
+          "width": "half",
+          "type": "table",
+          "entityId": "customer"
+        },
+        {
+          "id": "order_table",
+          "title": "Orders",
+          "width": "half",
+          "type": "table",
+          "entityId": "order",
+          "columns": [
+            "order_number",
+            "customer_id",
+            "amount",
+            "order_date",
+            "status"
+          ],
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_customer",
+          "title": "Add Customer",
+          "width": "half",
+          "type": "form",
+          "entityId": "customer",
+          "fieldIds": [
+            "name",
+            "email",
+            "phone"
+          ],
+          "submitLabel": "Add Customer"
+        },
+        {
+          "id": "add_order",
+          "title": "Add Order",
+          "width": "half",
+          "type": "form",
+          "entityId": "order",
+          "fieldIds": [
+            "order_number",
+            "customer_id",
+            "amount",
+            "order_date",
+            "status"
+          ],
+          "submitLabel": "Add Order"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2042,
+          "outputTokens": 1269
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2042,
+      "outputTokens": 1269
+    },
+    "latencyMs": 144241,
+    "failure": null,
+    "warnings": []
+  }
+}

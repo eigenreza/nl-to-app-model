@@ -1,0 +1,145 @@
+{
+  "caseId": "birthday_list",
+  "band": "simple",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144232,
+  "inputTokens": 2034,
+  "outputTokens": 636,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Birthday List",
+        "description": "Track birthdays of people you know with their relationship to you"
+      },
+      "entities": [
+        {
+          "id": "person",
+          "name": "Person",
+          "pluralName": "People",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "birthday",
+              "label": "Birthday",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "relationship",
+              "label": "How I Know Them",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Family",
+                "Friend",
+                "Colleague",
+                "Acquaintance",
+                "Other"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "name": "Sarah Johnson",
+              "birthday": "1985-03-15",
+              "relationship": "Friend"
+            },
+            {
+              "name": "Michael Chen",
+              "birthday": "1990-07-22",
+              "relationship": "Colleague"
+            },
+            {
+              "name": "Emma Wilson",
+              "birthday": "1988-11-08",
+              "relationship": "Family"
+            },
+            {
+              "name": "James Martinez",
+              "birthday": "1992-05-30",
+              "relationship": "Friend"
+            },
+            {
+              "name": "Lisa Anderson",
+              "birthday": "1987-09-12",
+              "relationship": "Acquaintance"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "birthday_table",
+          "title": "Birthday List",
+          "width": "full",
+          "type": "table",
+          "entityId": "person",
+          "columns": [
+            "name",
+            "birthday",
+            "relationship"
+          ],
+          "filters": [
+            {
+              "fieldId": "relationship",
+              "control": "select",
+              "label": "Relationship"
+            }
+          ]
+        },
+        {
+          "id": "add_person",
+          "title": "Add a Person",
+          "width": "full",
+          "type": "form",
+          "entityId": "person",
+          "submitLabel": "Add to Birthday List"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2034,
+          "outputTokens": 636
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2034,
+      "outputTokens": 636
+    },
+    "latencyMs": 144232,
+    "failure": null,
+    "warnings": []
+  }
+}

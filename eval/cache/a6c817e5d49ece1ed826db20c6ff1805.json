@@ -1,0 +1,242 @@
+{
+  "caseId": "wants_notifications",
+  "band": "out_of_scope",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": false,
+  "iterations": 2,
+  "latencyMs": 298377,
+  "inputTokens": 5768,
+  "outputTokens": 2452,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Stock Tracker",
+        "description": "Track inventory levels for shop items"
+      },
+      "entities": [
+        {
+          "id": "item",
+          "name": "Item",
+          "pluralName": "Items",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Item Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "sku",
+              "label": "SKU",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "quantity",
+              "label": "Quantity in Stock",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "reorder_level",
+              "label": "Reorder Level",
+              "type": "number",
+              "required": false
+            },
+            {
+              "id": "last_updated",
+              "label": "Last Updated",
+              "type": "date",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "name": "Wireless Mouse",
+              "sku": "WM-001",
+              "quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2024-03-19"
+            },
+            {
+              "name": "USB-C Cable",
+              "sku": "UC-002",
+              "quantity": 12,
+              "reorder_level": 5,
+              "last_updated": "2024-03-18"
+            },
+            {
+              "name": "Keyboard",
+              "sku": "KB-003",
+              "quantity": 4,
+              "reorder_level": 5,
+              "last_updated": "2024-03-19"
+            },
+            {
+              "name": "Monitor Stand",
+              "sku": "MS-004",
+              "quantity": 8,
+              "reorder_level": 5,
+              "last_updated": "2024-03-17"
+            },
+            {
+              "name": "Desk Lamp",
+              "sku": "DL-005",
+              "quantity": 15,
+              "reorder_level": 5,
+              "last_updated": "2024-03-16"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "low_stock_metric",
+          "title": "Items Below Reorder Level",
+          "width": "third",
+          "type": "metric",
+          "entityId": "item",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "quantity",
+                "op": "lessThan",
+                "value": 5
+              }
+            ]
+          }
+        },
+        {
+          "id": "total_items_metric",
+          "title": "Total Items Tracked",
+          "width": "third",
+          "type": "metric",
+          "entityId": "item",
+          "aggregate": "count"
+        },
+        {
+          "id": "avg_stock_metric",
+          "title": "Average Stock Level",
+          "width": "third",
+          "type": "metric",
+          "entityId": "item",
+          "aggregate": "average",
+          "fieldId": "quantity"
+        },
+        {
+          "id": "item_table",
+          "title": "Inventory",
+          "width": "full",
+          "type": "table",
+          "entityId": "item",
+          "columns": [
+            "name",
+            "sku",
+            "quantity",
+            "reorder_level",
+            "last_updated"
+          ]
+        },
+        {
+          "id": "low_stock_table",
+          "title": "Low Stock Alerts",
+          "width": "full",
+          "type": "table",
+          "entityId": "item",
+          "columns": [
+            "name",
+            "sku",
+            "quantity",
+            "reorder_level"
+          ],
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "quantity",
+                "op": "lessThan",
+                "value": 5
+              }
+            ]
+          },
+          "emptyMessage": "No items below reorder level."
+        },
+        {
+          "id": "add_item",
+          "title": "Add New Item",
+          "width": "full",
+          "type": "form",
+          "entityId": "item",
+          "fieldIds": [
+            "name",
+            "sku",
+            "quantity",
+            "reorder_level",
+            "last_updated"
+          ],
+          "submitLabel": "Add Item"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": false,
+    "iterations": 2,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Candidate rejected: 1 error.",
+        "ok": false,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [
+          {
+            "path": "components[3].filters[0].control",
+            "code": "filter_control_mismatch",
+            "message": "A \"text\" filter needs a field of type \"string\", but \"quantity\" has type \"number\". Use control \"select\" instead.",
+            "severity": "error"
+          }
+        ],
+        "usage": {
+          "inputTokens": 2038,
+          "outputTokens": 1247
+        },
+        "latencyMs": 0,
+        "index": 0
+      },
+      {
+        "kind": "repair",
+        "label": "Repair produced a valid model.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 3730,
+          "outputTokens": 1205
+        },
+        "latencyMs": 0,
+        "index": 1
+      }
+    ],
+    "usage": {
+      "inputTokens": 5768,
+      "outputTokens": 2452
+    },
+    "latencyMs": 298377,
+    "failure": null,
+    "warnings": []
+  }
+}

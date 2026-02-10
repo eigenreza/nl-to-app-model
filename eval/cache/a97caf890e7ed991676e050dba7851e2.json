@@ -1,0 +1,152 @@
+{
+  "caseId": "bulleted",
+  "band": "awkward",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144239,
+  "inputTokens": 2051,
+  "outputTokens": 674,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Swimming Log",
+        "description": "Track your swimming sessions with distance, pool, date, and duration."
+      },
+      "entities": [
+        {
+          "id": "swim",
+          "name": "Swim",
+          "pluralName": "Swims",
+          "fields": [
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "pool",
+              "label": "Pool",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "distance",
+              "label": "Distance (metres)",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "duration",
+              "label": "Duration (minutes)",
+              "type": "number",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "date": "2024-03-19",
+              "pool": "City Pool",
+              "distance": 1500,
+              "duration": 45
+            },
+            {
+              "date": "2024-03-17",
+              "pool": "University Pool",
+              "distance": 2000,
+              "duration": 60
+            },
+            {
+              "date": "2024-03-15",
+              "pool": "City Pool",
+              "distance": 1200,
+              "duration": 40
+            },
+            {
+              "date": "2024-03-13",
+              "pool": "Beach",
+              "distance": 800,
+              "duration": 30
+            },
+            {
+              "date": "2024-03-11",
+              "pool": "University Pool",
+              "distance": 1800,
+              "duration": 55
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "total_distance",
+          "width": "full",
+          "type": "metric",
+          "entityId": "swim",
+          "aggregate": "sum",
+          "fieldId": "distance",
+          "caption": "Total distance"
+        },
+        {
+          "id": "swim_table",
+          "title": "Swimming Log",
+          "width": "full",
+          "type": "table",
+          "entityId": "swim",
+          "columns": [
+            "date",
+            "pool",
+            "distance",
+            "duration"
+          ]
+        },
+        {
+          "id": "add_swim",
+          "title": "Log a swim",
+          "width": "full",
+          "type": "form",
+          "entityId": "swim",
+          "submitLabel": "Add swim"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2051,
+          "outputTokens": 674
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2051,
+      "outputTokens": 674
+    },
+    "latencyMs": 144239,
+    "failure": null,
+    "warnings": []
+  }
+}

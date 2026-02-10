@@ -1,0 +1,306 @@
+{
+  "caseId": "gym_log",
+  "band": "simple",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 12193,
+  "inputTokens": 15979,
+  "outputTokens": 1727,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Gym Log",
+        "description": "A gym log for recording exercises with weight, reps, and date."
+      },
+      "entities": [
+        {
+          "id": "exercise_log",
+          "name": "Exercise Log",
+          "pluralName": "Exercise Logs",
+          "fields": [
+            {
+              "id": "exercise",
+              "label": "Exercise",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "weight_kg",
+              "label": "Weight (kg)",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "reps",
+              "label": "Reps",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "exercise": "Bench Press",
+              "weight_kg": 80,
+              "reps": 8,
+              "date": "2024-01-15"
+            },
+            {
+              "exercise": "Squats",
+              "weight_kg": 100,
+              "reps": 10,
+              "date": "2024-01-15"
+            },
+            {
+              "exercise": "Deadlift",
+              "weight_kg": 120,
+              "reps": 5,
+              "date": "2024-01-16"
+            },
+            {
+              "exercise": "Bench Press",
+              "weight_kg": 82,
+              "reps": 8,
+              "date": "2024-01-17"
+            },
+            {
+              "exercise": "Squats",
+              "weight_kg": 102,
+              "reps": 10,
+              "date": "2024-01-18"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "exercise_log_table",
+          "title": "Exercise Log",
+          "width": "full",
+          "type": "table",
+          "entityId": "exercise_log",
+          "columns": [
+            "exercise",
+            "weight_kg",
+            "reps",
+            "date"
+          ],
+          "filters": [
+            {
+              "fieldId": "exercise",
+              "control": "text",
+              "label": "Search Exercise"
+            }
+          ]
+        },
+        {
+          "id": "add_log_form",
+          "title": "Log New Exercise",
+          "width": "full",
+          "type": "form",
+          "entityId": "exercise_log",
+          "fieldIds": [
+            "exercise",
+            "weight_kg",
+            "reps",
+            "date"
+          ],
+          "submitLabel": "Log Exercise"
+        },
+        {
+          "id": "total_weight_metric",
+          "title": "Total Weight Lifted",
+          "width": "full",
+          "type": "metric",
+          "entityId": "exercise_log",
+          "aggregate": "sum",
+          "fieldId": "weight_kg",
+          "caption": "kg across all exercises"
+        },
+        {
+          "id": "total_reps_metric",
+          "title": "Total Reps",
+          "width": "full",
+          "type": "metric",
+          "entityId": "exercise_log",
+          "aggregate": "sum",
+          "fieldId": "reps",
+          "caption": "reps completed"
+        },
+        {
+          "id": "log_count_metric",
+          "title": "Total Workouts",
+          "width": "full",
+          "type": "metric",
+          "entityId": "exercise_log",
+          "aggregate": "count",
+          "caption": "exercises logged"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3066,
+          "outputTokens": 692
+        },
+        "latencyMs": 4673,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"exercise_log\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"exercise_log\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Exercise Log entity with the following structure:\n\n**Entity: Exercise Log**\n- **Exercise** (string, required): The name of the exercise\n- **Weight (kg)** (number, required): The weight lifted in kilograms\n- **Reps** (number, required): The number of repetitions\n- **Date** (date, required): The date of the workout\n\nI've also seeded the entity with 5 realistic ",
+        "usage": {
+          "inputTokens": 3828,
+          "outputTokens": 147
+        },
+        "latencyMs": 1838,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"exercise_log_table\".",
+        "usage": {
+          "inputTokens": 3993,
+          "outputTokens": 840
+        },
+        "latencyMs": 4298,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_log_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_weight_metric\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_reps_metric\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"log_count_metric\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 10
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 5092,
+          "outputTokens": 48
+        },
+        "latencyMs": 1216,
+        "index": 11
+      }
+    ],
+    "usage": {
+      "inputTokens": 15979,
+      "outputTokens": 1727
+    },
+    "latencyMs": 12193,
+    "failure": null,
+    "warnings": []
+  }
+}

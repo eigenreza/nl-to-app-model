@@ -1,0 +1,247 @@
+{
+  "caseId": "donation_ledger",
+  "band": "moderate",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 3,
+  "latencyMs": 9339,
+  "inputTokens": 10871,
+  "outputTokens": 1314,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Donation Ledger",
+        "description": "A donation ledger that records donors, amounts, dates, and campaigns while tracking total raised."
+      },
+      "entities": [
+        {
+          "id": "donation",
+          "name": "Donation",
+          "pluralName": "Donations",
+          "fields": [
+            {
+              "id": "donor",
+              "label": "Donor",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "amount",
+              "label": "Amount",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "campaign",
+              "label": "Campaign",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "donor": "John Smith",
+              "amount": 500,
+              "date": "2024-01-15",
+              "campaign": "Community Center Fund"
+            },
+            {
+              "donor": "Sarah Johnson",
+              "amount": 1000,
+              "date": "2024-01-20",
+              "campaign": "Education Initiative"
+            },
+            {
+              "donor": "Michael Chen",
+              "amount": 750,
+              "date": "2024-02-05",
+              "campaign": "Community Center Fund"
+            },
+            {
+              "donor": "Emma Davis",
+              "amount": 250,
+              "date": "2024-02-10",
+              "campaign": "Health Program"
+            },
+            {
+              "donor": "Robert Wilson",
+              "amount": 2000,
+              "date": "2024-02-15",
+              "campaign": "Education Initiative"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "donations_table",
+          "title": "Donation Ledger",
+          "width": "full",
+          "type": "table",
+          "entityId": "donation",
+          "columns": [
+            "donor",
+            "amount",
+            "date",
+            "campaign"
+          ]
+        },
+        {
+          "id": "total_raised",
+          "title": "Total Raised",
+          "width": "full",
+          "type": "metric",
+          "entityId": "donation",
+          "aggregate": "sum",
+          "fieldId": "amount",
+          "caption": "Total amount donated"
+        },
+        {
+          "id": "new_donation_form",
+          "title": "Enter New Donation",
+          "width": "full",
+          "type": "form",
+          "entityId": "donation",
+          "fieldIds": [
+            "donor",
+            "amount",
+            "date",
+            "campaign"
+          ],
+          "submitLabel": "Record Donation"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 3,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3075,
+          "outputTokens": 683
+        },
+        "latencyMs": 4441,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"donation\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"donation\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Donation entity with the following structure:\n\n**Entity: Donation**\n- **donor** (string, required): The name of the person making the donation\n- **amount** (number, required): The donation amount\n- **date** (date, required): When the donation was made\n- **campaign** (string, required): The campaign the donation supports\n\nI've also seeded the entity with 5 rea",
+        "usage": {
+          "inputTokens": 3824,
+          "outputTokens": 130
+        },
+        "latencyMs": 1725,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"donations_table\".",
+        "usage": {
+          "inputTokens": 3972,
+          "outputTokens": 501
+        },
+        "latencyMs": 2886,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_raised\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"new_donation_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      }
+    ],
+    "usage": {
+      "inputTokens": 10871,
+      "outputTokens": 1314
+    },
+    "latencyMs": 9339,
+    "failure": null,
+    "warnings": []
+  }
+}

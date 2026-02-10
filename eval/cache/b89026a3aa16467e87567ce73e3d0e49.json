@@ -1,0 +1,210 @@
+{
+  "caseId": "one_word",
+  "band": "awkward",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144237,
+  "inputTokens": 2021,
+  "outputTokens": 1041,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Expenses",
+        "description": "Track and manage expenses"
+      },
+      "entities": [
+        {
+          "id": "expense",
+          "name": "Expense",
+          "pluralName": "Expenses",
+          "fields": [
+            {
+              "id": "description",
+              "label": "Description",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "amount",
+              "label": "Amount",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "category",
+              "label": "Category",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Food",
+                "Transport",
+                "Utilities",
+                "Entertainment",
+                "Other"
+              ]
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "paid",
+              "label": "Paid",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "description": "Grocery shopping",
+              "amount": 45.5,
+              "category": "Food",
+              "date": "2024-03-15",
+              "paid": true
+            },
+            {
+              "description": "Gas",
+              "amount": 60,
+              "category": "Transport",
+              "date": "2024-03-14",
+              "paid": true
+            },
+            {
+              "description": "Electric bill",
+              "amount": 120,
+              "category": "Utilities",
+              "date": "2024-03-10",
+              "paid": false
+            },
+            {
+              "description": "Movie tickets",
+              "amount": 30,
+              "category": "Entertainment",
+              "date": "2024-03-13",
+              "paid": true
+            },
+            {
+              "description": "Restaurant dinner",
+              "amount": 75.25,
+              "category": "Food",
+              "date": "2024-03-12",
+              "paid": true
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "total_spent",
+          "title": "Total Spent",
+          "width": "third",
+          "type": "metric",
+          "entityId": "expense",
+          "aggregate": "sum",
+          "fieldId": "amount"
+        },
+        {
+          "id": "unpaid_total",
+          "title": "Unpaid Amount",
+          "width": "third",
+          "type": "metric",
+          "entityId": "expense",
+          "aggregate": "sum",
+          "fieldId": "amount",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "paid",
+                "op": "isFalse"
+              }
+            ]
+          }
+        },
+        {
+          "id": "expense_count",
+          "title": "Total Expenses",
+          "width": "third",
+          "type": "metric",
+          "entityId": "expense",
+          "aggregate": "count"
+        },
+        {
+          "id": "expense_table",
+          "title": "Expenses",
+          "width": "full",
+          "type": "table",
+          "entityId": "expense",
+          "columns": [
+            "description",
+            "amount",
+            "category",
+            "date",
+            "paid"
+          ],
+          "filters": [
+            {
+              "fieldId": "category",
+              "control": "select",
+              "label": "Category"
+            },
+            {
+              "fieldId": "paid",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_expense",
+          "title": "Add Expense",
+          "width": "full",
+          "type": "form",
+          "entityId": "expense",
+          "submitLabel": "Add expense"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2021,
+          "outputTokens": 1041
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2021,
+      "outputTokens": 1041
+    },
+    "latencyMs": 144237,
+    "failure": null,
+    "warnings": []
+  }
+}

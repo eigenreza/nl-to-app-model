@@ -1,0 +1,191 @@
+{
+  "caseId": "wants_uploads",
+  "band": "out_of_scope",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144242,
+  "inputTokens": 2034,
+  "outputTokens": 880,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Painting Catalogue",
+        "description": "A catalogue of paintings with details and photos"
+      },
+      "entities": [
+        {
+          "id": "painting",
+          "name": "Painting",
+          "pluralName": "Paintings",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "artist",
+              "label": "Artist",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "year",
+              "label": "Year",
+              "type": "number",
+              "required": false
+            },
+            {
+              "id": "medium",
+              "label": "Medium",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Oil",
+                "Acrylic",
+                "Watercolor",
+                "Pastel",
+                "Mixed Media"
+              ]
+            },
+            {
+              "id": "dimensions",
+              "label": "Dimensions",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Available",
+                "Sold",
+                "On Loan",
+                "In Progress"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "title": "Sunset Over Mountains",
+              "artist": "Self",
+              "year": 2023,
+              "medium": "Oil",
+              "dimensions": "24x36 inches",
+              "status": "Available"
+            },
+            {
+              "title": "Urban Landscape",
+              "artist": "Self",
+              "year": 2023,
+              "medium": "Acrylic",
+              "dimensions": "18x24 inches",
+              "status": "Sold"
+            },
+            {
+              "title": "Abstract Composition",
+              "artist": "Self",
+              "year": 2024,
+              "medium": "Mixed Media",
+              "dimensions": "30x30 inches",
+              "status": "Available"
+            },
+            {
+              "title": "Portrait Study",
+              "artist": "Self",
+              "year": 2024,
+              "medium": "Watercolor",
+              "dimensions": "12x16 inches",
+              "status": "In Progress"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "painting_table",
+          "title": "My Paintings",
+          "width": "full",
+          "type": "table",
+          "entityId": "painting",
+          "columns": [
+            "title",
+            "artist",
+            "year",
+            "medium",
+            "status"
+          ],
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select",
+              "label": "Status"
+            },
+            {
+              "fieldId": "medium",
+              "control": "select",
+              "label": "Medium"
+            }
+          ]
+        },
+        {
+          "id": "add_painting",
+          "title": "Add Painting",
+          "width": "full",
+          "type": "form",
+          "entityId": "painting",
+          "fieldIds": [
+            "title",
+            "artist",
+            "year",
+            "medium",
+            "dimensions",
+            "status"
+          ],
+          "submitLabel": "Add painting"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2034,
+          "outputTokens": 880
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2034,
+      "outputTokens": 880
+    },
+    "latencyMs": 144242,
+    "failure": null,
+    "warnings": []
+  }
+}

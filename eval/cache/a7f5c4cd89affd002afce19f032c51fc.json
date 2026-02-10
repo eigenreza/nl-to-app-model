@@ -1,0 +1,140 @@
+{
+  "caseId": "contact_list",
+  "band": "simple",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144227,
+  "inputTokens": 2034,
+  "outputTokens": 588,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Contact List",
+        "description": "A contact list with names, emails and the team each person belongs to"
+      },
+      "entities": [
+        {
+          "id": "contact",
+          "name": "Contact",
+          "pluralName": "Contacts",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "email",
+              "label": "Email",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "team",
+              "label": "Team",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Design",
+                "Engineering",
+                "Sales",
+                "Marketing",
+                "Operations"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "name": "Alice Johnson",
+              "email": "alice@example.com",
+              "team": "Engineering"
+            },
+            {
+              "name": "Bob Smith",
+              "email": "bob@example.com",
+              "team": "Design"
+            },
+            {
+              "name": "Carol Davis",
+              "email": "carol@example.com",
+              "team": "Sales"
+            },
+            {
+              "name": "David Wilson",
+              "email": "david@example.com",
+              "team": "Marketing"
+            },
+            {
+              "name": "Emma Brown",
+              "email": "emma@example.com",
+              "team": "Operations"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "contact_table",
+          "title": "Contacts",
+          "width": "full",
+          "type": "table",
+          "entityId": "contact",
+          "filters": [
+            {
+              "fieldId": "team",
+              "control": "select",
+              "label": "Team"
+            }
+          ]
+        },
+        {
+          "id": "add_contact",
+          "title": "Add Contact",
+          "width": "full",
+          "type": "form",
+          "entityId": "contact",
+          "submitLabel": "Add Contact"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2034,
+          "outputTokens": 588
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2034,
+      "outputTokens": 588
+    },
+    "latencyMs": 144227,
+    "failure": null,
+    "warnings": []
+  }
+}

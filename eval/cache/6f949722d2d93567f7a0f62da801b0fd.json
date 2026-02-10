@@ -1,0 +1,280 @@
+{
+  "caseId": "units_and_numbers",
+  "band": "awkward",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 3,
+  "latencyMs": 11742,
+  "inputTokens": 11311,
+  "outputTokens": 1692,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Coffee Bag Tracker",
+        "description": "Track coffee bags with roaster details, weight, price, roast date, and age metrics."
+      },
+      "entities": [
+        {
+          "id": "coffee_bag",
+          "name": "Coffee Bag",
+          "pluralName": "Coffee Bags",
+          "fields": [
+            {
+              "id": "roaster",
+              "label": "Roaster",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "weight_grams",
+              "label": "Weight (grams)",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "price_pounds",
+              "label": "Price (£)",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "roast_date",
+              "label": "Roast Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "days_since_roasting",
+              "label": "Days Since Roasting",
+              "type": "number",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "roaster": "Hasbean Coffee",
+              "weight_grams": 250,
+              "price_pounds": 5.5,
+              "roast_date": "2024-01-15",
+              "days_since_roasting": 8
+            },
+            {
+              "roaster": "Square Mile Coffee",
+              "weight_grams": 1000,
+              "price_pounds": 18,
+              "roast_date": "2024-01-10",
+              "days_since_roasting": 13
+            },
+            {
+              "roaster": "Colonna Coffee",
+              "weight_grams": 250,
+              "price_pounds": 6.25,
+              "roast_date": "2024-01-18",
+              "days_since_roasting": 5
+            },
+            {
+              "roaster": "Rave Coffee",
+              "weight_grams": 500,
+              "price_pounds": 9.99,
+              "roast_date": "2024-01-12",
+              "days_since_roasting": 11
+            },
+            {
+              "roaster": "Ozone Coffee",
+              "weight_grams": 1000,
+              "price_pounds": 16.5,
+              "roast_date": "2024-01-08",
+              "days_since_roasting": 15
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "coffee_bags_table",
+          "title": "Coffee Bags",
+          "width": "full",
+          "type": "table",
+          "entityId": "coffee_bag",
+          "columns": [
+            "roaster",
+            "weight_grams",
+            "price_pounds",
+            "roast_date",
+            "days_since_roasting"
+          ]
+        },
+        {
+          "id": "add_coffee_bag",
+          "title": "Add Coffee Bag",
+          "width": "full",
+          "type": "form",
+          "entityId": "coffee_bag",
+          "fieldIds": [
+            "roaster",
+            "weight_grams",
+            "price_pounds",
+            "roast_date",
+            "days_since_roasting"
+          ],
+          "submitLabel": "Add Bag"
+        },
+        {
+          "id": "average_price",
+          "title": "Average Price",
+          "width": "full",
+          "type": "metric",
+          "entityId": "coffee_bag",
+          "aggregate": "average",
+          "fieldId": "price_pounds",
+          "caption": "across all bags"
+        },
+        {
+          "id": "total_bags",
+          "title": "Total Bags",
+          "width": "full",
+          "type": "metric",
+          "entityId": "coffee_bag",
+          "aggregate": "count",
+          "caption": "in collection"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 3,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3084,
+          "outputTokens": 898
+        },
+        "latencyMs": 5309,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"coffee_bag\" with 5 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"coffee_bag\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Coffee Bag entity with seed data. The entity includes:\n- **Roaster**: the coffee roaster name\n- **Weight (grams)**: the bag weight in grams\n- **Price (£)**: the price in pounds\n- **Roast Date**: the date the coffee was roasted\n- **Days Since Roasting**: how many days have passed since roasting\n\nI've seeded it with 5 realistic coffee bags from various roasters",
+        "usage": {
+          "inputTokens": 4043,
+          "outputTokens": 123
+        },
+        "latencyMs": 1823,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"coffee_bags_table\".",
+        "usage": {
+          "inputTokens": 4184,
+          "outputTokens": 671
+        },
+        "latencyMs": 3506,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_coffee_bag\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"average_price\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_bags\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      }
+    ],
+    "usage": {
+      "inputTokens": 11311,
+      "outputTokens": 1692
+    },
+    "latencyMs": 11742,
+    "failure": null,
+    "warnings": []
+  }
+}

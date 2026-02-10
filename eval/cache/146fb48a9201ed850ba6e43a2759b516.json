@@ -1,0 +1,272 @@
+{
+  "caseId": "issue_tracker",
+  "band": "moderate",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 3,
+  "latencyMs": 10904,
+  "inputTokens": 10894,
+  "outputTokens": 1326,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Issue Tracker",
+        "description": "An issue tracker to manage tasks with status, priority, and time estimates."
+      },
+      "entities": [
+        {
+          "id": "issue",
+          "name": "Issue",
+          "pluralName": "Issues",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "open",
+                "in progress",
+                "done"
+              ]
+            },
+            {
+              "id": "priority",
+              "label": "Priority",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "low",
+                "medium",
+                "high"
+              ]
+            },
+            {
+              "id": "estimate",
+              "label": "Estimate (hours)",
+              "type": "number",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "title": "Fix login bug",
+              "status": "open",
+              "priority": "high",
+              "estimate": 3
+            },
+            {
+              "title": "Update documentation",
+              "status": "in progress",
+              "priority": "medium",
+              "estimate": 5
+            },
+            {
+              "title": "Refactor database queries",
+              "status": "done",
+              "priority": "high",
+              "estimate": 8
+            },
+            {
+              "title": "Add dark mode",
+              "status": "open",
+              "priority": "low",
+              "estimate": 6
+            },
+            {
+              "title": "Optimize images",
+              "status": "done",
+              "priority": "medium",
+              "estimate": 4
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "incomplete_count",
+          "width": "full",
+          "type": "metric",
+          "entityId": "issue",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "status",
+                "op": "notEquals",
+                "value": "done"
+              }
+            ]
+          },
+          "caption": "Issues not done"
+        },
+        {
+          "id": "all_issues",
+          "title": "All Issues",
+          "width": "full",
+          "type": "table",
+          "entityId": "issue",
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select"
+            },
+            {
+              "fieldId": "priority",
+              "control": "select"
+            }
+          ]
+        },
+        {
+          "id": "finished_issues",
+          "title": "Finished Issues",
+          "width": "full",
+          "type": "table",
+          "entityId": "issue",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "done"
+              }
+            ]
+          },
+          "emptyMessage": "No finished issues yet"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 3,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3084,
+          "outputTokens": 681
+        },
+        "latencyMs": 4431,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"issue\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"issue\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Issue entity with the following:\n\n**Entity: Issue**\n- **title** (string, required): The issue description\n- **status** (enum, required): One of \"open\", \"in progress\", or \"done\"\n- **priority** (enum, required): One of \"low\", \"medium\", or \"high\"\n- **estimate** (number, required): Time estimate in hours\n\nI've seeded it with 5 realistic sample issues. Next, I'll ",
+        "usage": {
+          "inputTokens": 3827,
+          "outputTokens": 138
+        },
+        "latencyMs": 1688,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"incomplete_count\".",
+        "usage": {
+          "inputTokens": 3983,
+          "outputTokens": 507
+        },
+        "latencyMs": 3334,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"all_issues\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"finished_issues\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a vertical layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      }
+    ],
+    "usage": {
+      "inputTokens": 10894,
+      "outputTokens": 1326
+    },
+    "latencyMs": 10904,
+    "failure": null,
+    "warnings": []
+  }
+}

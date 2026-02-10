@@ -1,0 +1,178 @@
+{
+  "caseId": "wants_kanban",
+  "band": "out_of_scope",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144243,
+  "inputTokens": 2040,
+  "outputTokens": 833,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Sprint Kanban Board",
+        "description": "A kanban board for managing sprint tasks with columns for different stages and swimlanes for team members."
+      },
+      "entities": [
+        {
+          "id": "task",
+          "name": "Task",
+          "pluralName": "Tasks",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "description",
+              "label": "Description",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "assignee",
+              "label": "Assignee",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Alice",
+                "Bob",
+                "Charlie",
+                "Diana"
+              ]
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "To Do",
+                "In Progress",
+                "Review",
+                "Done"
+              ]
+            },
+            {
+              "id": "priority",
+              "label": "Priority",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Low",
+                "Medium",
+                "High"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "title": "Design login page",
+              "description": "Create mockups for authentication flow",
+              "assignee": "Alice",
+              "status": "To Do",
+              "priority": "High"
+            },
+            {
+              "title": "Setup database schema",
+              "description": "Initialize PostgreSQL tables",
+              "assignee": "Bob",
+              "status": "In Progress",
+              "priority": "High"
+            },
+            {
+              "title": "API endpoint for users",
+              "description": "Build REST API for user management",
+              "assignee": "Charlie",
+              "status": "In Progress",
+              "priority": "Medium"
+            },
+            {
+              "title": "Write unit tests",
+              "description": "Test coverage for auth module",
+              "assignee": "Diana",
+              "status": "Review",
+              "priority": "Medium"
+            },
+            {
+              "title": "Deploy to staging",
+              "description": "Push changes to staging environment",
+              "assignee": "Bob",
+              "status": "Done",
+              "priority": "High"
+            },
+            {
+              "title": "Update documentation",
+              "description": "Document API endpoints",
+              "assignee": "Alice",
+              "status": "To Do",
+              "priority": "Low"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "kanban_board",
+          "title": "Sprint Kanban Board",
+          "width": "full",
+          "type": "table",
+          "entityId": "task",
+          "columns": [
+            "title",
+            "status",
+            "assignee",
+            "priority"
+          ]
+        },
+        {
+          "id": "add_task",
+          "title": "Add Task",
+          "width": "full",
+          "type": "form",
+          "entityId": "task",
+          "submitLabel": "Create Task"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2040,
+          "outputTokens": 833
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2040,
+      "outputTokens": 833
+    },
+    "latencyMs": 144243,
+    "failure": null,
+    "warnings": []
+  }
+}

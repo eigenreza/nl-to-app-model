@@ -1,0 +1,153 @@
+{
+  "caseId": "wine_cellar",
+  "band": "simple",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144231,
+  "inputTokens": 2041,
+  "outputTokens": 763,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Wine Cellar",
+        "description": "Track wines in your cellar with producer, vintage year, bottles remaining, and region."
+      },
+      "entities": [
+        {
+          "id": "wine",
+          "name": "Wine",
+          "pluralName": "Wines",
+          "fields": [
+            {
+              "id": "producer",
+              "label": "Producer",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "vintage_year",
+              "label": "Vintage Year",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "bottles_left",
+              "label": "Bottles Left",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "region",
+              "label": "Region",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "producer": "Château Margaux",
+              "vintage_year": 2015,
+              "bottles_left": 3,
+              "region": "Bordeaux"
+            },
+            {
+              "producer": "Barolo DOCG",
+              "vintage_year": 2018,
+              "bottles_left": 5,
+              "region": "Piedmont"
+            },
+            {
+              "producer": "Cloudy Bay",
+              "vintage_year": 2021,
+              "bottles_left": 2,
+              "region": "Marlborough"
+            },
+            {
+              "producer": "Opus One",
+              "vintage_year": 2019,
+              "bottles_left": 1,
+              "region": "Napa Valley"
+            },
+            {
+              "producer": "Chablis William Fèvre",
+              "vintage_year": 2020,
+              "bottles_left": 6,
+              "region": "Burgundy"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "wine_table",
+          "title": "Wine Cellar",
+          "width": "full",
+          "type": "table",
+          "entityId": "wine",
+          "filters": [
+            {
+              "fieldId": "region",
+              "control": "text",
+              "label": "Region"
+            }
+          ]
+        },
+        {
+          "id": "add_wine",
+          "title": "Add Wine",
+          "width": "full",
+          "type": "form",
+          "entityId": "wine",
+          "submitLabel": "Add wine"
+        },
+        {
+          "id": "total_bottles",
+          "title": "Total Bottles",
+          "width": "third",
+          "type": "metric",
+          "entityId": "wine",
+          "aggregate": "sum",
+          "fieldId": "bottles_left"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2041,
+          "outputTokens": 763
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2041,
+      "outputTokens": 763
+    },
+    "latencyMs": 144231,
+    "failure": null,
+    "warnings": []
+  }
+}

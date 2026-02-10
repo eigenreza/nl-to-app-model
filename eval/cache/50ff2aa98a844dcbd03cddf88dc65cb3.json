@@ -1,0 +1,286 @@
+{
+  "caseId": "vague_purpose",
+  "band": "awkward",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144238,
+  "inputTokens": 2029,
+  "outputTokens": 1511,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Band Manager",
+        "description": "Track songs, gigs, and band members"
+      },
+      "entities": [
+        {
+          "id": "song",
+          "name": "Song",
+          "pluralName": "Songs",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "artist",
+              "label": "Artist",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "duration",
+              "label": "Duration (seconds)",
+              "type": "number",
+              "required": false
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Learning",
+                "Ready",
+                "Retired"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "title": "Midnight Echo",
+              "artist": "Original",
+              "duration": 240,
+              "status": "Ready"
+            },
+            {
+              "title": "Electric Dreams",
+              "artist": "Original",
+              "duration": 210,
+              "status": "Ready"
+            },
+            {
+              "title": "Summer Nights",
+              "artist": "Cover",
+              "duration": 180,
+              "status": "Learning"
+            }
+          ]
+        },
+        {
+          "id": "gig",
+          "name": "Gig",
+          "pluralName": "Gigs",
+          "fields": [
+            {
+              "id": "venue",
+              "label": "Venue",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "time",
+              "label": "Time",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "confirmed",
+              "label": "Confirmed",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "venue": "The Blue Note",
+              "date": "2024-04-15",
+              "time": "8:00 PM",
+              "confirmed": true
+            },
+            {
+              "venue": "City Hall",
+              "date": "2024-05-22",
+              "time": "7:30 PM",
+              "confirmed": false
+            },
+            {
+              "venue": "The Riverside",
+              "date": "2024-06-10",
+              "time": "9:00 PM",
+              "confirmed": true
+            }
+          ]
+        },
+        {
+          "id": "member",
+          "name": "Member",
+          "pluralName": "Members",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "instrument",
+              "label": "Instrument",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Vocals",
+                "Guitar",
+                "Bass",
+                "Drums",
+                "Keyboard"
+              ]
+            },
+            {
+              "id": "active",
+              "label": "Active",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "name": "Alex Johnson",
+              "instrument": "Vocals",
+              "active": true
+            },
+            {
+              "name": "Jordan Smith",
+              "instrument": "Guitar",
+              "active": true
+            },
+            {
+              "name": "Casey Lee",
+              "instrument": "Bass",
+              "active": true
+            },
+            {
+              "name": "Morgan Davis",
+              "instrument": "Drums",
+              "active": true
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "song_table",
+          "title": "Songs",
+          "width": "full",
+          "type": "table",
+          "entityId": "song",
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_song",
+          "title": "Add Song",
+          "width": "half",
+          "type": "form",
+          "entityId": "song",
+          "submitLabel": "Add song"
+        },
+        {
+          "id": "gig_table",
+          "title": "Gigs",
+          "width": "full",
+          "type": "table",
+          "entityId": "gig",
+          "filters": [
+            {
+              "fieldId": "confirmed",
+              "control": "select",
+              "label": "Confirmed"
+            }
+          ]
+        },
+        {
+          "id": "add_gig",
+          "title": "Add Gig",
+          "width": "half",
+          "type": "form",
+          "entityId": "gig",
+          "submitLabel": "Add gig"
+        },
+        {
+          "id": "member_table",
+          "title": "Band Members",
+          "width": "full",
+          "type": "table",
+          "entityId": "member",
+          "filters": [
+            {
+              "fieldId": "active",
+              "control": "select",
+              "label": "Active"
+            }
+          ]
+        },
+        {
+          "id": "add_member",
+          "title": "Add Member",
+          "width": "half",
+          "type": "form",
+          "entityId": "member",
+          "submitLabel": "Add member"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2029,
+          "outputTokens": 1511
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2029,
+      "outputTokens": 1511
+    },
+    "latencyMs": 144238,
+    "failure": null,
+    "warnings": []
+  }
+}

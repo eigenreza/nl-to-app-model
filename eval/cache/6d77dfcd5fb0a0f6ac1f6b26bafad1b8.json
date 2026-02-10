@@ -1,0 +1,280 @@
+{
+  "caseId": "recipe_box",
+  "band": "simple",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 3,
+  "latencyMs": 11932,
+  "inputTokens": 10892,
+  "outputTokens": 1510,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Recipe Box",
+        "description": "A recipe box listing recipes with course type, preparation time, and whether you have made them before."
+      },
+      "entities": [
+        {
+          "id": "recipe",
+          "name": "Recipe",
+          "pluralName": "Recipes",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Recipe Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "course",
+              "label": "Course Type",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "appetizer",
+                "main",
+                "dessert",
+                "side",
+                "beverage"
+              ]
+            },
+            {
+              "id": "minutes",
+              "label": "Minutes to Prepare",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "made_before",
+              "label": "Made Before",
+              "type": "boolean",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "name": "Chocolate Chip Cookies",
+              "course": "dessert",
+              "minutes": 30,
+              "made_before": true
+            },
+            {
+              "name": "Grilled Salmon",
+              "course": "main",
+              "minutes": 25,
+              "made_before": true
+            },
+            {
+              "name": "Caesar Salad",
+              "course": "side",
+              "minutes": 15,
+              "made_before": false
+            },
+            {
+              "name": "Bruschetta",
+              "course": "appetizer",
+              "minutes": 20,
+              "made_before": true
+            },
+            {
+              "name": "Lemon Iced Tea",
+              "course": "beverage",
+              "minutes": 10,
+              "made_before": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "recipes_table",
+          "title": "My Recipes",
+          "width": "full",
+          "type": "table",
+          "entityId": "recipe",
+          "filters": [
+            {
+              "fieldId": "course",
+              "control": "select",
+              "label": "Course Type"
+            },
+            {
+              "fieldId": "made_before",
+              "control": "select",
+              "label": "Made Before"
+            }
+          ]
+        },
+        {
+          "id": "add_recipe_form",
+          "title": "Add New Recipe",
+          "width": "full",
+          "type": "form",
+          "entityId": "recipe",
+          "fieldIds": [
+            "name",
+            "course",
+            "minutes",
+            "made_before"
+          ],
+          "submitLabel": "Add Recipe"
+        },
+        {
+          "id": "total_recipes",
+          "title": "Total Recipes",
+          "width": "full",
+          "type": "metric",
+          "entityId": "recipe",
+          "aggregate": "count",
+          "caption": "recipes in your box"
+        },
+        {
+          "id": "average_time",
+          "title": "Average Prep Time",
+          "width": "full",
+          "type": "metric",
+          "entityId": "recipe",
+          "aggregate": "average",
+          "fieldId": "minutes",
+          "caption": "minutes"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 3,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3066,
+          "outputTokens": 698
+        },
+        "latencyMs": 4297,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"recipe\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"recipe\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the Recipe Box application with:\n\n**Entity: Recipe**\n- **Recipe Name** (string, required) - the name of the recipe\n- **Course Type** (enum, required) - one of: appetizer, main, dessert, side, or beverage\n- **Minutes to Prepare** (number, required) - how long the recipe takes\n- **Made Before** (boolean, required) - whether you've made this recipe before\n\nI've seeded it with 5 ",
+        "usage": {
+          "inputTokens": 3828,
+          "outputTokens": 152
+        },
+        "latencyMs": 2414,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"recipes_table\".",
+        "usage": {
+          "inputTokens": 3998,
+          "outputTokens": 660
+        },
+        "latencyMs": 4022,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_recipe_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_recipes\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"average_time\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      }
+    ],
+    "usage": {
+      "inputTokens": 10892,
+      "outputTokens": 1510
+    },
+    "latencyMs": 11932,
+    "failure": null,
+    "warnings": []
+  }
+}

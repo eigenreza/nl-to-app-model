@@ -1,0 +1,199 @@
+{
+  "caseId": "over_specified",
+  "band": "awkward",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 3,
+  "latencyMs": 8446,
+  "inputTokens": 11165,
+  "outputTokens": 1048,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Running Shoes Tracker",
+        "description": "A table displaying running shoes with model, brand, kilometres run, and retirement status."
+      },
+      "entities": [
+        {
+          "id": "shoe",
+          "name": "Shoe",
+          "pluralName": "Shoes",
+          "fields": [
+            {
+              "id": "model",
+              "label": "Model",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "brand",
+              "label": "Brand",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "kilometres_run",
+              "label": "Kilometres Run",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "retired",
+              "label": "Retired",
+              "type": "boolean",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "model": "Pegasus 40",
+              "brand": "Nike",
+              "kilometres_run": 850,
+              "retired": true
+            },
+            {
+              "model": "Gel-Kayano 29",
+              "brand": "Asics",
+              "kilometres_run": 620,
+              "retired": false
+            },
+            {
+              "model": "Ultraboost 22",
+              "brand": "Adidas",
+              "kilometres_run": 1200,
+              "retired": true
+            },
+            {
+              "model": "Clifton 9",
+              "brand": "Hoka",
+              "kilometres_run": 450,
+              "retired": false
+            },
+            {
+              "model": "Rebel v3",
+              "brand": "New Balance",
+              "kilometres_run": 320,
+              "retired": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "shoes_table",
+          "title": "Running Shoes",
+          "width": "full",
+          "type": "table",
+          "entityId": "shoe",
+          "columns": [
+            "model",
+            "brand",
+            "kilometres_run",
+            "retired"
+          ]
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 3,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3081,
+          "outputTokens": 681
+        },
+        "latencyMs": 4312,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"shoe\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"shoe\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"shoes_table\".",
+        "usage": {
+          "inputTokens": 3828,
+          "outputTokens": 316
+        },
+        "latencyMs": 2998,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a vertical layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4256,
+          "outputTokens": 51
+        },
+        "latencyMs": 1136,
+        "index": 6
+      }
+    ],
+    "usage": {
+      "inputTokens": 11165,
+      "outputTokens": 1048
+    },
+    "latencyMs": 8446,
+    "failure": null,
+    "warnings": []
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "caseId": "donation_ledger",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144236,
+  "inputTokens": 2051,
+  "outputTokens": 966,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Donation Ledger",
+        "description": "Track donations by donor, amount, date, and campaign with totals and entry form"
+      },
+      "entities": [
+        {
+          "id": "donation",
+          "name": "Donation",
+          "pluralName": "Donations",
+          "fields": [
+            {
+              "id": "donor",
+              "label": "Donor",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "amount",
+              "label": "Amount",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "campaign",
+              "label": "Campaign",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Annual Fund",
+                "Building Campaign",
+                "Scholarship Fund",
+                "Emergency Relief"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "donor": "Sarah Johnson",
+              "amount": 500,
+              "date": "2024-01-15",
+              "campaign": "Annual Fund"
+            },
+            {
+              "donor": "Michael Chen",
+              "amount": 1000,
+              "date": "2024-01-20",
+              "campaign": "Building Campaign"
+            },
+            {
+              "donor": "Emma Rodriguez",
+              "amount": 250,
+              "date": "2024-02-01",
+              "campaign": "Scholarship Fund"
+            },
+            {
+              "donor": "James Wilson",
+              "amount": 750,
+              "date": "2024-02-10",
+              "campaign": "Annual Fund"
+            },
+            {
+              "donor": "Lisa Park",
+              "amount": 2000,
+              "date": "2024-02-15",
+              "campaign": "Building Campaign"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "total_raised",
+          "title": "Total Raised",
+          "width": "third",
+          "type": "metric",
+          "entityId": "donation",
+          "aggregate": "sum",
+          "fieldId": "amount",
+          "caption": "All donations"
+        },
+        {
+          "id": "donation_count",
+          "title": "Total Donations",
+          "width": "third",
+          "type": "metric",
+          "entityId": "donation",
+          "aggregate": "count",
+          "caption": "Number of donations"
+        },
+        {
+          "id": "average_donation",
+          "title": "Average Donation",
+          "width": "third",
+          "type": "metric",
+          "entityId": "donation",
+          "aggregate": "average",
+          "fieldId": "amount",
+          "caption": "Per donation"
+        },
+        {
+          "id": "donation_table",
+          "title": "Donation Ledger",
+          "width": "full",
+          "type": "table",
+          "entityId": "donation",
+          "columns": [
+            "donor",
+            "amount",
+            "date",
+            "campaign"
+          ],
+          "filters": [
+            {
+              "fieldId": "campaign",
+              "control": "select",
+              "label": "Campaign"
+            }
+          ]
+        },
+        {
+          "id": "add_donation",
+          "title": "Record New Donation",
+          "width": "full",
+          "type": "form",
+          "entityId": "donation",
+          "submitLabel": "Record Donation"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2051,
+          "outputTokens": 966
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2051,
+      "outputTokens": 966
+    },
+    "latencyMs": 144236,
+    "failure": null,
+    "warnings": []
+  }
+}

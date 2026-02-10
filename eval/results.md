@@ -1,6 +1,6 @@
 # Eval results
 
-Generated 2026-08-25 from 45 fixture descriptions.
+Generated 2026-08-26 from 45 fixture descriptions.
 
 ## Summary
 
@@ -78,4 +78,4 @@ Assertions that merely turned out to be demanding were left alone. The rule appl
 npm run eval -- --offline --provider anthropic
 ```
 
-Outcomes are cached under `.eval-cache/`, keyed by the case, the configuration, the prompts and the schema version. An offline run regenerates this file from those cached outcomes without calling a provider. Editing a prompt changes the key and the affected cases are rerun.
+Outcomes are cached under `eval/cache/`, which is committed, keyed by the case, the configuration, the prompts and the schema version. An offline run regenerates this file from those cached outcomes without calling a provider. Editing a prompt changes the key and the affected cases are rerun.

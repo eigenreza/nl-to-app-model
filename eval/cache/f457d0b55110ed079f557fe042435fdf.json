@@ -1,0 +1,180 @@
+{
+  "caseId": "units_and_numbers",
+  "band": "awkward",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144240,
+  "inputTokens": 2060,
+  "outputTokens": 1018,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Coffee Bag Inventory",
+        "description": "Track coffee bags with roaster, weight, price, and roast information"
+      },
+      "entities": [
+        {
+          "id": "coffee_bag",
+          "name": "Coffee Bag",
+          "pluralName": "Coffee Bags",
+          "fields": [
+            {
+              "id": "roaster",
+              "label": "Roaster",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "weight_grams",
+              "label": "Weight (grams)",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "250",
+                "500",
+                "1000"
+              ]
+            },
+            {
+              "id": "price_pounds",
+              "label": "Price (£)",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "roast_date",
+              "label": "Roast Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "days_since_roasting",
+              "label": "Days Since Roasting",
+              "type": "number",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "roaster": "Hasbean",
+              "weight_grams": "250",
+              "price_pounds": 5.5,
+              "roast_date": "2024-03-15",
+              "days_since_roasting": 4
+            },
+            {
+              "roaster": "Square Mile",
+              "weight_grams": "1000",
+              "price_pounds": 18,
+              "roast_date": "2024-03-10",
+              "days_since_roasting": 9
+            },
+            {
+              "roaster": "Colonna",
+              "weight_grams": "500",
+              "price_pounds": 9.75,
+              "roast_date": "2024-03-18",
+              "days_since_roasting": 1
+            },
+            {
+              "roaster": "Hasbean",
+              "weight_grams": "250",
+              "price_pounds": 6,
+              "roast_date": "2024-03-12",
+              "days_since_roasting": 7
+            },
+            {
+              "roaster": "Ozone",
+              "weight_grams": "1000",
+              "price_pounds": 16.5,
+              "roast_date": "2024-03-05",
+              "days_since_roasting": 14
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "average_price",
+          "title": "Average Price",
+          "width": "third",
+          "type": "metric",
+          "entityId": "coffee_bag",
+          "aggregate": "average",
+          "fieldId": "price_pounds",
+          "caption": "per bag"
+        },
+        {
+          "id": "total_bags",
+          "title": "Total Bags",
+          "width": "third",
+          "type": "metric",
+          "entityId": "coffee_bag",
+          "aggregate": "count",
+          "caption": "in inventory"
+        },
+        {
+          "id": "coffee_table",
+          "title": "Coffee Bags",
+          "width": "full",
+          "type": "table",
+          "entityId": "coffee_bag",
+          "columns": [
+            "roaster",
+            "weight_grams",
+            "price_pounds",
+            "roast_date",
+            "days_since_roasting"
+          ]
+        },
+        {
+          "id": "add_bag",
+          "title": "Add Coffee Bag",
+          "width": "full",
+          "type": "form",
+          "entityId": "coffee_bag",
+          "submitLabel": "Add bag"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2060,
+          "outputTokens": 1018
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2060,
+      "outputTokens": 1018
+    },
+    "latencyMs": 144240,
+    "failure": null,
+    "warnings": []
+  }
+}

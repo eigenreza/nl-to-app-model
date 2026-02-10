@@ -1,0 +1,329 @@
+{
+  "caseId": "vehicle_service",
+  "band": "moderate",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 13576,
+  "inputTokens": 16810,
+  "outputTokens": 2002,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Van Service Record",
+        "description": "Track van servicing records with registration, work type, cost, mileage, and date information."
+      },
+      "entities": [
+        {
+          "id": "service",
+          "name": "Service",
+          "pluralName": "Services",
+          "fields": [
+            {
+              "id": "registration",
+              "label": "Van Registration",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "work_type",
+              "label": "Type of Work",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Oil Change",
+                "Tire Rotation",
+                "Inspection",
+                "Repair",
+                "Brake Service",
+                "Filter Replacement",
+                "Other"
+              ]
+            },
+            {
+              "id": "cost",
+              "label": "Cost",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "mileage",
+              "label": "Mileage",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "service_date",
+              "label": "Service Date",
+              "type": "date",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "registration": "AB21 VAN",
+              "work_type": "Oil Change",
+              "cost": 45,
+              "mileage": 15230,
+              "service_date": "2024-01-15"
+            },
+            {
+              "registration": "AB21 VAN",
+              "work_type": "Inspection",
+              "cost": 60,
+              "mileage": 18450,
+              "service_date": "2024-03-22"
+            },
+            {
+              "registration": "CD22 VAN",
+              "work_type": "Tire Rotation",
+              "cost": 55,
+              "mileage": 22100,
+              "service_date": "2024-02-10"
+            },
+            {
+              "registration": "AB21 VAN",
+              "work_type": "Brake Service",
+              "cost": 120,
+              "mileage": 21680,
+              "service_date": "2024-05-08"
+            },
+            {
+              "registration": "CD22 VAN",
+              "work_type": "Filter Replacement",
+              "cost": 35,
+              "mileage": 24560,
+              "service_date": "2024-04-18"
+            },
+            {
+              "registration": "EF23 VAN",
+              "work_type": "Repair",
+              "cost": 250,
+              "mileage": 19200,
+              "service_date": "2024-06-05"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "service_table",
+          "title": "Service Records",
+          "width": "full",
+          "type": "table",
+          "entityId": "service",
+          "columns": [
+            "registration",
+            "work_type",
+            "cost",
+            "mileage",
+            "service_date"
+          ],
+          "filters": [
+            {
+              "fieldId": "registration",
+              "control": "text",
+              "label": "Van Registration"
+            },
+            {
+              "fieldId": "work_type",
+              "control": "select",
+              "label": "Type of Work"
+            }
+          ]
+        },
+        {
+          "id": "total_spent",
+          "title": "Total Spent on Servicing",
+          "width": "full",
+          "type": "metric",
+          "entityId": "service",
+          "aggregate": "sum",
+          "fieldId": "cost",
+          "caption": "Total cost of all services"
+        },
+        {
+          "id": "service_count",
+          "title": "Total Services",
+          "width": "full",
+          "type": "metric",
+          "entityId": "service",
+          "aggregate": "count",
+          "caption": "Number of service records"
+        },
+        {
+          "id": "average_cost",
+          "title": "Average Service Cost",
+          "width": "full",
+          "type": "metric",
+          "entityId": "service",
+          "aggregate": "average",
+          "fieldId": "cost",
+          "caption": "Average cost per service"
+        },
+        {
+          "id": "add_service_form",
+          "title": "Add New Service Record",
+          "width": "full",
+          "type": "form",
+          "entityId": "service",
+          "fieldIds": [
+            "registration",
+            "work_type",
+            "cost",
+            "mileage",
+            "service_date"
+          ],
+          "submitLabel": "Record Service"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3083,
+          "outputTokens": 995
+        },
+        "latencyMs": 6331,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"service\" with 5 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"service\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Service entity with seed data. The application now has:\n\n**Entity: Service**\n- Van Registration (string, required)\n- Type of Work (enum with options: Oil Change, Tire Rotation, Inspection, Repair, Brake Service, Filter Replacement, Other)\n- Cost (number, required)\n- Mileage (number, required)\n- Service Date (date, required)\n\nThe entity includes 6 realistic sa",
+        "usage": {
+          "inputTokens": 4129,
+          "outputTokens": 125
+        },
+        "latencyMs": 1864,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"service_table\".",
+        "usage": {
+          "inputTokens": 4272,
+          "outputTokens": 840
+        },
+        "latencyMs": 4333,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_spent\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"service_count\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"average_cost\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_service_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 5326,
+          "outputTokens": 42
+        },
+        "latencyMs": 905,
+        "index": 10
+      }
+    ],
+    "usage": {
+      "inputTokens": 16810,
+      "outputTokens": 2002
+    },
+    "latencyMs": 13576,
+    "failure": null,
+    "warnings": []
+  }
+}

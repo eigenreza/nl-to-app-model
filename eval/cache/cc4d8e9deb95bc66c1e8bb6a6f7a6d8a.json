@@ -1,0 +1,134 @@
+{
+  "caseId": "contradictory",
+  "band": "awkward",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144239,
+  "inputTokens": 2047,
+  "outputTokens": 555,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Tool Inventory",
+        "description": "Track your tools with a count metric and add new ones"
+      },
+      "entities": [
+        {
+          "id": "tool",
+          "name": "Tool",
+          "pluralName": "Tools",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "category",
+              "label": "Category",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Hand Tools",
+                "Power Tools",
+                "Measuring",
+                "Safety",
+                "Other"
+              ]
+            },
+            {
+              "id": "location",
+              "label": "Location",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "name": "Hammer",
+              "category": "Hand Tools",
+              "location": "Garage"
+            },
+            {
+              "name": "Drill",
+              "category": "Power Tools",
+              "location": "Workshop"
+            },
+            {
+              "name": "Tape Measure",
+              "category": "Measuring",
+              "location": "Garage"
+            },
+            {
+              "name": "Screwdriver Set",
+              "category": "Hand Tools",
+              "location": "Toolbox"
+            },
+            {
+              "name": "Circular Saw",
+              "category": "Power Tools",
+              "location": "Workshop"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "tool_count",
+          "title": "Total Tools",
+          "width": "third",
+          "type": "metric",
+          "entityId": "tool",
+          "aggregate": "count"
+        },
+        {
+          "id": "add_tool",
+          "title": "Add a Tool",
+          "width": "full",
+          "type": "form",
+          "entityId": "tool",
+          "submitLabel": "Add tool"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2047,
+          "outputTokens": 555
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2047,
+      "outputTokens": 555
+    },
+    "latencyMs": 144239,
+    "failure": null,
+    "warnings": []
+  }
+}

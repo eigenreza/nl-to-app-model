@@ -16,5 +16,4 @@ Thumbs.db
 npm-debug.log*
 
 .vite/
-.eval-cache/
 

@@ -1,0 +1,282 @@
+{
+  "caseId": "habit_tracker",
+  "band": "moderate",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 12267,
+  "inputTokens": 15865,
+  "outputTokens": 1528,
+  "failureReason": null,
+  "expectationsMet": false,
+  "expectationFailures": [
+    "no table filter on a field of type \"enum\""
+  ],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Habit Tracker",
+        "description": "A habit tracker where each entry records the habit, the date, whether it was completed and a note."
+      },
+      "entities": [
+        {
+          "id": "entry",
+          "name": "Entry",
+          "pluralName": "Entries",
+          "fields": [
+            {
+              "id": "habit",
+              "label": "Habit",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "completed",
+              "label": "Completed",
+              "type": "boolean",
+              "required": true
+            },
+            {
+              "id": "note",
+              "label": "Note",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "habit": "Morning Run",
+              "date": "2024-01-15",
+              "completed": true,
+              "note": "5 km in 30 minutes"
+            },
+            {
+              "habit": "Morning Run",
+              "date": "2024-01-16",
+              "completed": false,
+              "note": "Overslept"
+            },
+            {
+              "habit": "Read",
+              "date": "2024-01-15",
+              "completed": true,
+              "note": "Finished chapter 3"
+            },
+            {
+              "habit": "Meditation",
+              "date": "2024-01-15",
+              "completed": true,
+              "note": "10 minutes"
+            },
+            {
+              "habit": "Meditation",
+              "date": "2024-01-16",
+              "completed": true,
+              "note": "15 minutes"
+            },
+            {
+              "habit": "Read",
+              "date": "2024-01-16",
+              "completed": false,
+              "note": "Too busy"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "completed_count",
+          "title": "Completed Entries",
+          "width": "full",
+          "type": "metric",
+          "entityId": "entry",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "completed",
+                "op": "isTrue"
+              }
+            ]
+          },
+          "caption": "Total habits completed"
+        },
+        {
+          "id": "entries_table",
+          "title": "Habit Entries",
+          "width": "full",
+          "type": "table",
+          "entityId": "entry",
+          "columns": [
+            "habit",
+            "date",
+            "completed",
+            "note"
+          ],
+          "filters": [
+            {
+              "fieldId": "habit",
+              "control": "text",
+              "label": "Filter by Habit"
+            }
+          ],
+          "emptyMessage": "No entries found"
+        },
+        {
+          "id": "new_entry_form",
+          "title": "Add New Entry",
+          "width": "full",
+          "type": "form",
+          "entityId": "entry",
+          "fieldIds": [
+            "habit",
+            "date",
+            "completed",
+            "note"
+          ],
+          "submitLabel": "Add Entry"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3076,
+          "outputTokens": 756
+        },
+        "latencyMs": 4584,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"entry\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"entry\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Entry entity with seed data. The entity has four fields:\n- **Habit** (required string) - the name of the habit\n- **Date** (required date) - when the habit was tracked\n- **Completed** (required boolean) - whether the habit was completed\n- **Note** (optional string) - additional notes about the entry\n\nI've seeded it with 6 realistic example entries showing diff",
+        "usage": {
+          "inputTokens": 3898,
+          "outputTokens": 148
+        },
+        "latencyMs": 1974,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"completed_count\".",
+        "usage": {
+          "inputTokens": 4064,
+          "outputTokens": 576
+        },
+        "latencyMs": 3524,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"entries_table\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"new_entry_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4827,
+          "outputTokens": 48
+        },
+        "latencyMs": 1272,
+        "index": 9
+      }
+    ],
+    "usage": {
+      "inputTokens": 15865,
+      "outputTokens": 1528
+    },
+    "latencyMs": 12267,
+    "failure": null,
+    "warnings": []
+  }
+}

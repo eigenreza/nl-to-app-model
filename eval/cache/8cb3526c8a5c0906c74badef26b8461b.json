@@ -1,0 +1,195 @@
+{
+  "caseId": "wants_export",
+  "band": "out_of_scope",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144243,
+  "inputTokens": 2043,
+  "outputTokens": 984,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Mileage Claim Log",
+        "description": "Track mileage claims for monthly export and reporting"
+      },
+      "entities": [
+        {
+          "id": "mileage_claim",
+          "name": "Mileage Claim",
+          "pluralName": "Mileage Claims",
+          "fields": [
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "description",
+              "label": "Description",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "miles",
+              "label": "Miles",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "category",
+              "label": "Category",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Business",
+                "Client Visit",
+                "Conference",
+                "Training",
+                "Other"
+              ]
+            },
+            {
+              "id": "notes",
+              "label": "Notes",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "date": "2024-01-08",
+              "description": "Client meeting downtown",
+              "miles": 24,
+              "category": "Client Visit",
+              "notes": "ABC Corp headquarters"
+            },
+            {
+              "date": "2024-01-12",
+              "description": "Conference attendance",
+              "miles": 156,
+              "category": "Conference",
+              "notes": "Annual industry conference"
+            },
+            {
+              "date": "2024-01-15",
+              "description": "Office to supplier",
+              "miles": 18,
+              "category": "Business",
+              "notes": "Parts pickup"
+            },
+            {
+              "date": "2024-01-22",
+              "description": "Training session",
+              "miles": 42,
+              "category": "Training",
+              "notes": "Professional development"
+            },
+            {
+              "date": "2024-01-28",
+              "description": "Multiple client visits",
+              "miles": 67,
+              "category": "Client Visit",
+              "notes": "Three locations in metro area"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "claims_table",
+          "title": "Mileage Claims",
+          "width": "full",
+          "type": "table",
+          "entityId": "mileage_claim",
+          "columns": [
+            "date",
+            "description",
+            "miles",
+            "category"
+          ],
+          "filters": [
+            {
+              "fieldId": "category",
+              "control": "select",
+              "label": "Category"
+            }
+          ]
+        },
+        {
+          "id": "total_miles",
+          "title": "Total Miles",
+          "width": "third",
+          "type": "metric",
+          "entityId": "mileage_claim",
+          "aggregate": "sum",
+          "fieldId": "miles",
+          "caption": "this month"
+        },
+        {
+          "id": "claim_count",
+          "title": "Total Claims",
+          "width": "third",
+          "type": "metric",
+          "entityId": "mileage_claim",
+          "aggregate": "count",
+          "caption": "entries"
+        },
+        {
+          "id": "add_claim",
+          "title": "Log a Claim",
+          "width": "full",
+          "type": "form",
+          "entityId": "mileage_claim",
+          "fieldIds": [
+            "date",
+            "description",
+            "miles",
+            "category",
+            "notes"
+          ],
+          "submitLabel": "Add claim"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2043,
+          "outputTokens": 984
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2043,
+      "outputTokens": 984
+    },
+    "latencyMs": 144243,
+    "failure": null,
+    "warnings": []
+  }
+}

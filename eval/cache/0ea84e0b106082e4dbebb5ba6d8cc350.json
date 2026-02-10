@@ -1,0 +1,369 @@
+{
+  "caseId": "wants_kanban",
+  "band": "out_of_scope",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 13795,
+  "inputTokens": 16939,
+  "outputTokens": 1873,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Sprint Kanban Board",
+        "description": "A kanban board for managing sprint tasks with columns for workflow stages and swimlanes organized by team member."
+      },
+      "entities": [
+        {
+          "id": "person",
+          "name": "Person",
+          "pluralName": "People",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "role",
+              "label": "Role",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "name": "Alice Johnson",
+              "role": "Frontend Developer"
+            },
+            {
+              "name": "Bob Smith",
+              "role": "Backend Developer"
+            },
+            {
+              "name": "Carol White",
+              "role": "QA Engineer"
+            }
+          ]
+        },
+        {
+          "id": "task",
+          "name": "Task",
+          "pluralName": "Tasks",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "description",
+              "label": "Description",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "To Do",
+                "In Progress",
+                "Done"
+              ]
+            },
+            {
+              "id": "assignee",
+              "label": "Assignee",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "priority",
+              "label": "Priority",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Low",
+                "Medium",
+                "High"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "title": "Design login page",
+              "description": "Create mockups for the login UI",
+              "status": "To Do",
+              "assignee": "Alice Johnson",
+              "priority": "High"
+            },
+            {
+              "title": "Set up database",
+              "description": "Initialize PostgreSQL database schema",
+              "status": "In Progress",
+              "assignee": "Bob Smith",
+              "priority": "High"
+            },
+            {
+              "title": "Write API tests",
+              "description": "Unit tests for authentication endpoints",
+              "status": "To Do",
+              "assignee": "Carol White",
+              "priority": "Medium"
+            },
+            {
+              "title": "Implement user registration",
+              "description": "Build registration form and backend logic",
+              "status": "In Progress",
+              "assignee": "Alice Johnson",
+              "priority": "High"
+            },
+            {
+              "title": "Test payment flow",
+              "description": "QA testing for payment integration",
+              "status": "Done",
+              "assignee": "Carol White",
+              "priority": "Medium"
+            },
+            {
+              "title": "Deploy to staging",
+              "description": "Deploy latest build to staging environment",
+              "status": "To Do",
+              "assignee": "Bob Smith",
+              "priority": "Medium"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "tasks_table",
+          "title": "Sprint Tasks",
+          "width": "full",
+          "type": "table",
+          "entityId": "task",
+          "columns": [
+            "title",
+            "status",
+            "assignee",
+            "priority"
+          ],
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select"
+            },
+            {
+              "fieldId": "assignee",
+              "control": "text"
+            }
+          ]
+        },
+        {
+          "id": "tasks_by_status",
+          "title": "Total Tasks",
+          "width": "full",
+          "type": "metric",
+          "entityId": "task",
+          "aggregate": "count",
+          "caption": "tasks in sprint"
+        },
+        {
+          "id": "add_task",
+          "title": "Add Task",
+          "width": "full",
+          "type": "form",
+          "entityId": "task",
+          "fieldIds": [
+            "title",
+            "description",
+            "status",
+            "assignee",
+            "priority"
+          ],
+          "submitLabel": "Create Task"
+        },
+        {
+          "id": "team_members",
+          "title": "Team Members",
+          "width": "full",
+          "type": "table",
+          "entityId": "person"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3064,
+          "outputTokens": 1077
+        },
+        "latencyMs": 6356,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"person\" with 2 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"task\" with 5 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"person\" with 3 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"task\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the foundation for your Sprint Kanban Board application with:\n\n**Entities:**\n1. **Person** - Team members with name and role\n2. **Task** - Sprint tasks with title, description, status (To Do, In Progress, Done), assignee, and priority level\n\n**Seed Data:**\n- 3 team members (Alice, Bob, Carol) with their roles\n- 6 sample tasks distributed across different statuses and assignee",
+        "usage": {
+          "inputTokens": 4240,
+          "outputTokens": 142
+        },
+        "latencyMs": 2398,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"tasks_table\".",
+        "usage": {
+          "inputTokens": 4400,
+          "outputTokens": 619
+        },
+        "latencyMs": 3577,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"tasks_by_status\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_task\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"team_members\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 10
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 11
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 5235,
+          "outputTokens": 35
+        },
+        "latencyMs": 902,
+        "index": 12
+      }
+    ],
+    "usage": {
+      "inputTokens": 16939,
+      "outputTokens": 1873
+    },
+    "latencyMs": 13795,
+    "failure": null,
+    "warnings": []
+  }
+}

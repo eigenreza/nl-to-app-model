@@ -1,0 +1,239 @@
+{
+  "caseId": "inventory",
+  "band": "moderate",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 11576,
+  "inputTokens": 15569,
+  "outputTokens": 1292,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Shop Inventory",
+        "description": "A small shop inventory system to track products, suppliers, pricing, and stock levels."
+      },
+      "entities": [
+        {
+          "id": "product",
+          "name": "Product",
+          "pluralName": "Products",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Product Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "supplier",
+              "label": "Supplier",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "unit_price",
+              "label": "Unit Price",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "quantity_in_stock",
+              "label": "Quantity in Stock",
+              "type": "number",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "name": "Wireless Mouse",
+              "supplier": "TechSupply Co",
+              "unit_price": 15.99,
+              "quantity_in_stock": 45
+            },
+            {
+              "name": "USB-C Cable",
+              "supplier": "CableWorld",
+              "unit_price": 8.5,
+              "quantity_in_stock": 120
+            },
+            {
+              "name": "Mechanical Keyboard",
+              "supplier": "TechSupply Co",
+              "unit_price": 89.99,
+              "quantity_in_stock": 12
+            },
+            {
+              "name": "Monitor Stand",
+              "supplier": "OfficeGear Ltd",
+              "unit_price": 34.5,
+              "quantity_in_stock": 28
+            },
+            {
+              "name": "HDMI Cable",
+              "supplier": "CableWorld",
+              "unit_price": 12,
+              "quantity_in_stock": 85
+            },
+            {
+              "name": "Desk Lamp",
+              "supplier": "OfficeGear Ltd",
+              "unit_price": 42,
+              "quantity_in_stock": 18
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "products_table",
+          "title": "Inventory",
+          "width": "full",
+          "type": "table",
+          "entityId": "product",
+          "filters": [
+            {
+              "fieldId": "supplier",
+              "control": "text",
+              "label": "Filter by Supplier"
+            }
+          ]
+        },
+        {
+          "id": "total_inventory_value",
+          "title": "Total Inventory Value",
+          "width": "full",
+          "type": "metric",
+          "entityId": "product",
+          "aggregate": "sum",
+          "fieldId": "unit_price",
+          "caption": "Total value of all products in stock"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3073,
+          "outputTokens": 772
+        },
+        "latencyMs": 5037,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"product\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"product\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Product entity with seed data. The entity has four fields:\n- **Product Name** (string, required)\n- **Supplier** (string, required)\n- **Unit Price** (number, required)\n- **Quantity in Stock** (number, required)\n\nI've seeded it with 6 realistic products from different suppliers. Now I'll add the components in the next turn: a table with supplier filtering and a",
+        "usage": {
+          "inputTokens": 3911,
+          "outputTokens": 110
+        },
+        "latencyMs": 2073,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"products_table\".",
+        "usage": {
+          "inputTokens": 4039,
+          "outputTokens": 359
+        },
+        "latencyMs": 2336,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_inventory_value\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a vertical layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4546,
+          "outputTokens": 51
+        },
+        "latencyMs": 1124,
+        "index": 8
+      }
+    ],
+    "usage": {
+      "inputTokens": 15569,
+      "outputTokens": 1292
+    },
+    "latencyMs": 11576,
+    "failure": null,
+    "warnings": []
+  }
+}

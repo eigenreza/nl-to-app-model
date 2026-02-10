@@ -1,0 +1,158 @@
+{
+  "caseId": "recipe_box",
+  "band": "simple",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144228,
+  "inputTokens": 2042,
+  "outputTokens": 715,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Recipe Box",
+        "description": "A collection of recipes with course type, preparation time, and tracking of previously made recipes."
+      },
+      "entities": [
+        {
+          "id": "recipe",
+          "name": "Recipe",
+          "pluralName": "Recipes",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Recipe Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "course",
+              "label": "Course",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Appetizer",
+                "Soup",
+                "Salad",
+                "Main Course",
+                "Side Dish",
+                "Dessert",
+                "Beverage"
+              ]
+            },
+            {
+              "id": "minutes",
+              "label": "Time (minutes)",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "made_before",
+              "label": "Made Before",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "title": "Chocolate Chip Cookies",
+              "course": "Dessert",
+              "minutes": 30,
+              "made_before": true
+            },
+            {
+              "title": "Grilled Salmon",
+              "course": "Main Course",
+              "minutes": 25,
+              "made_before": true
+            },
+            {
+              "title": "Caesar Salad",
+              "course": "Salad",
+              "minutes": 15,
+              "made_before": false
+            },
+            {
+              "title": "Tomato Soup",
+              "course": "Soup",
+              "minutes": 40,
+              "made_before": true
+            },
+            {
+              "title": "Garlic Bread",
+              "course": "Side Dish",
+              "minutes": 10,
+              "made_before": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "recipe_table",
+          "title": "My Recipes",
+          "width": "full",
+          "type": "table",
+          "entityId": "recipe",
+          "filters": [
+            {
+              "fieldId": "course",
+              "control": "select",
+              "label": "Course"
+            },
+            {
+              "fieldId": "made_before",
+              "control": "select",
+              "label": "Made Before"
+            }
+          ]
+        },
+        {
+          "id": "add_recipe",
+          "title": "Add Recipe",
+          "width": "full",
+          "type": "form",
+          "entityId": "recipe",
+          "submitLabel": "Add Recipe"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2042,
+          "outputTokens": 715
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2042,
+      "outputTokens": 715
+    },
+    "latencyMs": 144228,
+    "failure": null,
+    "warnings": []
+  }
+}

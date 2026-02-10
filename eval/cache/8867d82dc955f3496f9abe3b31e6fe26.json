@@ -1,0 +1,180 @@
+{
+  "caseId": "time_log",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144236,
+  "inputTokens": 2057,
+  "outputTokens": 911,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Freelance Time Log",
+        "description": "Track billable hours by client and project, with invoicing status and unbilled hours summary."
+      },
+      "entities": [
+        {
+          "id": "time_entry",
+          "name": "Time Entry",
+          "pluralName": "Time Entries",
+          "fields": [
+            {
+              "id": "client",
+              "label": "Client",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "project",
+              "label": "Project",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "hours",
+              "label": "Hours Worked",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "invoiced",
+              "label": "Invoiced",
+              "type": "boolean",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "client": "Acme Corp",
+              "project": "Website Redesign",
+              "hours": 8,
+              "date": "2024-03-18",
+              "invoiced": true
+            },
+            {
+              "client": "Acme Corp",
+              "project": "Website Redesign",
+              "hours": 6,
+              "date": "2024-03-19",
+              "invoiced": false
+            },
+            {
+              "client": "TechStart Inc",
+              "project": "Mobile App Development",
+              "hours": 7.5,
+              "date": "2024-03-18",
+              "invoiced": false
+            },
+            {
+              "client": "TechStart Inc",
+              "project": "API Integration",
+              "hours": 4,
+              "date": "2024-03-17",
+              "invoiced": true
+            },
+            {
+              "client": "Design Studio",
+              "project": "Brand Guidelines",
+              "hours": 5,
+              "date": "2024-03-19",
+              "invoiced": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "unbilled_hours",
+          "title": "Total Unbilled Hours",
+          "width": "third",
+          "type": "metric",
+          "entityId": "time_entry",
+          "aggregate": "sum",
+          "fieldId": "hours",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "invoiced",
+                "op": "isFalse"
+              }
+            ]
+          }
+        },
+        {
+          "id": "time_log_table",
+          "title": "Time Log",
+          "width": "full",
+          "type": "table",
+          "entityId": "time_entry",
+          "columns": [
+            "client",
+            "project",
+            "hours",
+            "date",
+            "invoiced"
+          ],
+          "filters": [
+            {
+              "fieldId": "client",
+              "control": "text",
+              "label": "Client"
+            }
+          ]
+        },
+        {
+          "id": "add_entry",
+          "title": "Log Time",
+          "width": "full",
+          "type": "form",
+          "entityId": "time_entry",
+          "submitLabel": "Add Entry"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2057,
+          "outputTokens": 911
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2057,
+      "outputTokens": 911
+    },
+    "latencyMs": 144236,
+    "failure": null,
+    "warnings": []
+  }
+}

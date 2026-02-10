@@ -1,0 +1,178 @@
+{
+  "caseId": "vehicle_service",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144237,
+  "inputTokens": 2059,
+  "outputTokens": 977,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Van Servicing Record",
+        "description": "Track van servicing history with registration, work type, cost, mileage, and annual spending."
+      },
+      "entities": [
+        {
+          "id": "service_record",
+          "name": "Service Record",
+          "pluralName": "Service Records",
+          "fields": [
+            {
+              "id": "registration",
+              "label": "Van Registration",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "work_type",
+              "label": "Type of Work",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Oil Change",
+                "Tire Rotation",
+                "Brake Service",
+                "Engine Inspection",
+                "Transmission Service",
+                "Electrical Work",
+                "Other"
+              ]
+            },
+            {
+              "id": "cost",
+              "label": "Cost",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "mileage",
+              "label": "Mileage",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "service_date",
+              "label": "Service Date",
+              "type": "date",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "registration": "LM21 ABC",
+              "work_type": "Oil Change",
+              "cost": 45,
+              "mileage": 15230,
+              "service_date": "2024-01-15"
+            },
+            {
+              "registration": "LM21 ABC",
+              "work_type": "Tire Rotation",
+              "cost": 60,
+              "mileage": 18450,
+              "service_date": "2024-03-22"
+            },
+            {
+              "registration": "LM21 ABC",
+              "work_type": "Brake Service",
+              "cost": 150,
+              "mileage": 22100,
+              "service_date": "2024-05-10"
+            },
+            {
+              "registration": "LM22 XYZ",
+              "work_type": "Engine Inspection",
+              "cost": 85,
+              "mileage": 12500,
+              "service_date": "2024-02-28"
+            },
+            {
+              "registration": "LM22 XYZ",
+              "work_type": "Oil Change",
+              "cost": 45,
+              "mileage": 16800,
+              "service_date": "2024-04-14"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "service_table",
+          "title": "Service Records",
+          "width": "full",
+          "type": "table",
+          "entityId": "service_record",
+          "filters": [
+            {
+              "fieldId": "registration",
+              "control": "text",
+              "label": "Van Registration"
+            },
+            {
+              "fieldId": "work_type",
+              "control": "select",
+              "label": "Type of Work"
+            }
+          ]
+        },
+        {
+          "id": "total_spent",
+          "title": "Total Spent This Year",
+          "width": "third",
+          "type": "metric",
+          "entityId": "service_record",
+          "aggregate": "sum",
+          "fieldId": "cost"
+        },
+        {
+          "id": "add_service",
+          "title": "Record New Service",
+          "width": "full",
+          "type": "form",
+          "entityId": "service_record",
+          "submitLabel": "Add service record"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2059,
+          "outputTokens": 977
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2059,
+      "outputTokens": 977
+    },
+    "latencyMs": 144237,
+    "failure": null,
+    "warnings": []
+  }
+}

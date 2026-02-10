@@ -1,0 +1,273 @@
+{
+  "caseId": "film_watchlist",
+  "band": "simple",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 12204,
+  "inputTokens": 15576,
+  "outputTokens": 1413,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Film Watchlist",
+        "description": "A film watchlist showing title, director, year and whether you have watched it, plus a count of unwatched films."
+      },
+      "entities": [
+        {
+          "id": "film",
+          "name": "Film",
+          "pluralName": "Films",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "director",
+              "label": "Director",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "year",
+              "label": "Year",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "watched",
+              "label": "Watched",
+              "type": "boolean",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "title": "Inception",
+              "director": "Christopher Nolan",
+              "year": 2010,
+              "watched": true
+            },
+            {
+              "title": "The Shawshank Redemption",
+              "director": "Frank Darabont",
+              "year": 1994,
+              "watched": true
+            },
+            {
+              "title": "Parasite",
+              "director": "Bong Joon-ho",
+              "year": 2019,
+              "watched": false
+            },
+            {
+              "title": "Dune",
+              "director": "Denis Villeneuve",
+              "year": 2021,
+              "watched": false
+            },
+            {
+              "title": "Oppenheimer",
+              "director": "Christopher Nolan",
+              "year": 2023,
+              "watched": true
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "unwatched_count",
+          "title": "Unwatched Films",
+          "width": "full",
+          "type": "metric",
+          "entityId": "film",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "watched",
+                "op": "isFalse"
+              }
+            ]
+          },
+          "caption": "films still to watch"
+        },
+        {
+          "id": "films_table",
+          "title": "My Watchlist",
+          "width": "full",
+          "type": "table",
+          "entityId": "film",
+          "columns": [
+            "title",
+            "director",
+            "year",
+            "watched"
+          ],
+          "filters": [
+            {
+              "fieldId": "watched",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_film_form",
+          "title": "Add Film",
+          "width": "full",
+          "type": "form",
+          "entityId": "film",
+          "fieldIds": [
+            "title",
+            "director",
+            "year",
+            "watched"
+          ],
+          "submitLabel": "Add to Watchlist"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3069,
+          "outputTokens": 691
+        },
+        "latencyMs": 4260,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"film\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"film\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Film entity with seed data. The application has:\n\n- **Entity: Film** with fields for:\n  - Title (required string)\n  - Director (required string)\n  - Year (required number)\n  - Watched (required boolean)\n\n- **Seed data** with 5 example films, including 3 watched and 2 unwatched films\n\nReady for the next turn to add components for displaying the watchlist, addi",
+        "usage": {
+          "inputTokens": 3826,
+          "outputTokens": 122
+        },
+        "latencyMs": 1707,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"unwatched_count\".",
+        "usage": {
+          "inputTokens": 3966,
+          "outputTokens": 565
+        },
+        "latencyMs": 3792,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"films_table\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_film_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4715,
+          "outputTokens": 35
+        },
+        "latencyMs": 1047,
+        "index": 9
+      }
+    ],
+    "usage": {
+      "inputTokens": 15576,
+      "outputTokens": 1413
+    },
+    "latencyMs": 12204,
+    "failure": null,
+    "warnings": []
+  }
+}

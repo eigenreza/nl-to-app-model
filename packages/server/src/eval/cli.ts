@@ -40,7 +40,12 @@ import type { EvalCase } from './types.js';
 
 const REPO_ROOT = fileURLToPath(new URL('../../../../', import.meta.url));
 const DEFAULT_OUT = join(REPO_ROOT, 'eval');
-const CACHE_DIR = join(REPO_ROOT, '.eval-cache');
+/**
+ * Committed, not scratch. The cache is what makes the published table
+ * reproducible by anyone who clones the repository: an offline run regenerates
+ * the report from these outcomes without calling a provider.
+ */
+const CACHE_DIR = join(REPO_ROOT, 'eval', 'cache');
 
 /**
  * Calls a single case tends to make. Measured rather than guessed: the agent is

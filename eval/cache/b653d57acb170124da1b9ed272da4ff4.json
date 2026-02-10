@@ -1,0 +1,169 @@
+{
+  "caseId": "talk_submissions",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144233,
+  "inputTokens": 2061,
+  "outputTokens": 856,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Conference Talk Submissions",
+        "description": "Track conference talk submissions with status and deadlines"
+      },
+      "entities": [
+        {
+          "id": "submission",
+          "name": "Submission",
+          "pluralName": "Submissions",
+          "fields": [
+            {
+              "id": "conference_name",
+              "label": "Conference Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "talk_title",
+              "label": "Talk Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "deadline",
+              "label": "Deadline",
+              "type": "date",
+              "required": false
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Draft",
+                "Submitted",
+                "Accepted",
+                "Rejected"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "conference_name": "PyCon 2024",
+              "talk_title": "Advanced Python Patterns",
+              "deadline": "2024-03-15",
+              "status": "Submitted"
+            },
+            {
+              "conference_name": "JSConf Europe",
+              "talk_title": "Building Scalable Web Apps",
+              "deadline": "2024-04-01",
+              "status": "Submitted"
+            },
+            {
+              "conference_name": "RustConf 2024",
+              "talk_title": "Memory Safety in Systems Programming",
+              "deadline": "2024-05-10",
+              "status": "Draft"
+            },
+            {
+              "conference_name": "ReactConf",
+              "talk_title": "State Management Best Practices",
+              "deadline": "2024-03-20",
+              "status": "Accepted"
+            },
+            {
+              "conference_name": "DevOps Days",
+              "talk_title": "CI/CD Pipeline Optimization",
+              "deadline": "2024-02-28",
+              "status": "Rejected"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "pending_count",
+          "title": "Awaiting Response",
+          "width": "third",
+          "type": "metric",
+          "entityId": "submission",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "Submitted"
+              }
+            ]
+          },
+          "caption": "submissions pending"
+        },
+        {
+          "id": "submission_table",
+          "title": "Talk Submissions",
+          "width": "full",
+          "type": "table",
+          "entityId": "submission",
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_submission",
+          "title": "Add Submission",
+          "width": "full",
+          "type": "form",
+          "entityId": "submission",
+          "submitLabel": "Add submission"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2061,
+          "outputTokens": 856
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2061,
+      "outputTokens": 856
+    },
+    "latencyMs": 144233,
+    "failure": null,
+    "warnings": []
+  }
+}

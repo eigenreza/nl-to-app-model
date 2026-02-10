@@ -1,0 +1,181 @@
+{
+  "caseId": "course_grades",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144234,
+  "inputTokens": 2050,
+  "outputTokens": 894,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Course Grades",
+        "description": "Record and track course grades, credits, and performance metrics"
+      },
+      "entities": [
+        {
+          "id": "course",
+          "name": "Course",
+          "pluralName": "Courses",
+          "fields": [
+            {
+              "id": "course_name",
+              "label": "Course",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "credits",
+              "label": "Credits",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "mark",
+              "label": "Mark",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "term",
+              "label": "Term",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Fall",
+                "Winter",
+                "Spring",
+                "Summer"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "course_name": "Introduction to Computer Science",
+              "credits": 3,
+              "mark": 87,
+              "term": "Fall"
+            },
+            {
+              "course_name": "Calculus I",
+              "credits": 4,
+              "mark": 92,
+              "term": "Fall"
+            },
+            {
+              "course_name": "English Literature",
+              "credits": 3,
+              "mark": 78,
+              "term": "Winter"
+            },
+            {
+              "course_name": "Physics II",
+              "credits": 4,
+              "mark": 85,
+              "term": "Winter"
+            },
+            {
+              "course_name": "Data Structures",
+              "credits": 3,
+              "mark": 91,
+              "term": "Spring"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "average_mark",
+          "title": "Average Mark",
+          "width": "third",
+          "type": "metric",
+          "entityId": "course",
+          "aggregate": "average",
+          "fieldId": "mark",
+          "caption": "across all courses"
+        },
+        {
+          "id": "highest_mark",
+          "title": "Highest Mark",
+          "width": "third",
+          "type": "metric",
+          "entityId": "course",
+          "aggregate": "max",
+          "fieldId": "mark",
+          "caption": "best performance"
+        },
+        {
+          "id": "total_credits",
+          "title": "Total Credits",
+          "width": "third",
+          "type": "metric",
+          "entityId": "course",
+          "aggregate": "sum",
+          "fieldId": "credits",
+          "caption": "completed"
+        },
+        {
+          "id": "course_table",
+          "title": "Courses",
+          "width": "full",
+          "type": "table",
+          "entityId": "course",
+          "filters": [
+            {
+              "fieldId": "term",
+              "control": "select",
+              "label": "Term"
+            }
+          ]
+        },
+        {
+          "id": "add_course",
+          "title": "Add Course",
+          "width": "full",
+          "type": "form",
+          "entityId": "course",
+          "submitLabel": "Add course"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2050,
+          "outputTokens": 894
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2050,
+      "outputTokens": 894
+    },
+    "latencyMs": 144234,
+    "failure": null,
+    "warnings": []
+  }
+}

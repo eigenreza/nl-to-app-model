@@ -1,0 +1,146 @@
+{
+  "caseId": "bookmarks",
+  "band": "simple",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144231,
+  "inputTokens": 2035,
+  "outputTokens": 634,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Link Collection",
+        "description": "A place to keep interesting links with titles, URLs, and categories"
+      },
+      "entities": [
+        {
+          "id": "link",
+          "name": "Link",
+          "pluralName": "Links",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "url",
+              "label": "URL",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "category",
+              "label": "Category",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Technology",
+                "Design",
+                "Business",
+                "Learning",
+                "Entertainment",
+                "News"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "title": "Hacker News",
+              "url": "https://news.ycombinator.com",
+              "category": "Technology"
+            },
+            {
+              "title": "Dribbble",
+              "url": "https://dribbble.com",
+              "category": "Design"
+            },
+            {
+              "title": "Product Hunt",
+              "url": "https://producthunt.com",
+              "category": "Business"
+            },
+            {
+              "title": "Coursera",
+              "url": "https://coursera.org",
+              "category": "Learning"
+            },
+            {
+              "title": "The Verge",
+              "url": "https://theverge.com",
+              "category": "News"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "links_table",
+          "title": "Links",
+          "width": "full",
+          "type": "table",
+          "entityId": "link",
+          "columns": [
+            "title",
+            "url",
+            "category"
+          ],
+          "filters": [
+            {
+              "fieldId": "category",
+              "control": "select",
+              "label": "Category"
+            }
+          ]
+        },
+        {
+          "id": "add_link",
+          "title": "Add a Link",
+          "width": "full",
+          "type": "form",
+          "entityId": "link",
+          "submitLabel": "Save Link"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2035,
+          "outputTokens": 634
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2035,
+      "outputTokens": 634
+    },
+    "latencyMs": 144231,
+    "failure": null,
+    "warnings": []
+  }
+}

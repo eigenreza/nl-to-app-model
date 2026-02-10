@@ -1,0 +1,351 @@
+{
+  "caseId": "ui_jargon",
+  "band": "awkward",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 14640,
+  "inputTokens": 16920,
+  "outputTokens": 2124,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Purchase Order Dashboard",
+        "description": "A dashboard for tracking purchase orders with KPI metrics, a searchable data grid, and inline CRUD form."
+      },
+      "entities": [
+        {
+          "id": "purchase_order",
+          "name": "Purchase Order",
+          "pluralName": "Purchase Orders",
+          "fields": [
+            {
+              "id": "order_number",
+              "label": "Order Number",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "vendor",
+              "label": "Vendor",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "amount",
+              "label": "Amount",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Draft",
+                "Submitted",
+                "Approved",
+                "Received",
+                "Cancelled"
+              ]
+            },
+            {
+              "id": "order_date",
+              "label": "Order Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "description",
+              "label": "Description",
+              "type": "string",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "order_number": "PO-2024-001",
+              "vendor": "Acme Supplies",
+              "amount": 5000,
+              "status": "Approved",
+              "order_date": "2024-01-15",
+              "description": "Office equipment"
+            },
+            {
+              "order_number": "PO-2024-002",
+              "vendor": "Tech Solutions Inc",
+              "amount": 12500,
+              "status": "Submitted",
+              "order_date": "2024-01-18",
+              "description": "Computer hardware"
+            },
+            {
+              "order_number": "PO-2024-003",
+              "vendor": "Global Logistics",
+              "amount": 8750,
+              "status": "Received",
+              "order_date": "2024-01-10",
+              "description": "Shipping materials"
+            },
+            {
+              "order_number": "PO-2024-004",
+              "vendor": "Office Depot",
+              "amount": 2300,
+              "status": "Draft",
+              "order_date": "2024-01-20",
+              "description": "Stationery and supplies"
+            },
+            {
+              "order_number": "PO-2024-005",
+              "vendor": "Industrial Parts Co",
+              "amount": 15000,
+              "status": "Approved",
+              "order_date": "2024-01-12",
+              "description": "Manufacturing components"
+            },
+            {
+              "order_number": "PO-2024-006",
+              "vendor": "Acme Supplies",
+              "amount": 3500,
+              "status": "Cancelled",
+              "order_date": "2024-01-08",
+              "description": "Cancelled order"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "kpi_total_orders",
+          "title": "Total Orders",
+          "width": "third",
+          "type": "metric",
+          "entityId": "purchase_order",
+          "aggregate": "count",
+          "caption": "All purchase orders"
+        },
+        {
+          "id": "kpi_total_amount",
+          "title": "Total Amount",
+          "width": "third",
+          "type": "metric",
+          "entityId": "purchase_order",
+          "aggregate": "sum",
+          "fieldId": "amount",
+          "caption": "Sum of all orders"
+        },
+        {
+          "id": "kpi_pending_orders",
+          "title": "Pending Orders",
+          "width": "third",
+          "type": "metric",
+          "entityId": "purchase_order",
+          "aggregate": "count",
+          "where": {
+            "combinator": "or",
+            "conditions": [
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "Submitted"
+              },
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "Draft"
+              }
+            ]
+          },
+          "caption": "Submitted or Draft"
+        },
+        {
+          "id": "orders_table",
+          "title": "Purchase Orders",
+          "width": "full",
+          "type": "table",
+          "entityId": "purchase_order",
+          "columns": [
+            "order_number",
+            "vendor",
+            "amount",
+            "status",
+            "order_date",
+            "description"
+          ],
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select",
+              "label": "Status"
+            }
+          ],
+          "emptyMessage": "No purchase orders found"
+        },
+        {
+          "id": "order_form",
+          "title": "Add or Edit Purchase Order",
+          "width": "full",
+          "type": "form",
+          "entityId": "purchase_order",
+          "fieldIds": [
+            "order_number",
+            "vendor",
+            "amount",
+            "status",
+            "order_date",
+            "description"
+          ],
+          "submitLabel": "Save Order"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3082,
+          "outputTokens": 1032
+        },
+        "latencyMs": 5876,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"purchase_order\" with 6 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"purchase_order\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Purchase Order entity with seed data. The entity has fields for order number, vendor, amount, status, order date, and description. Now I'm ready to add the components in the next turn: KPI metric tiles, a data grid with status filtering, and a CRUD form.",
+        "usage": {
+          "inputTokens": 4156,
+          "outputTokens": 70
+        },
+        "latencyMs": 1721,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"kpi_total_orders\".",
+        "usage": {
+          "inputTokens": 4244,
+          "outputTokens": 968
+        },
+        "latencyMs": 4882,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"kpi_total_amount\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"kpi_pending_orders\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"orders_table\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"order_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 5438,
+          "outputTokens": 54
+        },
+        "latencyMs": 1081,
+        "index": 10
+      }
+    ],
+    "usage": {
+      "inputTokens": 16920,
+      "outputTokens": 2124
+    },
+    "latencyMs": 14640,
+    "failure": null,
+    "warnings": []
+  }
+}

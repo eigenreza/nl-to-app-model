@@ -1,0 +1,135 @@
+{
+  "caseId": "wants_sorting",
+  "band": "out_of_scope",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144241,
+  "inputTokens": 2042,
+  "outputTokens": 542,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Player Leaderboard",
+        "description": "A leaderboard displaying players and their scores with filtering and search capabilities."
+      },
+      "entities": [
+        {
+          "id": "player",
+          "name": "Player",
+          "pluralName": "Players",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "score",
+              "label": "Score",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "rank",
+              "label": "Rank",
+              "type": "number",
+              "required": false
+            }
+          ],
+          "seed": [
+            {
+              "name": "Alice Chen",
+              "score": 9850,
+              "rank": 1
+            },
+            {
+              "name": "Bob Martinez",
+              "score": 8720,
+              "rank": 2
+            },
+            {
+              "name": "Carol Johnson",
+              "score": 8450,
+              "rank": 3
+            },
+            {
+              "name": "David Lee",
+              "score": 7920,
+              "rank": 4
+            },
+            {
+              "name": "Emma Wilson",
+              "score": 7650,
+              "rank": 5
+            },
+            {
+              "name": "Frank Brown",
+              "score": 7200,
+              "rank": 6
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "leaderboard_table",
+          "title": "Leaderboard",
+          "width": "full",
+          "type": "table",
+          "entityId": "player",
+          "columns": [
+            "rank",
+            "name",
+            "score"
+          ],
+          "filters": [
+            {
+              "fieldId": "name",
+              "control": "text",
+              "label": "Search player"
+            }
+          ]
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2042,
+          "outputTokens": 542
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2042,
+      "outputTokens": 542
+    },
+    "latencyMs": 144241,
+    "failure": null,
+    "warnings": []
+  }
+}

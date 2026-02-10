@@ -1,0 +1,447 @@
+{
+  "caseId": "terse_two_words",
+  "band": "awkward",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 5,
+  "latencyMs": 17120,
+  "inputTokens": 22193,
+  "outputTokens": 2557,
+  "failureReason": null,
+  "expectationsMet": false,
+  "expectationFailures": [
+    "expected at most 1 entities, found 2"
+  ],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Gig Tickets",
+        "description": "An application to manage and track concert and event tickets."
+      },
+      "entities": [
+        {
+          "id": "gig",
+          "name": "Gig",
+          "pluralName": "Gigs",
+          "fields": [
+            {
+              "id": "artist",
+              "label": "Artist",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "venue",
+              "label": "Venue",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "ticket_price",
+              "label": "Ticket Price",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "genre",
+              "label": "Genre",
+              "type": "enum",
+              "required": false,
+              "options": [
+                "Rock",
+                "Pop",
+                "Hip-Hop",
+                "Jazz",
+                "Classical",
+                "Electronic",
+                "Country",
+                "Other"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "artist": "The Weeknd",
+              "venue": "Madison Square Garden",
+              "date": "2024-06-15",
+              "ticket_price": 125,
+              "genre": "Pop"
+            },
+            {
+              "artist": "Metallica",
+              "venue": "Barclays Center",
+              "date": "2024-07-22",
+              "ticket_price": 95,
+              "genre": "Rock"
+            },
+            {
+              "artist": "Kendrick Lamar",
+              "venue": "Crypto.com Arena",
+              "date": "2024-08-10",
+              "ticket_price": 110,
+              "genre": "Hip-Hop"
+            },
+            {
+              "artist": "Coldplay",
+              "venue": "United Center",
+              "date": "2024-09-05",
+              "ticket_price": 130,
+              "genre": "Rock"
+            },
+            {
+              "artist": "Dua Lipa",
+              "venue": "American Airlines Center",
+              "date": "2024-10-12",
+              "ticket_price": 115,
+              "genre": "Pop"
+            }
+          ]
+        },
+        {
+          "id": "ticket",
+          "name": "Ticket",
+          "pluralName": "Tickets",
+          "fields": [
+            {
+              "id": "ticket_number",
+              "label": "Ticket Number",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "gig_artist",
+              "label": "Artist",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "seat",
+              "label": "Seat",
+              "type": "string",
+              "required": false
+            },
+            {
+              "id": "purchase_date",
+              "label": "Purchase Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Active",
+                "Used",
+                "Cancelled",
+                "Transferred"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "ticket_number": "TK001",
+              "gig_artist": "The Weeknd",
+              "seat": "A12",
+              "purchase_date": "2024-05-01",
+              "status": "Active"
+            },
+            {
+              "ticket_number": "TK002",
+              "gig_artist": "The Weeknd",
+              "seat": "A13",
+              "purchase_date": "2024-05-01",
+              "status": "Active"
+            },
+            {
+              "ticket_number": "TK003",
+              "gig_artist": "Metallica",
+              "seat": "B45",
+              "purchase_date": "2024-06-10",
+              "status": "Active"
+            },
+            {
+              "ticket_number": "TK004",
+              "gig_artist": "Kendrick Lamar",
+              "seat": "C22",
+              "purchase_date": "2024-07-15",
+              "status": "Used"
+            },
+            {
+              "ticket_number": "TK005",
+              "gig_artist": "Coldplay",
+              "seat": "D10",
+              "purchase_date": "2024-08-20",
+              "status": "Active"
+            },
+            {
+              "ticket_number": "TK006",
+              "gig_artist": "Dua Lipa",
+              "seat": "E05",
+              "purchase_date": "2024-09-01",
+              "status": "Cancelled"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "gigs_table",
+          "title": "Upcoming Gigs",
+          "width": "full",
+          "type": "table",
+          "entityId": "gig",
+          "columns": [
+            "artist",
+            "venue",
+            "date",
+            "ticket_price",
+            "genre"
+          ],
+          "filters": [
+            {
+              "fieldId": "genre",
+              "control": "select"
+            }
+          ]
+        },
+        {
+          "id": "tickets_table",
+          "title": "My Tickets",
+          "width": "full",
+          "type": "table",
+          "entityId": "ticket",
+          "columns": [
+            "ticket_number",
+            "gig_artist",
+            "seat",
+            "purchase_date",
+            "status"
+          ],
+          "filters": [
+            {
+              "fieldId": "status",
+              "control": "select"
+            }
+          ]
+        },
+        {
+          "id": "add_ticket_form",
+          "title": "Purchase Ticket",
+          "width": "full",
+          "type": "form",
+          "entityId": "ticket",
+          "fieldIds": [
+            "ticket_number",
+            "gig_artist",
+            "seat",
+            "purchase_date",
+            "status"
+          ],
+          "submitLabel": "Purchase"
+        },
+        {
+          "id": "active_tickets_metric",
+          "title": "Active Tickets",
+          "width": "full",
+          "type": "metric",
+          "entityId": "ticket",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "status",
+                "op": "equals",
+                "value": "Active"
+              }
+            ]
+          },
+          "caption": "Tickets ready to use"
+        },
+        {
+          "id": "total_spent_metric",
+          "title": "Total Gigs",
+          "width": "full",
+          "type": "metric",
+          "entityId": "gig",
+          "aggregate": "count",
+          "caption": "Upcoming events"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 5,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3047,
+          "outputTokens": 787
+        },
+        "latencyMs": 4583,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"gig\" with 5 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"ticket\" with 5 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"gig\" with 5 rows.",
+        "usage": {
+          "inputTokens": 3815,
+          "outputTokens": 752
+        },
+        "latencyMs": 4266,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"ticket\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've set up the gig tickets application with:\n\n**Entities created:**\n- **Gig** - 5 sample gigs with artists like The Weeknd, Metallica, Kendrick Lamar, Coldplay, and Dua Lipa\n- **Ticket** - 6 sample tickets with various statuses (Active, Used, Cancelled)\n\nThe application is now ready for components to be added. Would you like me to proceed with adding components like tables, forms, and me",
+        "usage": {
+          "inputTokens": 4661,
+          "outputTokens": 119
+        },
+        "latencyMs": 1761,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"gigs_table\".",
+        "usage": {
+          "inputTokens": 4798,
+          "outputTokens": 855
+        },
+        "latencyMs": 4526,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"tickets_table\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_ticket_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"active_tickets_metric\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_spent_metric\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 10
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 11
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 5872,
+          "outputTokens": 44
+        },
+        "latencyMs": 1013,
+        "index": 12
+      }
+    ],
+    "usage": {
+      "inputTokens": 22193,
+      "outputTokens": 2557
+    },
+    "latencyMs": 17120,
+    "failure": null,
+    "warnings": []
+  }
+}

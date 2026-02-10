@@ -1,0 +1,326 @@
+{
+  "caseId": "one_word",
+  "band": "awkward",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 12834,
+  "inputTokens": 16330,
+  "outputTokens": 1875,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Expenses",
+        "description": "An application to track and manage personal expenses."
+      },
+      "entities": [
+        {
+          "id": "expense",
+          "name": "Expense",
+          "pluralName": "Expenses",
+          "fields": [
+            {
+              "id": "description",
+              "label": "Description",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "amount",
+              "label": "Amount",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "category",
+              "label": "Category",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Food",
+                "Transportation",
+                "Entertainment",
+                "Utilities",
+                "Healthcare",
+                "Shopping",
+                "Other"
+              ]
+            },
+            {
+              "id": "date",
+              "label": "Date",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "payment_method",
+              "label": "Payment Method",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Cash",
+                "Credit Card",
+                "Debit Card",
+                "Bank Transfer"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "description": "Grocery shopping",
+              "amount": 45.5,
+              "category": "Food",
+              "date": "2024-01-15",
+              "payment_method": "Debit Card"
+            },
+            {
+              "description": "Gas for car",
+              "amount": 52,
+              "category": "Transportation",
+              "date": "2024-01-16",
+              "payment_method": "Credit Card"
+            },
+            {
+              "description": "Movie tickets",
+              "amount": 28,
+              "category": "Entertainment",
+              "date": "2024-01-17",
+              "payment_method": "Cash"
+            },
+            {
+              "description": "Electric bill",
+              "amount": 120,
+              "category": "Utilities",
+              "date": "2024-01-18",
+              "payment_method": "Bank Transfer"
+            },
+            {
+              "description": "Doctor visit",
+              "amount": 150,
+              "category": "Healthcare",
+              "date": "2024-01-19",
+              "payment_method": "Credit Card"
+            },
+            {
+              "description": "New shoes",
+              "amount": 89.99,
+              "category": "Shopping",
+              "date": "2024-01-20",
+              "payment_method": "Debit Card"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "expenses_table",
+          "title": "All Expenses",
+          "width": "full",
+          "type": "table",
+          "entityId": "expense",
+          "filters": [
+            {
+              "fieldId": "category",
+              "control": "select"
+            },
+            {
+              "fieldId": "payment_method",
+              "control": "select"
+            }
+          ]
+        },
+        {
+          "id": "add_expense_form",
+          "title": "Add New Expense",
+          "width": "full",
+          "type": "form",
+          "entityId": "expense",
+          "fieldIds": [
+            "description",
+            "amount",
+            "category",
+            "date",
+            "payment_method"
+          ],
+          "submitLabel": "Add Expense"
+        },
+        {
+          "id": "total_spent",
+          "title": "Total Spent",
+          "width": "full",
+          "type": "metric",
+          "entityId": "expense",
+          "aggregate": "sum",
+          "fieldId": "amount",
+          "caption": "across all expenses"
+        },
+        {
+          "id": "expense_count",
+          "title": "Total Expenses",
+          "width": "full",
+          "type": "metric",
+          "entityId": "expense",
+          "aggregate": "count",
+          "caption": "number of expenses recorded"
+        },
+        {
+          "id": "average_expense",
+          "title": "Average Expense",
+          "width": "full",
+          "type": "metric",
+          "entityId": "expense",
+          "aggregate": "average",
+          "fieldId": "amount",
+          "caption": "per transaction"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3045,
+          "outputTokens": 870
+        },
+        "latencyMs": 5013,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"expense\" with 5 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"expense\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Expense entity with seed data. Here's what I set up:\n\n**Plan:** An expenses tracking application with one entity (Expense) that records individual expenses with description, amount, category, date, and payment method.\n\n**Entity Created:** \n- **Expense** with 5 fields:\n  - Description (string, required)\n  - Amount (number, required)\n  - Category (enum: Food, T",
+        "usage": {
+          "inputTokens": 3964,
+          "outputTokens": 182
+        },
+        "latencyMs": 2515,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"expenses_table\".",
+        "usage": {
+          "inputTokens": 4164,
+          "outputTokens": 779
+        },
+        "latencyMs": 3980,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_expense_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"total_spent\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"expense_count\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"average_expense\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 5157,
+          "outputTokens": 44
+        },
+        "latencyMs": 1322,
+        "index": 10
+      }
+    ],
+    "usage": {
+      "inputTokens": 16330,
+      "outputTokens": 1875
+    },
+    "latencyMs": 12834,
+    "failure": null,
+    "warnings": []
+  }
+}

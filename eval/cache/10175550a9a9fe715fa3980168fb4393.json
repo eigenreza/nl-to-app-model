@@ -1,0 +1,364 @@
+{
+  "caseId": "two_apps",
+  "band": "awkward",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 13672,
+  "inputTokens": 16839,
+  "outputTokens": 1902,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Greenhouse Tracker",
+        "description": "Track plants in a greenhouse and seeds in storage with their respective attributes."
+      },
+      "entities": [
+        {
+          "id": "plant",
+          "name": "Plant",
+          "pluralName": "Plants",
+          "fields": [
+            {
+              "id": "species",
+              "label": "Species",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "pot_size",
+              "label": "Pot Size",
+              "type": "string",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "species": "Tomato",
+              "pot_size": "10 inch"
+            },
+            {
+              "species": "Basil",
+              "pot_size": "6 inch"
+            },
+            {
+              "species": "Pepper",
+              "pot_size": "8 inch"
+            },
+            {
+              "species": "Lettuce",
+              "pot_size": "6 inch"
+            },
+            {
+              "species": "Cucumber",
+              "pot_size": "12 inch"
+            }
+          ]
+        },
+        {
+          "id": "seed",
+          "name": "Seed",
+          "pluralName": "Seeds",
+          "fields": [
+            {
+              "id": "species",
+              "label": "Species",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "packet_count",
+              "label": "Packet Count",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "expiry_date",
+              "label": "Expiry Date",
+              "type": "date",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "species": "Tomato",
+              "packet_count": 3,
+              "expiry_date": "2025-06-15"
+            },
+            {
+              "species": "Basil",
+              "packet_count": 5,
+              "expiry_date": "2024-12-31"
+            },
+            {
+              "species": "Carrot",
+              "packet_count": 2,
+              "expiry_date": "2025-08-20"
+            },
+            {
+              "species": "Spinach",
+              "packet_count": 4,
+              "expiry_date": "2025-03-10"
+            },
+            {
+              "species": "Pepper",
+              "packet_count": 1,
+              "expiry_date": "2025-09-05"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "plants_table",
+          "title": "Plants",
+          "width": "full",
+          "type": "table",
+          "entityId": "plant"
+        },
+        {
+          "id": "add_plant_form",
+          "title": "Add Plant",
+          "width": "full",
+          "type": "form",
+          "entityId": "plant",
+          "fieldIds": [
+            "species",
+            "pot_size"
+          ],
+          "submitLabel": "Add Plant"
+        },
+        {
+          "id": "seeds_table",
+          "title": "Seeds",
+          "width": "full",
+          "type": "table",
+          "entityId": "seed"
+        },
+        {
+          "id": "add_seed_form",
+          "title": "Add Seed",
+          "width": "full",
+          "type": "form",
+          "entityId": "seed",
+          "fieldIds": [
+            "species",
+            "packet_count",
+            "expiry_date"
+          ],
+          "submitLabel": "Add Seed"
+        },
+        {
+          "id": "plant_count",
+          "title": "Total Plants",
+          "width": "full",
+          "type": "metric",
+          "entityId": "plant",
+          "aggregate": "count",
+          "caption": "plants in greenhouse"
+        },
+        {
+          "id": "seed_count",
+          "title": "Total Seed Packets",
+          "width": "full",
+          "type": "metric",
+          "entityId": "seed",
+          "aggregate": "sum",
+          "fieldId": "packet_count",
+          "caption": "packets in storage"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3086,
+          "outputTokens": 907
+        },
+        "latencyMs": 5225,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"plant\" with 2 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"seed\" with 3 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"plant\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"seed\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the application model with:\n\n1. **Plan**: Greenhouse Tracker - an application to manage plants and seeds separately\n2. **Plant entity**: Tracks plants with species and pot size fields\n3. **Seed entity**: Tracks seeds with species, packet count, and expiry date fields\n4. **Sample data**: Added 5 realistic plants and 5 realistic seeds to populate the application\n\nBoth entities ",
+        "usage": {
+          "inputTokens": 4122,
+          "outputTokens": 118
+        },
+        "latencyMs": 1989,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"plants_table\".",
+        "usage": {
+          "inputTokens": 4258,
+          "outputTokens": 829
+        },
+        "latencyMs": 4045,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_plant_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"seeds_table\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_seed_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 9
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"plant_count\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 10
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"seed_count\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 11
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 12
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 13
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 5373,
+          "outputTokens": 48
+        },
+        "latencyMs": 1215,
+        "index": 14
+      }
+    ],
+    "usage": {
+      "inputTokens": 16839,
+      "outputTokens": 1902
+    },
+    "latencyMs": 13672,
+    "failure": null,
+    "warnings": []
+  }
+}

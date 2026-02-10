@@ -472,6 +472,6 @@ packages/
   server/    config, provider layer, agent loop, API, replay, eval harness
   web/       React client, Redux store, renderer, model editor
 eval/        committed results.json and results.md
-.eval-cache/ per-case outcomes, not committed
+eval/cache/  per-case outcomes, committed so the table is reproducible
 scripts/     repository hygiene checks
 ```

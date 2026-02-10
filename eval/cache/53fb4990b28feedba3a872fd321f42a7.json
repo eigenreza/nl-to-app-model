@@ -1,0 +1,243 @@
+{
+  "caseId": "bookmarks",
+  "band": "simple",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 10629,
+  "inputTokens": 15207,
+  "outputTokens": 1165,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Link Keeper",
+        "description": "An application to save and organize interesting links with titles, URLs, and categories."
+      },
+      "entities": [
+        {
+          "id": "link",
+          "name": "Link",
+          "pluralName": "Links",
+          "fields": [
+            {
+              "id": "title",
+              "label": "Title",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "url",
+              "label": "URL",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "category",
+              "label": "Category",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Technology",
+                "Design",
+                "Business",
+                "Learning",
+                "Entertainment",
+                "News"
+              ]
+            }
+          ],
+          "seed": [
+            {
+              "title": "Hacker News",
+              "url": "https://news.ycombinator.com",
+              "category": "Technology"
+            },
+            {
+              "title": "Dribbble",
+              "url": "https://dribbble.com",
+              "category": "Design"
+            },
+            {
+              "title": "TED Talks",
+              "url": "https://www.ted.com",
+              "category": "Learning"
+            },
+            {
+              "title": "The Verge",
+              "url": "https://www.theverge.com",
+              "category": "News"
+            },
+            {
+              "title": "Product Hunt",
+              "url": "https://www.producthunt.com",
+              "category": "Business"
+            },
+            {
+              "title": "Netflix",
+              "url": "https://www.netflix.com",
+              "category": "Entertainment"
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "links_table",
+          "title": "Links",
+          "width": "full",
+          "type": "table",
+          "entityId": "link",
+          "columns": [
+            "title",
+            "url",
+            "category"
+          ],
+          "filters": [
+            {
+              "fieldId": "category",
+              "control": "select",
+              "label": "Filter by Category"
+            }
+          ]
+        },
+        {
+          "id": "add_link_form",
+          "title": "Add New Link",
+          "width": "full",
+          "type": "form",
+          "entityId": "link",
+          "fieldIds": [
+            "title",
+            "url",
+            "category"
+          ],
+          "submitLabel": "Save Link"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3059,
+          "outputTokens": 662
+        },
+        "latencyMs": 4480,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"link\" with 3 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"link\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Link entity with the following structure:\n\n**Entity: Link**\n- **title** (string, required): The name of the link\n- **url** (string, required): The web address\n- **category** (enum, required): One of Technology, Design, Business, Learning, Entertainment, or News\n\nI've seeded it with 6 example links across different categories. Ready to add components in the ne",
+        "usage": {
+          "inputTokens": 3798,
+          "outputTokens": 102
+        },
+        "latencyMs": 1443,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"links_table\".",
+        "usage": {
+          "inputTokens": 3918,
+          "outputTokens": 366
+        },
+        "latencyMs": 2453,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_link_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a vertical layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4432,
+          "outputTokens": 35
+        },
+        "latencyMs": 902,
+        "index": 8
+      }
+    ],
+    "usage": {
+      "inputTokens": 15207,
+      "outputTokens": 1165
+    },
+    "latencyMs": 10629,
+    "failure": null,
+    "warnings": []
+  }
+}

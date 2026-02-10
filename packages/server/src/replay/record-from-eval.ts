@@ -19,7 +19,7 @@ import { OutcomeCache, cacheKey, configurationFor } from '../eval/cache.js';
 import { caseById } from '../eval/fixtures.js';
 import type { ReplayTrace } from './store.js';
 
-const CACHE_DIR = fileURLToPath(new URL('../../../../.eval-cache', import.meta.url));
+const CACHE_DIR = fileURLToPath(new URL('../../../../eval/cache', import.meta.url));
 
 /**
  * What the demo offers a visitor.

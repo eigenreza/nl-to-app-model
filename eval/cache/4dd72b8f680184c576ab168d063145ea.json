@@ -1,0 +1,199 @@
+{
+  "caseId": "wants_sorting",
+  "band": "out_of_scope",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 9599,
+  "inputTokens": 14627,
+  "outputTokens": 896,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Player Leaderboard",
+        "description": "A leaderboard displaying players and their scores with search and filtering capabilities."
+      },
+      "entities": [
+        {
+          "id": "player",
+          "name": "Player",
+          "pluralName": "Players",
+          "fields": [
+            {
+              "id": "name",
+              "label": "Player Name",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "score",
+              "label": "Score",
+              "type": "number",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "name": "Alex Chen",
+              "score": 2850
+            },
+            {
+              "name": "Jordan Smith",
+              "score": 2720
+            },
+            {
+              "name": "Casey Williams",
+              "score": 2615
+            },
+            {
+              "name": "Morgan Lee",
+              "score": 2490
+            },
+            {
+              "name": "Taylor Brown",
+              "score": 2380
+            },
+            {
+              "name": "Riley Davis",
+              "score": 2275
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "leaderboard_table",
+          "title": "Leaderboard",
+          "width": "full",
+          "type": "table",
+          "entityId": "player",
+          "columns": [
+            "name",
+            "score"
+          ],
+          "filters": [
+            {
+              "fieldId": "name",
+              "control": "text",
+              "label": "Search by name"
+            }
+          ],
+          "emptyMessage": "No players found matching your search."
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3066,
+          "outputTokens": 468
+        },
+        "latencyMs": 3687,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"player\" with 2 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"player\" with 6 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the foundation for the Player Leaderboard application:\n\n**Plan:** The app will have a single Player entity with name and score fields, displayed in a sortable table with search functionality.\n\n**Entity Created:** \n- **Player** entity with:\n  - `name` (string, required): Player Name\n  - `score` (number, required): Score\n\n**Seed Data:** Added 6 sample players with scores rangin",
+        "usage": {
+          "inputTokens": 3626,
+          "outputTokens": 140
+        },
+        "latencyMs": 2027,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"leaderboard_table\".",
+        "usage": {
+          "inputTokens": 3784,
+          "outputTokens": 253
+        },
+        "latencyMs": 2014,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a vertical layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4151,
+          "outputTokens": 35
+        },
+        "latencyMs": 809,
+        "index": 7
+      }
+    ],
+    "usage": {
+      "inputTokens": 14627,
+      "outputTokens": 896
+    },
+    "latencyMs": 9599,
+    "failure": null,
+    "warnings": []
+  }
+}

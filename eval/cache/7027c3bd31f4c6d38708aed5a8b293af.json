@@ -1,0 +1,211 @@
+{
+  "caseId": "incident_log",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144236,
+  "inputTokens": 2058,
+  "outputTokens": 1095,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Incident Log",
+        "description": "Track service incidents with severity, duration, and resolution status"
+      },
+      "entities": [
+        {
+          "id": "incident",
+          "name": "Incident",
+          "pluralName": "Incidents",
+          "fields": [
+            {
+              "id": "summary",
+              "label": "Summary",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "severity",
+              "label": "Severity",
+              "type": "enum",
+              "required": true,
+              "options": [
+                "Critical",
+                "High",
+                "Medium",
+                "Low"
+              ]
+            },
+            {
+              "id": "started_at",
+              "label": "Started At",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "duration_minutes",
+              "label": "Duration (minutes)",
+              "type": "number",
+              "required": false
+            },
+            {
+              "id": "resolved",
+              "label": "Resolved",
+              "type": "boolean",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "summary": "Database connection timeout",
+              "severity": "Critical",
+              "started_at": "2024-03-19",
+              "duration_minutes": 45,
+              "resolved": true
+            },
+            {
+              "summary": "API rate limiting issue",
+              "severity": "High",
+              "started_at": "2024-03-18",
+              "duration_minutes": 120,
+              "resolved": true
+            },
+            {
+              "summary": "Memory leak in worker process",
+              "severity": "High",
+              "started_at": "2024-03-20",
+              "duration_minutes": null,
+              "resolved": false
+            },
+            {
+              "summary": "Slow response times on dashboard",
+              "severity": "Medium",
+              "started_at": "2024-03-17",
+              "duration_minutes": 30,
+              "resolved": true
+            },
+            {
+              "summary": "Cache invalidation failure",
+              "severity": "Medium",
+              "started_at": "2024-03-21",
+              "duration_minutes": null,
+              "resolved": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "open_incidents",
+          "width": "third",
+          "type": "metric",
+          "entityId": "incident",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "resolved",
+                "op": "isFalse"
+              }
+            ]
+          },
+          "caption": "Open incidents"
+        },
+        {
+          "id": "total_downtime",
+          "width": "third",
+          "type": "metric",
+          "entityId": "incident",
+          "aggregate": "sum",
+          "fieldId": "duration_minutes",
+          "caption": "Total downtime (minutes)"
+        },
+        {
+          "id": "critical_incidents",
+          "width": "third",
+          "type": "metric",
+          "entityId": "incident",
+          "aggregate": "count",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "severity",
+                "op": "equals",
+                "value": "Critical"
+              }
+            ]
+          },
+          "caption": "Critical incidents"
+        },
+        {
+          "id": "incident_table",
+          "title": "Incidents",
+          "width": "full",
+          "type": "table",
+          "entityId": "incident",
+          "filters": [
+            {
+              "fieldId": "severity",
+              "control": "select",
+              "label": "Severity"
+            },
+            {
+              "fieldId": "resolved",
+              "control": "select",
+              "label": "Status"
+            }
+          ]
+        },
+        {
+          "id": "add_incident",
+          "title": "Log New Incident",
+          "width": "full",
+          "type": "form",
+          "entityId": "incident",
+          "submitLabel": "Log incident"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 3
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2058,
+          "outputTokens": 1095
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2058,
+      "outputTokens": 1095
+    },
+    "latencyMs": 144236,
+    "failure": null,
+    "warnings": []
+  }
+}

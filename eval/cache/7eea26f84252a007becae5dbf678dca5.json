@@ -1,0 +1,273 @@
+{
+  "caseId": "invoice_tracker",
+  "band": "moderate",
+  "mode": "agent",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 4,
+  "latencyMs": 11099,
+  "inputTokens": 15622,
+  "outputTokens": 1448,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "agent",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Invoice Tracker",
+        "description": "Track invoices with client details, amounts, dates, and payment status."
+      },
+      "entities": [
+        {
+          "id": "invoice",
+          "name": "Invoice",
+          "pluralName": "Invoices",
+          "fields": [
+            {
+              "id": "client",
+              "label": "Client",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "amount",
+              "label": "Amount",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "date_sent",
+              "label": "Date Sent",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "paid",
+              "label": "Paid",
+              "type": "boolean",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "client": "Acme Corp",
+              "amount": 1500,
+              "date_sent": "2024-01-15",
+              "paid": true
+            },
+            {
+              "client": "Tech Solutions Inc",
+              "amount": 2500,
+              "date_sent": "2024-01-20",
+              "paid": false
+            },
+            {
+              "client": "Global Enterprises",
+              "amount": 3200,
+              "date_sent": "2024-02-01",
+              "paid": false
+            },
+            {
+              "client": "StartUp Labs",
+              "amount": 1200,
+              "date_sent": "2024-02-10",
+              "paid": true
+            },
+            {
+              "client": "Digital Media Group",
+              "amount": 2800,
+              "date_sent": "2024-02-15",
+              "paid": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "invoices_table",
+          "title": "Invoices",
+          "width": "full",
+          "type": "table",
+          "entityId": "invoice",
+          "filters": [
+            {
+              "fieldId": "paid",
+              "control": "select",
+              "label": "Payment Status"
+            },
+            {
+              "fieldId": "client",
+              "control": "text",
+              "label": "Client"
+            }
+          ]
+        },
+        {
+          "id": "outstanding_total",
+          "title": "Total Outstanding",
+          "width": "full",
+          "type": "metric",
+          "entityId": "invoice",
+          "aggregate": "sum",
+          "fieldId": "amount",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "paid",
+                "op": "isFalse"
+              }
+            ]
+          },
+          "caption": "Unpaid invoices"
+        },
+        {
+          "id": "add_invoice_form",
+          "title": "Add Invoice",
+          "width": "full",
+          "type": "form",
+          "entityId": "invoice",
+          "fieldIds": [
+            "client",
+            "amount",
+            "date_sent",
+            "paid"
+          ],
+          "submitLabel": "Add Invoice"
+        }
+      ],
+      "layout": {
+        "type": "grid",
+        "columns": 2
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 4,
+    "steps": [
+      {
+        "kind": "plan",
+        "ok": true,
+        "label": "Planned the application.",
+        "usage": {
+          "inputTokens": 3074,
+          "outputTokens": 685
+        },
+        "latencyMs": 4427,
+        "index": 0
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Created entity \"invoice\" with 4 fields.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 1
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Seeded \"invoice\" with 5 rows.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 2
+      },
+      {
+        "kind": "tool",
+        "ok": false,
+        "label": "Replied without calling a tool.",
+        "detail": "Perfect! I've created the plan and the Invoice entity with the following structure:\n\n**Entity: Invoice**\n- **client** (string, required): The name of the client\n- **amount** (number, required): The invoice amount\n- **date_sent** (date, required): When the invoice was sent\n- **paid** (boolean, required): Whether the invoice has been paid\n\nI've also seeded the entity with 5 realistic sample invoices",
+        "usage": {
+          "inputTokens": 3825,
+          "outputTokens": 139
+        },
+        "latencyMs": 1613,
+        "index": 3
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added table \"invoices_table\".",
+        "usage": {
+          "inputTokens": 3982,
+          "outputTokens": 576
+        },
+        "latencyMs": 3658,
+        "index": 4
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added metric \"outstanding_total\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 5
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Added form \"add_invoice_form\".",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 6
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Set a grid layout.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 7
+      },
+      {
+        "kind": "tool",
+        "ok": true,
+        "label": "Validated the draft: no errors.",
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0
+        },
+        "latencyMs": 0,
+        "index": 8
+      },
+      {
+        "kind": "finalize",
+        "ok": true,
+        "label": "Accepted the model.",
+        "usage": {
+          "inputTokens": 4741,
+          "outputTokens": 48
+        },
+        "latencyMs": 1011,
+        "index": 9
+      }
+    ],
+    "usage": {
+      "inputTokens": 15622,
+      "outputTokens": 1448
+    },
+    "latencyMs": 11099,
+    "failure": null,
+    "warnings": []
+  }
+}

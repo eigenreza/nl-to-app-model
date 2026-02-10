@@ -1,0 +1,168 @@
+{
+  "caseId": "invoice_tracker",
+  "band": "moderate",
+  "mode": "baseline",
+  "ok": true,
+  "validFirstTry": true,
+  "iterations": 1,
+  "latencyMs": 144232,
+  "inputTokens": 2050,
+  "outputTokens": 809,
+  "failureReason": null,
+  "expectationsMet": true,
+  "expectationFailures": [],
+  "forbiddenMatches": [],
+  "result": {
+    "ok": true,
+    "mode": "baseline",
+    "provider": "anthropic",
+    "model": "claude-haiku-4-5-20251001",
+    "applicationModel": {
+      "schemaVersion": "1.0.0",
+      "app": {
+        "name": "Invoice Tracker",
+        "description": "Track invoices by client, amount, and payment status with outstanding balance summary."
+      },
+      "entities": [
+        {
+          "id": "invoice",
+          "name": "Invoice",
+          "pluralName": "Invoices",
+          "fields": [
+            {
+              "id": "client",
+              "label": "Client",
+              "type": "string",
+              "required": true
+            },
+            {
+              "id": "amount",
+              "label": "Amount",
+              "type": "number",
+              "required": true
+            },
+            {
+              "id": "date_sent",
+              "label": "Date Sent",
+              "type": "date",
+              "required": true
+            },
+            {
+              "id": "paid",
+              "label": "Paid",
+              "type": "boolean",
+              "required": true
+            }
+          ],
+          "seed": [
+            {
+              "client": "Acme Corp",
+              "amount": 2500,
+              "date_sent": "2024-01-15",
+              "paid": true
+            },
+            {
+              "client": "Tech Solutions Inc",
+              "amount": 1800,
+              "date_sent": "2024-01-20",
+              "paid": false
+            },
+            {
+              "client": "Global Enterprises",
+              "amount": 3200,
+              "date_sent": "2024-02-01",
+              "paid": false
+            },
+            {
+              "client": "StartUp Labs",
+              "amount": 950,
+              "date_sent": "2024-02-10",
+              "paid": true
+            },
+            {
+              "client": "Digital Media Group",
+              "amount": 4100,
+              "date_sent": "2024-02-15",
+              "paid": false
+            }
+          ]
+        }
+      ],
+      "components": [
+        {
+          "id": "outstanding_metric",
+          "title": "Total Outstanding",
+          "width": "third",
+          "type": "metric",
+          "entityId": "invoice",
+          "aggregate": "sum",
+          "fieldId": "amount",
+          "where": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "fieldId": "paid",
+                "op": "isFalse"
+              }
+            ]
+          }
+        },
+        {
+          "id": "invoice_table",
+          "title": "Invoices",
+          "width": "full",
+          "type": "table",
+          "entityId": "invoice",
+          "columns": [
+            "client",
+            "amount",
+            "date_sent",
+            "paid"
+          ],
+          "filters": [
+            {
+              "fieldId": "paid",
+              "control": "select",
+              "label": "Payment Status"
+            }
+          ]
+        },
+        {
+          "id": "add_invoice",
+          "title": "Add Invoice",
+          "width": "full",
+          "type": "form",
+          "entityId": "invoice",
+          "submitLabel": "Add Invoice"
+        }
+      ],
+      "layout": {
+        "type": "vertical"
+      }
+    },
+    "validFirstTry": true,
+    "iterations": 1,
+    "steps": [
+      {
+        "kind": "draft",
+        "label": "Produced a valid model on the first attempt.",
+        "ok": true,
+        "detail": "JSON was recovered from surrounding text.",
+        "issues": [],
+        "usage": {
+          "inputTokens": 2050,
+          "outputTokens": 809
+        },
+        "latencyMs": 0,
+        "index": 0
+      }
+    ],
+    "usage": {
+      "inputTokens": 2050,
+      "outputTokens": 809
+    },
+    "latencyMs": 144232,
+    "failure": null,
+    "warnings": []
+  }
+}
