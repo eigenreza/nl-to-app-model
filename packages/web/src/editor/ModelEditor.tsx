@@ -34,6 +34,11 @@ export function ModelEditor() {
         <span className="badge">{SOURCE_LABELS[source] ?? source}</span>
       </header>
 
+      <p className="pane-hint">
+        The document itself, editable. Every keystroke is validated; the application keeps
+        showing the last valid version.
+      </p>
+
       <div className="editor-toolbar">
         <label htmlFor="example-picker">
           Reference model

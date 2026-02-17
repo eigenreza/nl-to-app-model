@@ -49,6 +49,11 @@ export function PromptPanel() {
         {unreachable && <span className="badge">api offline</span>}
       </header>
 
+      <p className="pane-hint">
+        A description goes in, a validated application model comes out. The trace below shows
+        every step the agent took.
+      </p>
+
       <form onSubmit={handleSubmit}>
         <label className="visually-hidden" htmlFor="description">
           Description
@@ -96,27 +101,26 @@ export function PromptPanel() {
 
       {replayOnly && catalogue.length > 0 && (
         <div className="replay-catalogue">
-          <p>
-            This deployment answers from recorded traces, so it costs nothing to run and cannot
-            reach a provider. Try one of these:
+          <p className="catalogue-lede">
+            Sample prompts this demo can answer. Pick one, then press Generate.
           </p>
           <ul>
             {catalogue.map((entry) => (
               <li key={`${entry.mode}-${entry.id}`}>
                 <button
                   type="button"
-                  className="link-button"
+                  className="catalogue-item"
                   disabled={running}
                   onClick={() => {
                     dispatch(descriptionChanged(entry.description));
                     dispatch(modeChanged(entry.mode));
                   }}
                 >
-                  {entry.description}
-                </button>{' '}
-                <span className="catalogue-mode">
-                  {entry.mode === 'agent' ? 'agent loop' : 'baseline'}
-                </span>
+                  <span className="catalogue-text">{entry.description}</span>
+                  <span className={`catalogue-badge ${entry.mode}`}>
+                    {entry.mode === 'agent' ? 'agent loop' : 'baseline'}
+                  </span>
+                </button>
               </li>
             ))}
           </ul>

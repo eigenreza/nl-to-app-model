@@ -670,10 +670,171 @@ tbody tr:hover {
   font-variant-numeric: tabular-nums;
 }
 
-.catalogue-mode {
-  font-size: 0.72rem;
+
+/* Orientation ------------------------------------------------------------ */
+
+.app-lede {
+  margin: 0.4rem 0 0;
+  color: var(--text-muted);
+  max-width: 70ch;
+}
+
+.how-to {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin: 1.1rem 0 0;
+  padding: 0;
+}
+
+.how-to li {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr;
+  gap: 0.6rem;
+  align-items: start;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.how-to-step {
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: 0.8rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.how-to strong {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.how-to p {
+  margin: 0.15rem 0 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+@media (max-width: 860px) {
+  .how-to {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* One explanatory line per panel, directly under its heading. */
+.pane-hint {
+  margin: -0.35rem 0 0.9rem;
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  max-width: 62ch;
+}
+
+/* Sample prompts --------------------------------------------------------- */
+
+.catalogue-lede {
+  margin: 0 0 0.5rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.replay-catalogue ul {
+  padding: 0;
+  list-style: none;
+  gap: 0.3rem;
+}
+
+.catalogue-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.catalogue-item:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.catalogue-text {
+  min-width: 0;
+}
+
+.catalogue-badge {
+  flex: none;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
   color: var(--text-muted);
   white-space: nowrap;
+}
+
+.catalogue-badge.agent {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* About ------------------------------------------------------------------ */
+
+.about {
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  max-width: 72ch;
+}
+
+.about h2 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.about p {
+  margin: 0 0 0.7rem;
+  line-height: 1.6;
+}
+
+.about-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+}
+
+.about-meta > span:first-child {
+  font-weight: 600;
+}
+
+.about-meta a {
+  color: var(--accent);
+}
+
+.about-note {
+  font-size: 0.82rem;
+  color: var(--text-muted);
 }
