@@ -28,7 +28,9 @@ export function PromptPanel() {
   }, [dispatch]);
 
   const running = status === 'running';
+  const live = health?.live;
   const replayOnly = health !== null && !health.liveGenerationEnabled;
+  const liveExhausted = live?.configured === true && live.available === false;
   const canSubmit = description.trim().length >= 3 && !running && !unreachable;
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -43,7 +45,7 @@ export function PromptPanel() {
         <h2>Describe an application</h2>
         {health && (
           <span className="badge" title={`${health.provider} ${health.model}`}>
-            {replayOnly ? 'replay mode' : 'live'}
+            {replayOnly ? 'replay mode' : liveExhausted ? 'replay fallback' : 'live'}
           </span>
         )}
         {unreachable && <span className="badge">api offline</span>}
@@ -99,10 +101,20 @@ export function PromptPanel() {
         </p>
       )}
 
-      {replayOnly && catalogue.length > 0 && (
+      {liveExhausted && (
+        <p className="trace-status warning" role="status">
+          {live?.reason === 'budget_exhausted'
+            ? `This demo has spent its generation budget for today ($${live.dailyCapUsd.toFixed(2)}), so it cannot build anything new until the UTC day turns. The sample prompts below still work: they replay generations recorded earlier.`
+            : 'Live generation is not available at the moment. The sample prompts below still work.'}
+        </p>
+      )}
+
+      {catalogue.length > 0 && (
         <div className="replay-catalogue">
           <p className="catalogue-lede">
-            Sample prompts this demo can answer. Pick one, then press Generate.
+            {replayOnly || liveExhausted
+              ? 'Sample prompts, replayed from recorded generations. Pick one, then press Generate.'
+              : 'Sample prompts, answered instantly from recorded generations. Anything else is generated live.'}
           </p>
           <ul>
             {catalogue.map((entry) => (

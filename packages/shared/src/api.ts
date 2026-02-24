@@ -131,6 +131,33 @@ export type GenerationEvent =
   | { type: 'result'; result: GenerateResponse }
   | { type: 'error'; code: string; message: string };
 
+/**
+ * Why live generation is not available right now.
+ *
+ * Distinguished because they mean different things to a visitor: one resolves
+ * when the UTC day turns, one resolves in a moment, one never resolves without
+ * an operator changing something.
+ */
+export type LiveUnavailableReason =
+  | 'not_configured'
+  | 'budget_exhausted'
+  | 'rate_limited'
+  | 'busy';
+
+export interface LiveStatus {
+  /** Whether this deployment is set up for live generation at all. */
+  configured: boolean;
+  /** Whether a live generation could be started right now. */
+  available: boolean;
+  reason?: LiveUnavailableReason;
+  /** Spend ceiling for one UTC day, and how much of it is gone. */
+  dailyCapUsd: number;
+  spentTodayUsd: number;
+  remainingUsd: number;
+  utcDate: string;
+  generationsToday: number;
+}
+
 export interface HealthResponse {
   status: 'ok';
   demoMode: 'replay' | 'live';
@@ -140,6 +167,8 @@ export interface HealthResponse {
   replayTraces: number;
   /** True when this process is able to call a provider at all. */
   liveGenerationEnabled: boolean;
+  /** Absent on a deployment that was never configured for live generation. */
+  live?: LiveStatus;
 }
 
 export interface CatalogueEntry {

@@ -14,6 +14,15 @@ import { registerGenerateRoutes } from './routes/generate.js';
 import { registerMetaRoutes } from './routes/meta.js';
 
 export async function buildServer(context: ServerContext): Promise<FastifyInstance> {
+  // A provider that can be reached but not metered is the one configuration
+  // this must never assemble. Refusing here turns a silent "live generation
+  // quietly never works" into a loud failure at startup.
+  if (context.provider && !context.dailyBudget) {
+    throw new Error(
+      'A provider was supplied without a daily budget. Live generation must be metered, so the server will not start in that state.',
+    );
+  }
+
   const app = Fastify({
     loggerInstance: context.logger as FastifyBaseLogger,
     // Requests carry a description and nothing else, so a small ceiling is

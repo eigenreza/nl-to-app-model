@@ -9,6 +9,8 @@ import { loadConfig } from './config.js';
 import { Metrics } from './metrics.js';
 import { ReplayStore, type ReplayTrace } from './replay/store.js';
 import { ScriptedProvider, toolTurn } from './providers/scripted.js';
+import { DailyBudget } from './budget/daily-budget.js';
+import { LiveAccess } from './budget/live-access.js';
 import { buildServer, isClientNavigation } from './server.js';
 import type { ServerContext } from './context.js';
 
@@ -73,13 +75,32 @@ function liveTurns() {
 let app: FastifyInstance | undefined;
 
 async function startServer(overrides: Partial<Record<string, string>> = {}, live = false) {
-  const config = loadConfig({ NODE_ENV: 'test', LOG_LEVEL: 'silent', ...overrides });
+  const config = loadConfig({
+    NODE_ENV: 'test',
+    LOG_LEVEL: 'silent',
+    LLM_PROVIDER: 'anthropic',
+    LLM_MODEL: 'claude-haiku-4-5-20251001',
+    ...overrides,
+  });
+
+  let dailyBudget: DailyBudget | undefined;
+  if (live) {
+    dailyBudget = new DailyBudget({
+      capUsd: 10,
+      model: config.model,
+      path: join(tmpdir(), `nlam-server-test-${Math.trunc(performance.now() * 1000)}.json`),
+    });
+    await dailyBudget.load();
+  }
+
   const context: ServerContext = {
     config,
     logger: silentLogger,
     metrics: new Metrics(),
     replay: new ReplayStore([trace]),
     provider: live ? new ScriptedProvider(liveTurns()) : undefined,
+    dailyBudget,
+    liveAccess: live ? new LiveAccess({ perAddressPerDay: 100, maxConcurrent: 4 }) : undefined,
   };
   app = await buildServer(context);
   await app.ready();
@@ -267,24 +288,50 @@ describe('generation in live mode', () => {
     expect(allowed.statusCode).toBe(200);
   });
 
-  it('reports a missing provider rather than crashing', async () => {
+  it('degrades to replay when live is configured but no provider was built', async () => {
+    // The process entry point exits rather than reaching this state, but the
+    // server should still behave sensibly rather than crashing: it answers what
+    // it can and says what that is.
     const config = loadConfig({ DEMO_MODE: 'live', LOG_LEVEL: 'silent' });
     app = await buildServer({
       config,
       logger: silentLogger,
       metrics: new Metrics(),
-      replay: new ReplayStore(),
+      replay: new ReplayStore([trace]),
       provider: undefined,
     });
 
-    const response = await app.inject({
+    const recorded = await app.inject({
+      method: 'POST',
+      url: '/api/generate',
+      payload: { description: trace.description },
+    });
+    expect(recorded.statusCode).toBe(200);
+    expect(recorded.json().source).toBe('replay');
+
+    const novel = await app.inject({
       method: 'POST',
       url: '/api/generate',
       payload: { description: 'a contact list' },
     });
+    expect(novel.statusCode).toBe(409);
+    expect(novel.json().error.code).toBe('replay_miss');
+    expect(novel.json().error.detail.availableDescriptions).toContain(trace.description);
+  });
 
-    expect(response.statusCode).toBe(503);
-    expect(response.json().error.code).toBe('live_disabled');
+  it('refuses to assemble a server whose provider cannot be metered', async () => {
+    const config = loadConfig({ DEMO_MODE: 'live', LOG_LEVEL: 'silent' });
+
+    await expect(
+      buildServer({
+        config,
+        logger: silentLogger,
+        metrics: new Metrics(),
+        replay: new ReplayStore([trace]),
+        provider: new ScriptedProvider(liveTurns()),
+        dailyBudget: undefined,
+      }),
+    ).rejects.toThrow(/must be metered/);
   });
 });
 

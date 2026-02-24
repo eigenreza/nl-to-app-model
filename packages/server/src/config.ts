@@ -63,11 +63,37 @@ const EnvSchema = z.object({
   AGENT_TIME_BUDGET_MS: numberFromEnv(120_000, 5_000, 600_000),
 
   /**
-   * "replay" serves precomputed traces and cannot reach a provider at all.
-   * "live" allows generation, gated by DEMO_ACCESS_TOKEN when one is set.
+   * "replay" serves recorded traces and cannot reach a provider at all.
+   * "live" serves recorded traces too, and generates for anything else, inside
+   * the daily budget below. A recorded prompt never spends budget, so the
+   * sample prompts keep working after the allowance for the day is gone.
    */
   DEMO_MODE: z.enum(['replay', 'live']).default('replay'),
   DEMO_ACCESS_TOKEN: z.string().default(''),
+
+  /**
+   * Ceiling on live generation spend for one UTC day, in USD, computed from the
+   * token counts the provider reports and held on disk so that a restart does
+   * not hand out a fresh allowance. Reaching it disables live generation until
+   * the day turns. Replay is unaffected.
+   */
+  DAILY_SPEND_CAP_USD: z.coerce.number().min(0).max(1000).default(0.3),
+  /**
+   * Held back so a generation is only started with room to finish. An agent
+   * generation measured about $0.023 on the eval, so the default leaves room
+   * for roughly two.
+   */
+  LIVE_RESERVE_USD: z.coerce.number().min(0).max(100).default(0.05),
+  /** Live generations one address may start per UTC day. */
+  LIVE_PER_IP_PER_DAY: numberFromEnv(3, 1, 1000),
+  /** Live generations in flight at once, across everyone. */
+  LIVE_MAX_CONCURRENT: numberFromEnv(1, 1, 16),
+  /**
+   * Where the daily ledger is written. Defaults to a path inside the repository.
+   * On a deployment this must point at storage that survives a restart, or the
+   * budget resets every time the process does.
+   */
+  BUDGET_STATE_PATH: z.string().default(''),
 
   RATE_LIMIT_MAX: numberFromEnv(20, 1, 10_000),
   RATE_LIMIT_WINDOW_MS: numberFromEnv(60_000, 1_000, 3_600_000),

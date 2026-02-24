@@ -88,8 +88,22 @@ export class SpendGuard {
 }
 
 /**
+ * Anything that can veto a call and be told what it cost.
+ *
+ * Two implement it: the in-process guard above, for a run somebody is
+ * watching, and the persisted daily budget, for a demo nobody is. Recording is
+ * allowed to be asynchronous because a ledger that survives a restart has to
+ * reach disk before the answer reaches the caller.
+ */
+export interface SpendLedger {
+  /** Throws when another call must not be made. */
+  assertHeadroom(): void;
+  record(usage: TokenUsage, rateMultiplier?: number): void | Promise<void>;
+}
+
+/**
  * Wraps a provider so that no call can be made once the ceiling is in sight,
- * and every call that is made is counted.
+ * and every call that is made is counted before its answer is handed back.
  */
 export class BudgetedProvider implements LLMProvider {
   readonly name: string;
@@ -97,7 +111,7 @@ export class BudgetedProvider implements LLMProvider {
 
   constructor(
     private readonly inner: LLMProvider,
-    readonly guard: SpendGuard,
+    readonly guard: SpendLedger,
   ) {
     this.name = inner.name;
     this.model = inner.model;
@@ -106,7 +120,9 @@ export class BudgetedProvider implements LLMProvider {
   async complete(request: CompletionRequest, signal?: AbortSignal): Promise<CompletionResponse> {
     this.guard.assertHeadroom();
     const response = await this.inner.complete(request, signal);
-    this.guard.record(response.usage);
+    // Awaited, so a persisted ledger is on disk before the caller can act on a
+    // response it has not yet paid for in the books.
+    await this.guard.record(response.usage);
     return response;
   }
 }

@@ -12,3 +12,12 @@ export const REPLAY_DIRECTORY = fileURLToPath(new URL('../fixtures/replay', impo
  * during development, where Vite serves the client and proxies the API.
  */
 export const WEB_DIST_DIRECTORY = fileURLToPath(new URL('../../web/dist', import.meta.url));
+
+/**
+ * Default location of the daily spend ledger. Inside the repository so a local
+ * run works with no configuration; a deployment should point
+ * BUDGET_STATE_PATH at storage that survives a restart.
+ */
+export const DEFAULT_BUDGET_STATE_PATH = fileURLToPath(
+  new URL('../../../.local/budget-state.json', import.meta.url),
+);

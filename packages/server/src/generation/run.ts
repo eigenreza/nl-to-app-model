@@ -7,7 +7,13 @@
  * no provider object at all, which makes an accidental live call a type error
  * rather than a billing surprise.
  */
-import type { GenerationMode, GenerationResult, GenerationStep } from '@nlam/shared';
+import type {
+  CatalogueEntry,
+  GenerationMode,
+  GenerationResult,
+  GenerationStep,
+  LiveUnavailableReason,
+} from '@nlam/shared';
 import type { LLMProvider } from '../providers/types.js';
 import type { ReplayStore } from '../replay/store.js';
 import { generateBaseline } from './baseline.js';
@@ -30,6 +36,33 @@ export class LiveDisabledError extends Error {
   }
 }
 
+/**
+ * Live generation was refused for a description nobody recorded.
+ *
+ * Carries which guard refused and what the demo can still answer, because the
+ * useful thing to tell a visitor is not "no" but "not this, and here is what
+ * does work, and here is when this might".
+ */
+export class LiveUnavailableError extends Error {
+  constructor(
+    readonly reason: LiveUnavailableReason,
+    readonly available: CatalogueEntry[],
+  ) {
+    super(EXPLANATIONS[reason]);
+    this.name = 'LiveUnavailableError';
+  }
+}
+
+const EXPLANATIONS: Record<LiveUnavailableReason, string> = {
+  not_configured:
+    'This deployment answers from recorded traces only, and has no trace for that description.',
+  budget_exhausted:
+    'The demo has spent its generation budget for today, so it cannot build anything new until the UTC day turns. The recorded sample prompts still work.',
+  rate_limited:
+    'You have used your live generations for today. The recorded sample prompts still work, and your allowance returns when the UTC day turns.',
+  busy: 'Another generation is running, and the demo runs one at a time. Try again in a moment.',
+};
+
 export interface RunOptions {
   description: string;
   mode: GenerationMode;
@@ -42,6 +75,15 @@ export interface RunOptions {
 export interface RunOutcome {
   result: GenerationResult;
   source: 'live' | 'replay';
+}
+
+/** A recorded trace for this description, or nothing. Never touches a provider. */
+export function findReplay(store: ReplayStore, options: RunOptions): RunOutcome | undefined {
+  const trace = store.find(options.description, options.mode);
+  if (!trace) return undefined;
+
+  for (const step of trace.result.steps) options.onStep?.(step);
+  return { result: trace.result, source: 'replay' };
 }
 
 /** Answers from a recorded trace. Never touches a provider. */

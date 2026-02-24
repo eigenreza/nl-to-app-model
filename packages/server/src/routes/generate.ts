@@ -15,11 +15,13 @@ import { estimateCostUsd } from '../providers/pricing.js';
 import { hashPrompt } from '../logging.js';
 import {
   LiveDisabledError,
+  LiveUnavailableError,
   ReplayMissError,
-  runFromReplay,
+  findReplay,
   runLive,
   type RunOutcome,
 } from '../generation/run.js';
+import { claimLiveGeneration } from '../budget/live-decision.js';
 import type { ServerContext } from '../context.js';
 
 export function registerGenerateRoutes(app: FastifyInstance, context: ServerContext): void {
@@ -43,7 +45,7 @@ export function registerGenerateRoutes(app: FastifyInstance, context: ServerCont
     const requestId = randomUUID();
 
     try {
-      const outcome = await execute(context, { ...body, requestId });
+      const outcome = await execute(context, { ...body, requestId, address: request.ip });
       return await reply.send(toResponse(outcome, requestId));
     } catch (error) {
       const described = describeError(error);
@@ -75,16 +77,19 @@ export function registerGenerateRoutes(app: FastifyInstance, context: ServerCont
     request.raw.on('close', () => abort.abort());
 
     try {
+      // A recorded trace is tried first, so which source answers is not known
+      // until it has. Reporting the configured mode here would be a guess.
       write({
         type: 'accepted',
         requestId,
         mode: body.mode,
-        source: context.config.liveGenerationEnabled ? 'live' : 'replay',
+        source: context.replay.find(body.description, body.mode) ? 'replay' : 'live',
       });
 
       const outcome = await execute(context, {
         ...body,
         requestId,
+        address: request.ip,
         signal: abort.signal,
         onStep: (step: GenerationStep) => write({ type: 'step', step }),
       });
@@ -110,12 +115,22 @@ interface ExecuteOptions {
   description: string;
   mode: 'agent' | 'baseline';
   requestId: string;
+  /** Used only for the per-address live allowance. Never logged or stored. */
+  address: string;
   signal?: AbortSignal;
   onStep?: (step: GenerationStep) => void;
 }
 
+/**
+ * Answers one request.
+ *
+ * A recorded trace is tried first and always, so the sample prompts work
+ * whatever else is true: whether live generation was ever configured, whether
+ * the day's budget is gone, whether somebody else is mid-generation. Only a
+ * description nobody recorded reaches the guards and the provider.
+ */
 async function execute(context: ServerContext, options: ExecuteOptions): Promise<RunOutcome> {
-  const { config, logger, metrics, replay, provider } = context;
+  const { config, logger, metrics, replay } = context;
   const startedAt = Date.now();
 
   const runOptions = {
@@ -127,9 +142,8 @@ async function execute(context: ServerContext, options: ExecuteOptions): Promise
     ...(options.onStep ? { onStep: options.onStep } : {}),
   };
 
-  const outcome = config.liveGenerationEnabled
-    ? await runLive(requireProvider(provider), runOptions)
-    : runFromReplay(replay, runOptions);
+  const recorded = findReplay(replay, runOptions);
+  const outcome = recorded ?? (await executeLive(context, options, runOptions));
 
   metrics.record(outcome.result, outcome.source);
 
@@ -154,9 +168,37 @@ async function execute(context: ServerContext, options: ExecuteOptions): Promise
   return outcome;
 }
 
-function requireProvider(provider: ServerContext['provider']) {
-  if (!provider) throw new LiveDisabledError();
-  return provider;
+/**
+ * Runs a description nobody recorded, if every guard allows it.
+ *
+ * The slot is released in a finally, because a generation that throws still
+ * has to give the next visitor their turn. The per-address allowance is not
+ * refunded on failure: it is spent on asking, which is what stops a failing
+ * prompt from being retried indefinitely.
+ */
+async function executeLive(
+  context: ServerContext,
+  options: ExecuteOptions,
+  runOptions: Parameters<typeof runLive>[1],
+): Promise<RunOutcome> {
+  const gate = {
+    configured: context.config.liveGenerationEnabled && context.provider !== undefined,
+    budget: context.dailyBudget,
+    access: context.liveAccess,
+  };
+
+  const decision = claimLiveGeneration(gate, options.address);
+  if (!decision.allowed) {
+    throw new LiveUnavailableError(decision.reason, context.replay.catalogue());
+  }
+
+  try {
+    const outcome = await runLive(context.provider as NonNullable<ServerContext['provider']>, runOptions);
+    await context.dailyBudget?.countGeneration();
+    return outcome;
+  } finally {
+    decision.release();
+  }
 }
 
 function toResponse(outcome: RunOutcome, requestId: string): GenerateResponse {
@@ -227,6 +269,15 @@ function describeError(error: unknown): { code: string; message: string; detail?
       detail: { availableDescriptions: error.available },
     };
   }
+  if (error instanceof LiveUnavailableError) {
+    return {
+      // 'not_configured' is the case that existed before live generation did, so
+      // it keeps the code it had rather than renaming a published contract.
+      code: error.reason === 'not_configured' ? 'replay_miss' : `live_${error.reason}`,
+      message: error.message,
+      detail: { availableDescriptions: error.available.map((entry) => entry.description) },
+    };
+  }
   if (error instanceof LiveDisabledError) {
     return { code: 'live_disabled', message: error.message };
   }
@@ -237,7 +288,9 @@ function describeError(error: unknown): { code: string; message: string; detail?
 }
 
 function statusFor(code: string): number {
-  if (code === 'replay_miss') return 409;
-  if (code === 'live_disabled') return 503;
+  if (code === 'replay_miss' || code === 'live_not_configured') return 409;
+  if (code === 'live_rate_limited') return 429;
+  if (code === 'live_busy') return 503;
+  if (code === 'live_budget_exhausted' || code === 'live_disabled') return 503;
   return 502;
 }

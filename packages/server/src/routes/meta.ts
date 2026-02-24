@@ -8,7 +8,13 @@
  * reading the logs.
  */
 import type { FastifyInstance } from 'fastify';
-import { SCHEMA_VERSION, type CatalogueEntry, type HealthResponse } from '@nlam/shared';
+import {
+  SCHEMA_VERSION,
+  type CatalogueEntry,
+  type HealthResponse,
+  type LiveStatus,
+} from '@nlam/shared';
+import { liveAvailability } from '../budget/live-decision.js';
 import type { ServerContext } from '../context.js';
 
 export function registerMetaRoutes(app: FastifyInstance, context: ServerContext): void {
@@ -28,6 +34,7 @@ export function registerMetaRoutes(app: FastifyInstance, context: ServerContext)
       schemaVersion: SCHEMA_VERSION,
       replayTraces: context.replay.size,
       liveGenerationEnabled: context.config.liveGenerationEnabled,
+      ...(liveStatus(context) ? { live: liveStatus(context) } : {}),
     };
   });
 
@@ -36,4 +43,38 @@ export function registerMetaRoutes(app: FastifyInstance, context: ServerContext)
   });
 
   app.get('/api/stats', async () => context.metrics.snapshot());
+}
+
+/**
+ * What the browser needs to tell a visitor whether it can build something new,
+ * and if not, when that might change.
+ *
+ * Absent entirely on a deployment that was never configured for live
+ * generation, so the client can distinguish "off" from "out of budget".
+ */
+function liveStatus(context: ServerContext): LiveStatus | undefined {
+  if (!context.config.liveGenerationEnabled || !context.dailyBudget) return undefined;
+
+  const snapshot = context.dailyBudget.snapshot();
+  const availability = liveAvailability({
+    configured: true,
+    budget: context.dailyBudget,
+    access: context.liveAccess,
+  });
+
+  return {
+    configured: true,
+    available: availability.available,
+    ...(availability.reason ? { reason: availability.reason } : {}),
+    dailyCapUsd: round(snapshot.capUsd),
+    spentTodayUsd: round(snapshot.spentUsd),
+    remainingUsd: round(snapshot.remainingUsd),
+    utcDate: snapshot.utcDate,
+    generationsToday: snapshot.generations,
+  };
+}
+
+/** Four decimals: enough to see a single generation move the number. */
+function round(value: number): number {
+  return Math.round(value * 10_000) / 10_000;
 }
