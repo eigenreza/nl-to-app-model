@@ -55,9 +55,41 @@ Either provider works; set `LLM_PROVIDER=gemini` and `GEMINI_API_KEY` instead to
 run on that one.
 
 Without `DEMO_MODE=live` the server runs in replay mode, where it answers from
-recorded traces and cannot reach a provider at all. That is the default, and it
-is what a public deployment of this would run: the process never constructs a
-provider, so reaching one is not something a route can do by accident.
+recorded traces and cannot reach a provider at all: the process never constructs
+one, so reaching a provider is not something a route can do by accident. That is
+the default.
+
+### How the public demo behaves
+
+With `DEMO_MODE=live` both paths run at once, and which one answers is decided
+before any guard is consulted:
+
+- **A recorded prompt is always served from replay.** It is instant, it is
+  deterministic, and it spends nothing. This is checked first, so the sample
+  prompts keep working whatever else is true.
+- **Anything else is generated live**, inside a spend ceiling for the UTC day
+  (`DAILY_SPEND_CAP_USD`, default $0.30). The ceiling is computed from the token
+  counts the provider reports, not from an estimate, and it is written to disk
+  after every call: an in-memory counter would hand out a fresh allowance on
+  every restart, which for an unattended demo is no budget at all.
+- **When the day is spent, live generation turns itself off** and the demo says
+  so, falling back to replay until the UTC day turns. The sample prompts are
+  unaffected, because they never depended on the budget.
+
+Three cheaper guards sit in front of the budget, checked in the order of how
+long their refusal lasts: the daily ceiling, a per-address daily allowance
+(`LIVE_PER_IP_PER_DAY`), and a single concurrency slot
+(`LIVE_MAX_CONCURRENT`). Each refusal names what still works rather than only
+saying no.
+
+Two things fail closed. A model with no published price cannot be metered, so
+live generation refuses to run on one, and the server refuses to assemble a
+provider without a budget at all. Not knowing what something cost is not a safe
+basis for spending.
+
+`BUDGET_STATE_PATH` decides where the ledger lives. On a deployment it has to
+point at storage that survives a restart, or the budget resets whenever the
+process does.
 
 Other useful commands:
 

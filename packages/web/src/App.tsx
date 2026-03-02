@@ -11,10 +11,15 @@ export function App() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <h1>Natural language to application model</h1>
+        <div className="app-title">
+          <h1>Natural language to application model</h1>
+          <a className="header-link" href="#about">
+            About
+          </a>
+        </div>
         <p className="app-lede">
-          Describe an application, watch an agent build a validated model of it, and see that model
-          rendered. The model is the source of truth: edit it and the application follows.
+          Describe a small app in plain English, and an AI agent builds a working version of it in
+          seconds. Use it immediately, or edit its blueprint and watch it update.
         </p>
         <HowTo />
       </header>

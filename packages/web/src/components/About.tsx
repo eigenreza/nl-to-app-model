@@ -15,8 +15,14 @@ export function About() {
   const repoLinked = !REPO_URL.includes(REPO_PLACEHOLDER);
 
   return (
-    <footer className="about" aria-label="About this project">
+    // tabIndex lets fragment navigation move focus here, not only the viewport,
+    // so the header link works for someone using a keyboard or a screen reader.
+    <footer id="about" className="about" tabIndex={-1} aria-label="About this project">
       <h2>About</h2>
+      <p className="about-lede">
+        Describe a small app in plain English, and an AI agent builds a working version of it in
+        seconds. Use it immediately, or edit its blueprint and watch it update.
+      </p>
       <p>
         I built this to work through a pattern I keep running into: getting something structured and
         trustworthy out of a language model, rather than a wall of code you have to read before you
@@ -29,18 +35,25 @@ export function About() {
         real implementations, and an eval that measures whether the agent loop actually beat a
         one-shot baseline. It did not, on validity, and the results say so.
       </p>
-      <p className="about-meta">
-        <span>Reza Azad Gholami</span>
+
+      {/* Each on its own line by structure, not by a CSS rule that could change. */}
+      <div className="about-meta">
+        <p className="about-name">Reza Azad Gholami</p>
         {repoLinked ? (
-          <a href={REPO_URL} rel="noreferrer">
-            Source on GitHub
-          </a>
+          <p>
+            <a href={REPO_URL} rel="noreferrer">
+              Source on GitHub
+            </a>
+          </p>
         ) : (
-          <span className="muted">Repository link to be added at publish time</span>
+          <p className="muted">Repository link to be added at publish time</p>
         )}
-      </p>
+      </div>
+
       <p className="about-note">
-        This public demo replays generations recorded earlier. It makes no live model calls.
+        Sample prompts replay recorded generations and cost nothing. Your own prompts run live
+        within a small daily budget; when it is spent, the demo falls back to replay until the next
+        day.
       </p>
     </footer>
   );

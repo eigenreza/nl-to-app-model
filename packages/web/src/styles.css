@@ -818,15 +818,71 @@ tbody tr:hover {
   line-height: 1.6;
 }
 
-.about-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.75rem;
-  font-size: 0.88rem;
+
+
+
+.about-note {
+  font-size: 0.82rem;
+  color: var(--text-muted);
 }
 
-.about-meta > span:first-child {
+/* Header ----------------------------------------------------------------- */
+
+.app-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-link {
+  flex: none;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 0.05rem;
+}
+
+.header-link:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* Jumping to About should not land the heading under the top of the window. */
+.about {
+  scroll-margin-top: 1.25rem;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* About ------------------------------------------------------------------ */
+
+.about-lede {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+/* Name and repository link sit on their own lines. */
+.about-meta {
+  margin: 1rem 0 0.9rem;
+}
+
+.about-meta p {
+  margin: 0 0 0.2rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.about-name {
   font-weight: 600;
 }
 
@@ -834,7 +890,28 @@ tbody tr:hover {
   color: var(--accent);
 }
 
-.about-note {
-  font-size: 0.82rem;
-  color: var(--text-muted);
+/* Panel rhythm ----------------------------------------------------------- */
+
+/* One vertical rhythm across every panel, rather than each setting its own. */
+.pane > form,
+.pane > .editor-toolbar,
+.pane > .replay-catalogue {
+  margin-top: 0;
+}
+
+.prompt-pane .trace-status {
+  margin-top: 0.9rem;
+}
+
+.replay-catalogue {
+  margin-top: 0.9rem;
+}
+
+.editor-pane .issue-summary:first-of-type {
+  margin-top: 0.9rem;
+}
+
+/* Focused by the header link rather than by a click, so no focus ring. */
+.about:focus {
+  outline: none;
 }
