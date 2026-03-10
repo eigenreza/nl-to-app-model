@@ -73,8 +73,7 @@ export function registerGenerateRoutes(app: FastifyInstance, context: ServerCont
 
     // Stop the generation if the caller disconnects, so an abandoned tab does
     // not keep spending iterations.
-    const abort = new AbortController();
-    request.raw.on('close', () => abort.abort());
+    const abort = clientDisconnectSignal(reply);
 
     try {
       // A recorded trace is tried first, so which source answers is not known
@@ -94,8 +93,10 @@ export function registerGenerateRoutes(app: FastifyInstance, context: ServerCont
         onStep: (step: GenerationStep) => write({ type: 'step', step }),
       });
 
+      abort.settle();
       write({ type: 'result', result: toResponse(outcome, requestId) });
     } catch (error) {
+      abort.settle();
       const described = describeError(error);
       request.log.warn({ requestId, ...described }, 'generation stream failed');
       write({ type: 'error', ...described });
@@ -110,6 +111,34 @@ export function registerGenerateRoutes(app: FastifyInstance, context: ServerCont
 /* -------------------------------------------------------------------------- */
 /* Shared plumbing                                                            */
 /* -------------------------------------------------------------------------- */
+
+/**
+ * A signal that fires when the browser goes away, and only then.
+ *
+ * The obvious spelling of this, listening for 'close' on the request, is wrong.
+ * Node emits that when the request stream *ends*, which for a small JSON body
+ * Fastify has already read and parsed before the handler runs. Every live
+ * generation was therefore aborted a couple of milliseconds after it started,
+ * before the first provider call could return. The response is the thing that
+ * stays open for the length of the stream, so it is the thing to watch.
+ *
+ * The response also emits 'close' when it ends normally, so the caller marks
+ * the work settled first and a late event is ignored.
+ */
+function clientDisconnectSignal(reply: FastifyReply): AbortController & { settle(): void } {
+  const controller = new AbortController() as AbortController & { settle(): void };
+  let settled = false;
+
+  controller.settle = () => {
+    settled = true;
+  };
+
+  reply.raw.on('close', () => {
+    if (!settled) controller.abort();
+  });
+
+  return controller;
+}
 
 interface ExecuteOptions {
   description: string;
@@ -193,7 +222,10 @@ async function executeLive(
   }
 
   try {
-    const outcome = await runLive(context.provider as NonNullable<ServerContext['provider']>, runOptions);
+    const outcome = await runLive(
+      context.provider as NonNullable<ServerContext['provider']>,
+      runOptions,
+    );
     await context.dailyBudget?.countGeneration();
     return outcome;
   } finally {
