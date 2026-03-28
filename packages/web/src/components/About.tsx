@@ -1,19 +1,10 @@
 /**
  * Who made this and what it is meant to show.
- *
- * The repository link is a placeholder until publication. It renders as muted
- * text rather than as an anchor while it is unfilled, because shipping a demo
- * with a link that 404s is worse than shipping one with no link.
  */
 
-/** Replace with the repository URL at publish time. */
-const REPO_URL = 'https://github.com/REPLACE_WITH_REPO/nl-to-app-model';
-
-const REPO_PLACEHOLDER = 'REPLACE_WITH_REPO';
+const REPO_URL = 'https://github.com/eigenreza/nl-to-app-model';
 
 export function About() {
-  const repoLinked = !REPO_URL.includes(REPO_PLACEHOLDER);
-
   return (
     // tabIndex lets fragment navigation move focus here, not only the viewport,
     // so the header link works for someone using a keyboard or a screen reader.
@@ -39,15 +30,11 @@ export function About() {
       {/* Each on its own line by structure, not by a CSS rule that could change. */}
       <div className="about-meta">
         <p className="about-name">Reza Azad Gholami</p>
-        {repoLinked ? (
-          <p>
-            <a href={REPO_URL} rel="noreferrer">
-              Source on GitHub
-            </a>
-          </p>
-        ) : (
-          <p className="muted">Repository link to be added at publish time</p>
-        )}
+        <p>
+          <a href={REPO_URL} rel="noreferrer">
+            Source on GitHub
+          </a>
+        </p>
       </div>
 
       <p className="about-note">
