@@ -2,6 +2,8 @@
 
 An agentic system that turns natural-language descriptions into validated, editable application models.
 
+Try it live: https://nl-to-app-model.azurewebsites.net
+
 You type "a book tracker with a table of books, a filter by genre, and a count
 of unread books". A bounded, tool-using agent builds a JSON document describing
 that application: its data model, its components, and the derived values behind
@@ -59,7 +61,7 @@ recorded traces and cannot reach a provider at all: the process never constructs
 one, so reaching a provider is not something a route can do by accident. That is
 the default.
 
-### How the public demo behaves
+### How the hosted app behaves
 
 With `DEMO_MODE=live` both paths run at once, and which one answers is decided
 before any guard is consulted:
@@ -71,8 +73,8 @@ before any guard is consulted:
   (`DAILY_SPEND_CAP_USD`, default $0.30). The ceiling is computed from the token
   counts the provider reports, not from an estimate, and it is written to disk
   after every call: an in-memory counter would hand out a fresh allowance on
-  every restart, which for an unattended demo is no budget at all.
-- **When the day is spent, live generation turns itself off** and the demo says
+  every restart, which for an unattended deployment is no budget at all.
+- **When the day is spent, live generation turns itself off** and the page says
   so, falling back to replay until the UTC day turns. The sample prompts are
   unaffected, because they never depended on the budget.
 
@@ -114,6 +116,36 @@ the first turn's tool results exist, so batching it would change what is being
 measured. Set `LLM_SPEND_CAP_USD` to refuse the next call once a ceiling is in
 sight, enforced from the token counts the provider reports rather than from an
 estimate made beforehand.
+
+## Deployment
+
+The hosted app runs as a single Node process on Azure App Service, serving the
+API and the built client from one origin on the port App Service provides. It is
+deployed as a zip rather than wired to this repository, so a change ships when
+someone decides it should:
+
+```bash
+npm run deploy
+```
+
+That builds all three packages, assembles a self-contained package under
+`.deploy`, and uploads it. The package mirrors the repository layout, because the
+server resolves the client and the replay fixtures relative to its own compiled
+location: keeping the same shape means the deployed process needs no path
+configuration. The one workspace dependency is copied into `node_modules` as a
+real directory, since a symlink does not survive the round trip.
+
+Two things about the package are worth knowing before deploying it elsewhere.
+Its entry names must use forward slashes, or a Linux host reads the archive as a
+flat pile of files with backslashes in their names. And it is mounted rather than
+unpacked, which leaves the site root read only, so anything the process writes
+has to live outside it.
+
+Configuration is entirely environment variables, and the provider key is one of
+them: it belongs in the application settings of the host and nowhere else. The
+ledger path matters most. `BUDGET_STATE_PATH` has to point at storage that
+survives a restart, which on App Service means a path under `/home`. Anywhere
+else and the daily budget quietly starts over every time the process recycles.
 
 ## Architecture
 

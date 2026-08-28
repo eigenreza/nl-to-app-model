@@ -26,7 +26,9 @@
     "format:check": "prettier --check .",
     "eval": "npm run eval --workspace=@nlam/server",
     "check:charset": "node scripts/check-charset.mjs",
-    "verify": "npm run check:charset && npm run lint && npm run typecheck && npm run test"
+    "verify": "npm run check:charset && npm run lint && npm run typecheck && npm run test",
+    "package:deploy": "node scripts/package-deploy.mjs",
+    "deploy": "npm run build && npm run package:deploy && az webapp deploy -g nlam-demo-rg -n nl-to-app-model --src-path .deploy/site.zip --type zip"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
