@@ -29,6 +29,12 @@ export async function buildServer(context: ServerContext): Promise<FastifyInstan
     // enough and keeps an oversized body from being buffered at all.
     bodyLimit: 64 * 1024,
     trustProxy: true,
+    // Shutting down means shutting down. Without this, close() waits for every
+    // open connection to end by itself, and a generation stream whose caller
+    // walked away may have a socket that never reports closing. Waiting on one
+    // of those turns an orderly shutdown into a hang that only ends when
+    // something outside kills the process.
+    forceCloseConnections: true,
   });
 
   if (context.config.CORS_ORIGIN) {

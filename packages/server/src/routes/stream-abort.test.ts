@@ -264,3 +264,32 @@ describe('a caller who goes away', () => {
     expect(scripted.callCount).toBeLessThan(4);
   });
 });
+
+describe('shutting down after a caller walked away', () => {
+  it('closes promptly rather than waiting on a socket that never reports closing', async () => {
+    // What CI caught: the test above passed and then the teardown hung for
+    // over ten seconds on close(). The same wait would stall a real shutdown,
+    // since a deployment closes the server on SIGTERM and gets killed from
+    // outside if that does not return.
+    await startLiveServer(agentTurns());
+
+    const client = new AbortController();
+    const pending = fetch(`${baseUrl}/api/generate/stream`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ description: 'another abandoned request', mode: 'agent' }),
+      signal: client.signal,
+    }).catch(() => undefined);
+
+    await new Promise((resolve) => setTimeout(resolve, 40));
+    client.abort();
+    await pending;
+
+    const startedAt = Date.now();
+    await app?.close();
+    app = undefined;
+
+    // Generous next to the ten second hook timeout, and far below it.
+    expect(Date.now() - startedAt).toBeLessThan(2_000);
+  });
+});
